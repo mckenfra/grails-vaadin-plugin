@@ -23,6 +23,7 @@ import org.slf4j.Logger
 import com.vaadin.grails.terminal.gwt.server.GrailsAwareApplicationServlet
 import org.springframework.context.i18n.LocaleContextHolder
 import com.vaadin.grails.VaadinUtils
+import org.codehaus.groovy.grails.commons.GrailsApplication
 
 class VaadinGrailsPlugin {
 
@@ -33,7 +34,7 @@ class VaadinGrailsPlugin {
     private static final transient Logger log = LoggerFactory.getLogger("org.codehaus.groovy.grails.plugins.VaadinGrailsPlugin");
 
     // the plugin version
-    def version = "1.5.3"
+    def version = "1.6-SNAPSHOT"
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "1.1 > *"
     // the other plugins this plugin depends on
@@ -116,6 +117,24 @@ class VaadinGrailsPlugin {
         }
         clazz.metaClass.getBean = { Class type ->
             return VaadinUtils.getBean(type)
+        }
+    }
+    
+    /**
+     * Currently (to v2.0.2) GrailsApplication.addArtefact() will add multiple copies of the same class.
+     * So this method first checks if the class has already been added to GrailsApplication, and only
+     * calls the addArtefact method if it hasn't been added already.
+     */
+    def addVaadinArtefactToGrails(Class artefact, GrailsApplication grailsApplication) {
+        if (! grailsApplication.allClasses.contains(artefact)) {
+            if (log.isDebugEnabled()) {
+                log.debug "ADDING TO GRAILS: ${artefact}"
+            }
+            grailsApplication.addArtefact(VaadinArtefactHandler.TYPE, artefact)
+        } else {
+            if (log.isDebugEnabled()) {
+                log.debug "ALREADY IN GRAILS: ${artefact}"
+            }
         }
     }
 
@@ -267,7 +286,9 @@ class VaadinGrailsPlugin {
         Class changedClass = event.source
 
         if (application.isVaadinClass(changedClass)) {
-
+            // Ensure new artefacts are always added
+            addVaadinArtefactToGrails(changedClass, application)
+            
             //a vaadin component class has changed, but due to 'reachability'
             //we don't know which classes referenced it and might have a stale reference
             //So, we need to reload all classes:
@@ -283,7 +304,7 @@ class VaadinGrailsPlugin {
                     vaadinApplicationClass = reloadedClass
                 }
                 configureComponentClass(reloadedClass)
-                application.addArtefact(VaadinArtefactHandler.TYPE, reloadedClass)
+                addVaadinArtefactToGrails(reloadedClass, application)
             }
 
             //Now re-register the vaadin application Spring bean:
