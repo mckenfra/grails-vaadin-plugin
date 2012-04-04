@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>3.2 A Simple Tutorial 1.6-SNAPSHOT</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass() {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <ul>
+        <li>
+            <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                <a href="../../guide/index.html" class="button">Table of contents</a>
+
+                <div id="nav-summary-childs" style="display:none;">
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/1.%20Overview.html"><strong>1</strong><span>Overview</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/2.%20Installation.html"><strong>2</strong><span>Installation</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/3.%20Concepts%20and%20Usage.html"><strong>3</strong><span>Concepts and Usage</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Technical%20Details.html"><strong>5</strong><span>Technical Details</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/6.%20Version%20History.html"><strong>6</strong><span>Version History</span></a>
+                    </div>
+                    
+                </div>
+            </div>
+        </li>
+        <li class="separator selected">
+            <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+        </li>
+    </ul>
+</div>
+<div id="header">
+    <div class="images clearfix">
+        
+        
+    </div>
+    <p>        A plugin for creating a Vaadin application in Grails.
+    </p>
+</div>
+
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../../guide/2.%20Installation.html">&lt;&lt; <strong>2</strong><span>Installation</span></a></div>
+                
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                
+                    <div class="toc-item next-right"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span> >></a></div>
+                
+
+
+                <div class="project">
+                    <h1>3.2 A Simple Tutorial - Reference Documentation</h1>
+
+                    <p><strong>Authors:</strong> Ondrej Kvasnovsky, Francis McKenzie</p>
+
+                    <p><strong>Version:</strong> 1.6-SNAPSHOT</p>
+
+                    
+                </div>
+
+                
+
+                
+
+<h2 id="3.2 A Simple Tutorial">3.2 A Simple Tutorial</h2>
+In this section, we will create a simple "Hello World" screen using Vaadin. We will
+assume you have already installed Vaadin following the instructions in the 
+<a href="../guide/single.html#2.%20Installation" class="guide">Installation</a> section. Now follow these steps:<p class="paragraph"/><h4>1. Create the Controller</h4><p class="paragraph"/>Create a VaadinController by entering the following at the command line:<p class="paragraph"/><div class="code"><pre>grails create&#45;vaadin&#45;controller myapp.Hello</pre></div><p class="paragraph"/>This simply creates an empty groovy class under the <code>grails-app/vaadin</code> folder. Note that
+<code>VaadinController</code> is automatically appended to the class name.<p class="paragraph"/><h4>2. Create the View</h4><p class="paragraph"/>Create a new VaadinView by entering the following at the command line:<p class="paragraph"/><div class="code"><pre>grails create&#45;vaadin&#45;view myapp.Hello</pre></div><p class="paragraph"/>This simply creates an empty groovy class under the <code>grails-app/vaadin</code> folder. Note that
+<code>VaadinView</code> is automatically appended to the class name.<p class="paragraph"/><h4>3. Add an Action</h4><p class="paragraph"/>In the HelloVaadinController class, add a <code>greetings</code> method as follows:<p class="paragraph"/><div class="code"><pre>class HelloVaadinController &#123;
+	def greetings() &#123;&#125;
+&#125;</pre></div><p class="paragraph"/>In the HelloVaadinView class, add a <code>greetings</code> method as follows:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> com.vaadin.Label<p class="paragraph"/>class HelloVaadinView &#123;
+	def greetings() &#123;
+		application.mainWindow.body = <span class="java&#45;keyword">new</span> Label(<span class="java&#45;quote">"Hello world!"</span>)
+	&#125;
+&#125;</pre></div><p class="paragraph"/><h4>4. Run the App</h4><p class="paragraph"/>Finally, run the application using <code>grails run-app</code> and then browse to
+<code>http://localhost:8080/myapp#hello/greetings</code>. You should see the
+"Hello World!" message displayed, within the familiar Grails theme.<p class="paragraph"/>(Note that you will need to replace <code>'myapp'</code> in the above URL with the name of your
+grails project.)<p class="paragraph"/><blockquote class="note">
+You can create new Vaadin Controllers and Views while your app is running.
+They will automatically be available via your browser, after a short pause.
+Try it and see!
+</blockquote>
+
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../../guide/2.%20Installation.html">&lt;&lt; <strong>2</strong><span>Installation</span></a></div>
+                
+                    <div class="toc-item next-right"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span> >></a></div>
+                
+                <div style="clear:both"></div>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    
+    
+</div>
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+    <head>
+        <title>Vaadin Grails Plugin 1.6-SNAPSHOT</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8" />
+        <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8" />
+    <script type="text/javascript">
+function addJsClass(el) {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+    </head>
+
+    <body class="body" onload="addJsClass();">
+        <div id="navigation">
+            <ul>
+                <li>
+                    <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                        <a href="../guide/index.html" class="button">Table of contents</a>
+                        <div id="nav-summary-childs" style="display:none;">
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="#1.%20Overview"><strong>1</strong><span>Overview</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="#2.%20Installation"><strong>2</strong><span>Installation</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="#3.%20Concepts%20and%20Usage"><strong>3</strong><span>Concepts and Usage</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="#4.%20Known%20Issues%20and%20Limitations"><strong>4</strong><span>Known Issues and Limitations</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="#5.%20Technical%20Details"><strong>5</strong><span>Technical Details</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="#6.%20Version%20History"><strong>6</strong><span>Version History</span></a></div>
+                            
+                        </div>
+                    </div>
+                </li>
+                <li class="separator selected">
+                    <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+                </li>
+            </ul>
+        </div>
+        <div id="header">
+            <div class="images clearfix">
+                
+                
+            </div>
+            <p>        A plugin for creating a Vaadin application in Grails.
+    </p>
+        </div>
+
+
+        <table id="colset" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td id="col1">
+                    <div id="main" class="corner-all">
+
+                        <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                        <div class="project">
+                            <h1>Vaadin Grails Plugin - Reference Documentation</h1>
+                            <p><strong>Authors:</strong> Ondrej Kvasnovsky, Francis McKenzie</p>
+                            <p><strong>Version:</strong> 1.6-SNAPSHOT</p>
+                            
+                        </div>
+
+                        
+                        <div id="table-of-content">
+                            <h2>Table of Contents</h2>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="#1.%20Overview"><strong>1</strong><span>Overview</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="#2.%20Installation"><strong>2</strong><span>Installation</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="#3.%20Concepts%20and%20Usage"><strong>3</strong><span>Concepts and Usage</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="#3.1.%20Controllers,%20Views%20and%20Fragments"><strong>3.1</strong><span>Controllers, Views and Fragments</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="#3.2%20A%20Simple%20Tutorial"><strong>3.2</strong><span>A Simple Tutorial</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="#3.3%20Scaffolding%20a%20Domain%20Class"><strong>3.3</strong><span>Scaffolding a Domain Class</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="#4.%20Known%20Issues%20and%20Limitations"><strong>4</strong><span>Known Issues and Limitations</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="#5.%20Technical%20Details"><strong>5</strong><span>Technical Details</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="#5.1%20Vaadin%20API%20Injection"><strong>5.1</strong><span>Vaadin API Injection</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="#5.2%20Vaadin%20Classes"><strong>5.2</strong><span>Vaadin Classes</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="#6.%20Version%20History"><strong>6</strong><span>Version History</span></a></div>
+                            
+                            <div style="clear:both" ></div>
+                        </div>
+                        
+                        
+
+<h1 id="1. Overview">1 Overview</h1>
+Vaadin is a Java-based framework that brings a <a href="http://demo.vaadin.com/sampler" target="blank">rich suite of UI components</a>
+to web-based applications. The components are based on GWT, but are implemented server-side.
+Please visit <a href="http://vaadin.com" target="blank">http://vaadin.com</a> for more information.<p class="paragraph"/>This plugin adapts the Vaadin framework for use in a grails application.
+
+
+<h1 id="2. Installation">2 Installation</h1>
+<h4>Download the Plugin</h4><p class="paragraph"/>The preferred method for installing plugins is to add a plugin dependency
+in <code>grails-app/conf/BuildConfig.groovy</code>, i.e.:<p class="paragraph"/><div class="code"><pre>plugins &#123;
+    // Other plugin dependencies here
+    // . . .
+    // . . .<p class="paragraph"/>    compile ':vaadin:latest.integration'
+&#125;</pre></div><p class="paragraph"/>Alternatively, you can install manually with the following command:<p class="paragraph"/><div class="code"><pre>grails install&#45;plugin vaadin</pre></div><p class="paragraph"/><h4>Create the Application</h4><p class="paragraph"/>After installing the plugin using either of the above methods, you should run
+the following at the command line to create your Vaadin application:<p class="paragraph"/><div class="code"><pre>generate&#45;vaadin&#45;app com.somewhere.MyApp</pre></div><p class="paragraph"/>This will:
+<ul class="star">
+<li><strong class="bold">Create Application Class</strong></li>
+<ul class="star">
+<li>A class of type <code>com.vaadin.Application</code> will be created with the specified name, in <code>grails-app/vaadin</code></li>
+</ul>
+<li><strong class="bold">Update VaadinConfig</strong></li>
+<ul class="star">
+<li>The <code>applicationClass</code> setting in <code>grails-app/conf/VaadinConfig.groovy</code> will be changed to the new name.</li>
+</ul>
+<li><strong class="bold">Install Theme</strong></li>
+<ul class="star">
+<li>The grails theme for Vaadin will be installed in <code>web-app/VAADIN/themes/main</code></li>
+</ul>
+<li><strong class="bold">Disable UrlMappings</strong></li>
+<ul class="star">
+<li>Any entries in <code>grails-app/conf/UrlMappings.groovy</code> will be commented out, as these are incompatible with Vaadin (currently).</li>
+</ul></ul><p class="paragraph"/><h4>Run the Application</h4><p class="paragraph"/>If you now execute the following at the command line, you should see the default Grails
+home page - however note this is implemented in Vaadin, even though it (should) look
+identical to the standard home page provided by Grails!<p class="paragraph"/><div class="code"><pre>grails run&#45;app</pre></div>
+
+
+
+<h1 id="3. Concepts and Usage">3 Concepts and Usage</h1>
+
+
+
+<h2 id="3.1. Controllers, Views and Fragments">3.1 Controllers, Views and Fragments</h2>
+The Vaadin plugin adopts the Grails convention of structuring an application into
+Controllers and Views. However, since Vaadin is an AJAX-based framework
+rather than a conventional Request-Response framework, we do not map
+<strong class="bold">URLs</strong> to controllers but instead map <strong class="bold">Fragments</strong> to controllers.<p class="paragraph"/>As an example, say we want to create a screen for displaying a list of books.
+In Grails, we would create a <code>BookController.groovy</code> file containing a <code>list()</code> method,
+and a <code>list.gsp</code> file. This would then be accessible from a browser via
+<code>http://localhost:8080/myapp/book/list</code><p class="paragraph"/>With the Vaadin plugin, we do something very similar. We create a <code>BookVaadinController.groovy</code>
+file and a <code>BookVaadinView.groovy</code> file. This is then accessible from a browser
+via <code>http://localhost:8080/myapp#book/list</code>. Note the <code>'#'</code> in the URL to denote
+the fragment!<p class="paragraph"/><blockquote class="note">
+The naming convention for Vaadin controllers and views is important - their class name
+must end with <code>VaadinController</code> and <code>VaadinView</code> respectively.<p class="paragraph"/>Note that this method of identifying artefacts through the use of standard naming
+conventions is very common in Grails!
+</blockquote><p class="paragraph"/>
+
+
+<h2 id="3.2 A Simple Tutorial">3.2 A Simple Tutorial</h2>
+In this section, we will create a simple "Hello World" screen using Vaadin. We will
+assume you have already installed Vaadin following the instructions in the 
+<a href="../guide/single.html#2.%20Installation" class="guide">Installation</a> section. Now follow these steps:<p class="paragraph"/><h4>1. Create the Controller</h4><p class="paragraph"/>Create a VaadinController by entering the following at the command line:<p class="paragraph"/><div class="code"><pre>grails create&#45;vaadin&#45;controller myapp.Hello</pre></div><p class="paragraph"/>This simply creates an empty groovy class under the <code>grails-app/vaadin</code> folder. Note that
+<code>VaadinController</code> is automatically appended to the class name.<p class="paragraph"/><h4>2. Create the View</h4><p class="paragraph"/>Create a new VaadinView by entering the following at the command line:<p class="paragraph"/><div class="code"><pre>grails create&#45;vaadin&#45;view myapp.Hello</pre></div><p class="paragraph"/>This simply creates an empty groovy class under the <code>grails-app/vaadin</code> folder. Note that
+<code>VaadinView</code> is automatically appended to the class name.<p class="paragraph"/><h4>3. Add an Action</h4><p class="paragraph"/>In the HelloVaadinController class, add a <code>greetings</code> method as follows:<p class="paragraph"/><div class="code"><pre>class HelloVaadinController &#123;
+	def greetings() &#123;&#125;
+&#125;</pre></div><p class="paragraph"/>In the HelloVaadinView class, add a <code>greetings</code> method as follows:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> com.vaadin.Label<p class="paragraph"/>class HelloVaadinView &#123;
+	def greetings() &#123;
+		application.mainWindow.body = <span class="java&#45;keyword">new</span> Label(<span class="java&#45;quote">"Hello world!"</span>)
+	&#125;
+&#125;</pre></div><p class="paragraph"/><h4>4. Run the App</h4><p class="paragraph"/>Finally, run the application using <code>grails run-app</code> and then browse to
+<code>http://localhost:8080/myapp#hello/greetings</code>. You should see the
+"Hello World!" message displayed, within the familiar Grails theme.<p class="paragraph"/>(Note that you will need to replace <code>'myapp'</code> in the above URL with the name of your
+grails project.)<p class="paragraph"/><blockquote class="note">
+You can create new Vaadin Controllers and Views while your app is running.
+They will automatically be available via your browser, after a short pause.
+Try it and see!
+</blockquote>
+
+
+
+<h2 id="3.3 Scaffolding a Domain Class">3.3 Scaffolding a Domain Class</h2>
+One of Grails's (and indeed other frameworks such as Ruby) most useful features is its
+support for very quickly generating useable CRUD screens for your domain model. In
+Grails, this can be done by running the <code>generate-all</code> and <code>generate-views</code> commands.<p class="paragraph"/>The Vaadin plugin provides support for this type of scaffolding via the
+<code>generate-vaadin-ui</code> command. For example, if you have a Domain Class called
+<code>com.somepackage.Author</code>, you should run the following at the command line to
+scaffold a CRUD interface:<p class="paragraph"/><div class="code"><pre>grails generate&#45;vaadin&#45;ui com.somepackage.Author</pre></div><p class="paragraph"/>You can then browse the CRUD interface by visiting <code>http://localhost:8080/myapp#author</code>.<p class="paragraph"/>Some of the benefits of Vaadin should now become apparent! Notice the
+lazy-loading, infinitely scrollable table on the list screen. Also, for any Date fields
+in your domain class, notice the Date Picker that gets automatically inserted. If that
+is not enough, you should definitely visit the <a href="http://demo.vaadin.com/sampler" target="blank">Vaadin Sampler</a>
+page and check out all the other ways you can spruce up your user interface!
+
+
+
+<h1 id="4. Known Issues and Limitations">4 Known Issues and Limitations</h1>
+The following is a list of known issues/limitations with the Vaadin plugin:<p class="paragraph"/><h4>GSPs</h4><p class="paragraph"/>Unfortunately, it is not possible to create Vaadin GUIs using GSPs. The nearest you can get
+is to create a <code>CustomLayout</code> component, which uses an <code>.html</code> file for its layout. You can
+then modify the HTML file to achieve the design you are aiming for. However, at present
+constructing Vaadin GUIs requires creating bunches of GUI objects (Labels, Forms, Tables)
+and adding them all to containers - i.e. much the same as the Google Web Toolkit. My hope
+is that eventually we can support GSPs for creating Vaadin GUIs, with Grails Tags to
+create the Vaadin tables, forms, etc.<p class="paragraph"/><h4>Vaadin &#38; Grails in the Same App</h4><p class="paragraph"/>It is not possible to mix standard Grails pages and Vaadin in the same
+application, since Vaadin requires that you remove all settings from your
+<code>UrlMappings.groovy</code> file. Eventually, I hope we can find a way to support both
+models in the same app.<p class="paragraph"/><h4>Vaadin API</h4><p class="paragraph"/>Although the Vaadin plugin's support for Controllers and Views is a lot like
+standard Grails, it is a separate implementation. Therefore some of the methods
+that you expect to find in Grails Controllers  <em class="italic">may</em>  not be available in 
+VaadinControllers. However, let us know if anything important is missing, and we'll
+work on getting those added. 
+
+
+
+<h1 id="5. Technical Details">5 Technical Details</h1>
+
+
+
+<h2 id="5.1 Vaadin API Injection">5.1 Vaadin API Injection</h2>
+The Vaadin plugin automatically injects an API into an application's Vaadin classes.
+The injected API is as follows:<p class="paragraph"/><h3>All Vaadin Classes</h3><p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Field</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td><strong class="bold">application</strong></td><td>Gets the <code>com.vaadin.Application</code> object for this session.</td></tr><tr class="table-even"><td><strong class="bold">flash</strong></td><td>Gets a Grails-like 'flash' object for the current 'request'.</td></tr><tr class="table-odd"><td><strong class="bold">message()</strong></td><td>Provides same functionality as the Grails <code>g:message</code> tag.</td></tr><tr class="table-even"><td><strong class="bold">getBean()</strong></td><td>Specify a Spring bean to retrieve by name.</td></tr><tr class="table-odd"><td><strong class="bold">dispatcher</strong></td><td>Use this to dispatch requests to display different Vaadin pages.</td></tr></table><p class="paragraph"/><h3>Vaadin Controllers</h3><p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Field</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td><strong class="bold">params</strong></td><td>Gets params map for the current 'request'.</td></tr><tr class="table-even"><td><strong class="bold">redirect</strong></td><td>Mimics Grails's redirect function for controllers</td></tr><tr class="table-odd"><td><strong class="bold">render</strong></td><td>Mimics Grails's render function for controllers</td></tr></table><p class="paragraph"/><h3>Vaadin Views</h3><p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Field</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td><strong class="bold">params</strong></td><td>Gets params map for the current 'request'.</td></tr><tr class="table-even"><td><strong class="bold">model</strong></td><td>Gets the model set by the controller for the current 'request'</td></tr></table><p class="paragraph"/>Please consult the GroovyDocs for more information.<p class="paragraph"/><h3>Preventing API Injection</h3><p class="paragraph"/>You can add the annotation <code>&#64;NoVaadinAPI</code> to any class in your application,
+and this will prevent the above API from being injected.<p class="paragraph"/><blockquote class="note">
+The above API is only injected into your Vaadin classes if your main Application
+class subclasses <code>org.grails.plugin.vaadin.VaadinApplication</code>. The converse of this
+is, if you don't want any of the API injection features, just subclass
+<code>com.vaadin.Application</code> directly in you main Application class.
+</blockquote>
+
+
+<h2 id="5.2 Vaadin Classes">5.2 Vaadin Classes</h2>
+The Vaadin plugin automatically scans your classpath for Vaadin classes.<p class="paragraph"/>A class is considered a Vaadin Class if it:
+<ul class="star">
+<li>Has <code>vaadin</code> in the package name of itself, or any of its superclasses.</li>
+<li>Is a Vaadin Artefact (see below)</li>
+</ul><p class="paragraph"/>A class is considered a Vaadin Artefact if it:
+<ul class="star">
+<li>Has <code>VaadinController</code> or <code>VaadinView</code> at the end of the class name.</li>
+</ul><p class="paragraph"/>
+
+
+<h1 id="6. Version History">6 Version History</h1>
+<table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Version</strong></th><th><strong class="bold">Date</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td>1.6</td><td>5-Apr 2012</td><td>Added scaffolding</td></tr><tr class="table-even"><td>1.5.3</td><td>1-Mar 2012</td><td>Vaadin updated to 6.7.5</td></tr><tr class="table-odd"><td>1.5</td><td>Earlier</td><td>Possible to run it together with Grails 2.0.0.<br/>Vaadin updated to 6.7.4.<br/>Config option for custom servlet class name added.<br/>Automatic redeploy fixed (so you can do changes in<br/>Vaadin classes without restarting the application).</td></tr><tr class="table-even"><td>1.4</td><td>Earlier</td><td>Added the possibility to specify your own widgetset to be used by Vaadin servlet.<br/>This is very useful for using add-ons</td></tr><tr class="table-odd"><td>1.3</td><td>Earlier</td><td>Simple Vaadin upgrade to version 6.5.1</td></tr><tr class="table-even"><td>1.2</td><td>Earlier</td><td>Created new 'vaadin' artefact type - all Vaadin code should now reside in grails-app/vaadin.<br/>New features:<br/>Seamless integration with Grails Internationalization (i18n)<br/>Spring bean lookup from any Vaadin component.</td></tr><tr class="table-odd"><td>1.1.2</td><td>Earlier</td><td>Upgraded to the latest stable Vaadin release (6.3.4), fixing these issues.</td></tr><tr class="table-even"><td>1.1.1</td><td>Earlier</td><td>A minor point release that ensures compatibility with Grails 1.1 and higher.<br/>However, Groovy 1.7 language features (anonymous inner classes, etc)<br/>are only available in Grails 1.3+ environments<br/>(Groovy 1.7 is part of Grails 1.3+).</td></tr><tr class="table-odd"><td>1.1</td><td>Earlier</td><td>Latest stable Vaadin release (6.3.3). Ability to specify a path to your Vaadin UI<br/>other than the root context path<br/>(e.g. http://localhost:8080/myapp/vaadinUI).<br/>Environment-specific configuration support (production, development, etc).<br/>Custom environments too 'beta', 'uat', etc).</td></tr></table>
+
+                    </div>
+                </td>
+                <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                </div>
+            </div>
+        </td>
+            </tr>
+        </table>
+
+        <div id="footer">
+            
+            
+        </div>
+
+
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
+    </body>
+</html>
