@@ -39,7 +39,7 @@ class DefaultHome extends CustomLayout {
         this.addComponent(new Label("Controllers: ${grailsApplication.controllerClasses.size()}", Label.CONTENT_RAW), "controllerCount")
         this.addComponent(new Label("Domains: ${grailsApplication.domainClasses.size()}", Label.CONTENT_RAW), "domainCount")
         this.addComponent(new Label("Services: ${grailsApplication.serviceClasses.size()}", Label.CONTENT_RAW), "serviceCount")
-        this.addComponent(new Label("Tag Libraries: ${grailsApplication.tagLibClasses.size()}", Label.CONTENT_RAW), "tagLibCount")
+        this.addComponent(new Label("Tag Libraries: ${grailsApplication.tagLibClasses.size()}", Label.CONTENT_RAW), "tagLibraryCount")
 
         // Side bar - plugins list
         def pluginsMsg = getBean('pluginManager').allPlugins.collect { plugin ->
