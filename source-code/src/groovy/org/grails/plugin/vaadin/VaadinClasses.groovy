@@ -28,7 +28,7 @@ class VaadinClasses {
      * String(s) to scan for in classname to determine if
      * a class is a Vaadin class
      */
-    protected List<String> VAADIN_CLASSNAME_IDENTIFIERS = [
+    static List<String> VAADIN_CLASSNAME_IDENTIFIERS = [
         "vaadin"
     ]
     /**
@@ -36,7 +36,7 @@ class VaadinClasses {
      * a class is a Vaadin artefact, and the corresponding artefact
      * type if found
      */
-    protected Map<String,String> VAADIN_ARTEFACT_IDENTIFIERS = [
+    static Map<String,String> VAADIN_ARTEFACT_IDENTIFIERS = [
         "VaadinController": "controller",
         "VaadinView": "view"
     ]
@@ -105,11 +105,14 @@ class VaadinClasses {
     /**
      * Checks if a class qualifies as a Vaadin class (see description at top).
      * Used internally when initially creating the list of of Vaadin classes.
+     * <p>
+     * Note that this method has to be static, as it is used by the ArtefactHandler
+     * that monitors changes to Vaadin Artefacts.
      * 
      * @param clazz The candidate class
      * @return true if the specified class is considered a Vaadin class
      */
-    protected boolean isVaadinClass(Class clazz) {
+    static boolean isVaadinClass(Class clazz) {
         // Copied from vaadin plugin
         // A class is a vaadin class if it has 'vaadin' in the fully qualified class name
         boolean result = false
@@ -136,7 +139,7 @@ class VaadinClasses {
      * @param clazz The candidate class
      * @return true if the specified class is considered a Vaadin artefact
      */
-    protected boolean isVaadinArtefact(Class clazz) {
+    static boolean isVaadinArtefact(Class clazz) {
         return clazz && VAADIN_ARTEFACT_IDENTIFIERS.keySet().find { clazz.name.endsWith(it) }
     }
 
