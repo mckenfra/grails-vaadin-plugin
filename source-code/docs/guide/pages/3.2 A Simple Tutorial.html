@@ -97,7 +97,7 @@ assume you have already installed Vaadin following the instructions in the
 <code>VaadinController</code> is automatically appended to the class name.<p class="paragraph"/><h4>2. Create the View</h4><p class="paragraph"/>Create a new VaadinView by entering the following at the command line:<p class="paragraph"/><div class="code"><pre>grails create&#45;vaadin&#45;view myapp.Hello</pre></div><p class="paragraph"/>This simply creates an empty groovy class under the <code>grails-app/vaadin</code> folder. Note that
 <code>VaadinView</code> is automatically appended to the class name.<p class="paragraph"/><h4>3. Add an Action</h4><p class="paragraph"/>In the HelloVaadinController class, add a <code>greetings</code> method as follows:<p class="paragraph"/><div class="code"><pre>class HelloVaadinController &#123;
 	def greetings() &#123;&#125;
-&#125;</pre></div><p class="paragraph"/>In the HelloVaadinView class, add a <code>greetings</code> method as follows:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> com.vaadin.Label<p class="paragraph"/>class HelloVaadinView &#123;
+&#125;</pre></div><p class="paragraph"/>In the HelloVaadinView class, add a <code>greetings</code> method as follows:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> com.vaadin.ui.Label<p class="paragraph"/>class HelloVaadinView &#123;
 	def greetings() &#123;
 		application.mainWindow.body = <span class="java&#45;keyword">new</span> Label(<span class="java&#45;quote">"Hello world!"</span>)
 	&#125;

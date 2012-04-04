@@ -96,7 +96,9 @@ in <code>grails-app/conf/BuildConfig.groovy</code>, i.e.:<p class="paragraph"/><
     // Other plugin dependencies here
     // . . .
     // . . .<p class="paragraph"/>    compile ':vaadin:latest.integration'
-&#125;</pre></div><p class="paragraph"/>Alternatively, you can install manually with the following command:<p class="paragraph"/><div class="code"><pre>grails install&#45;plugin vaadin</pre></div><p class="paragraph"/><h4>Create the Application</h4><p class="paragraph"/>After installing the plugin using either of the above methods, you should run
+&#125;</pre></div><p class="paragraph"/>This will trigger installation of the plugin when we run our app. But since we
+need to use scripts in the plugin beforehand, we also have to install the plugin
+manually the first time. Run the following at the command line:<p class="paragraph"/><div class="code"><pre>grails install&#45;plugin vaadin</pre></div><p class="paragraph"/><h4>Create the Application</h4><p class="paragraph"/>After installing the plugin using either of the above methods, you should run
 the following at the command line to create your Vaadin application:<p class="paragraph"/><div class="code"><pre>generate&#45;vaadin&#45;app com.somewhere.MyApp</pre></div><p class="paragraph"/>This will:
 <ul class="star">
 <li><strong class="bold">Create Application Class</strong></li>
