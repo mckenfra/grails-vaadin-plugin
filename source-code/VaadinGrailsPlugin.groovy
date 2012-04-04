@@ -131,6 +131,10 @@ class VaadinGrailsPlugin {
                 log.debug "ADDING TO GRAILS: ${artefact}"
             }
             grailsApplication.addArtefact(VaadinArtefactHandler.TYPE, artefact)
+            // Get it to appear on the controllers list too
+            if (artefact.name.endsWith("Controller")) {
+                grailsApplication.addArtefact("Controller", artefact)
+            }
         } else {
             if (log.isDebugEnabled()) {
                 log.debug "ALREADY IN GRAILS: ${artefact}"
