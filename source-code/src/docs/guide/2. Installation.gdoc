@@ -13,7 +13,9 @@ plugins {
 }
 {code}
 
-Alternatively, you can install manually with the following command:
+This will trigger installation of the plugin when we run our app. But since we
+need to use scripts in the plugin beforehand, we also have to install the plugin
+manually the first time. Run the following at the command line:
 
 {code}
 grails install-plugin vaadin

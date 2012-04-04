@@ -37,7 +37,7 @@ class HelloVaadinController {
 In the HelloVaadinView class, add a @greetings@ method as follows:
 
 {code}
-import com.vaadin.Label
+import com.vaadin.ui.Label
 
 class HelloVaadinView {
 	def greetings() {
