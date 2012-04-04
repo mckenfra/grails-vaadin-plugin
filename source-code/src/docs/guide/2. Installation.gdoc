@@ -13,8 +13,8 @@ plugins {
 }
 {code}
 
-This will trigger installation of the plugin when we run our app. But since we
-need to use scripts in the plugin beforehand, we also have to install the plugin
+This will trigger installation of the plugin when we compile or run our app. But since
+we need to use scripts in the plugin beforehand, we also have to install the plugin
 manually the first time. Run the following at the command line:
 
 {code}
@@ -23,8 +23,8 @@ grails install-plugin vaadin
 
 h4. Create the Application
 
-After installing the plugin using either of the above methods, you should run
-the following at the command line to create your Vaadin application:
+After installing the plugin, you should run the following at the command line to
+create your Vaadin application:
 
 {code}
 generate-vaadin-app com.somewhere.MyApp
