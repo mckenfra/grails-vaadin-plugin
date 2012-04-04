@@ -1,0 +1,12 @@
+{table}
+ *Version* | *Date* | *Description*
+ 1.6 | 5-Apr 2012 | Added scaffolding
+ 1.5.3 | 1-Mar 2012 | Vaadin updated to 6.7.5
+ 1.5 | Earlier | Possible to run it together with Grails 2.0.0.\\Vaadin updated to 6.7.4.\\Config option for custom servlet class name added.\\Automatic redeploy fixed (so you can do changes in\\Vaadin classes without restarting the application).
+ 1.4 | Earlier | Added the possibility to specify your own widgetset to be used by Vaadin servlet.\\This is very useful for using add-ons
+ 1.3 | Earlier | Simple Vaadin upgrade to version 6.5.1
+ 1.2 | Earlier | Created new 'vaadin' artefact type - all Vaadin code should now reside in grails-app/vaadin.\\New features:\\Seamless integration with Grails Internationalization (i18n)\\Spring bean lookup from any Vaadin component.
+ 1.1.2 | Earlier | Upgraded to the latest stable Vaadin release (6.3.4), fixing these issues.
+ 1.1.1 | Earlier |  A minor point release that ensures compatibility with Grails 1.1 and higher.\\However, Groovy 1.7 language features (anonymous inner classes, etc)\\are only available in Grails 1.3+ environments\\(Groovy 1.7 is part of Grails 1.3+).
+ 1.1 | Earlier | Latest stable Vaadin release (6.3.3). Ability to specify a path to your Vaadin UI\\other than the root context path\\(e.g. http://localhost:8080/myapp/vaadinUI).\\Environment-specific configuration support (production, development, etc).\\Custom environments too 'beta', 'uat', etc).
+{table}

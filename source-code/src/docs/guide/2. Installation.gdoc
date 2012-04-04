@@ -1,0 +1,50 @@
+h4. Download the Plugin
+
+The preferred method for installing plugins is to add a plugin dependency
+in @grails-app/conf/BuildConfig.groovy@, i.e.:
+
+{code}
+plugins {
+    // Other plugin dependencies here
+    // . . .
+    // . . .
+
+    compile ':vaadin:latest.integration'
+}
+{code}
+
+Alternatively, you can install manually with the following command:
+
+{code}
+grails install-plugin vaadin
+{code}
+
+h4. Create the Application
+
+After installing the plugin using either of the above methods, you should run
+the following at the command line to create your Vaadin application:
+
+{code}
+generate-vaadin-app com.somewhere.MyApp
+{code}
+
+This will:
+
+* *Create Application Class*
+** A class of type @com.vaadin.Application@ will be created with the specified name, in @grails-app/vaadin@
+* *Update VaadinConfig*
+** The @applicationClass@ setting in @grails-app/conf/VaadinConfig.groovy@ will be changed to the new name.
+* *Install Theme*
+** The grails theme for Vaadin will be installed in @web-app/VAADIN/themes/main@
+* *Disable UrlMappings*
+** Any entries in @grails-app/conf/UrlMappings.groovy@ will be commented out, as these are incompatible with Vaadin (currently).
+
+h4. Run the Application
+
+If you now execute the following at the command line, you should see the default Grails
+home page - however note this is implemented in Vaadin, even though it (should) look
+identical to the standard home page provided by Grails!
+
+{code}
+grails run-app
+{code}

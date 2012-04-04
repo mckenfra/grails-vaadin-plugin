@@ -1,0 +1,23 @@
+The Vaadin plugin adopts the Grails convention of structuring an application into
+Controllers and Views. However, since Vaadin is an AJAX-based framework
+rather than a conventional Request-Response framework, we do not map
+*URLs* to controllers but instead map *Fragments* to controllers.
+
+As an example, say we want to create a screen for displaying a list of books.
+In Grails, we would create a @BookController.groovy@ file containing a @list()@ method,
+and a @list.gsp@ file. This would then be accessible from a browser via
+@http://localhost:8080/myapp/book/list@
+
+With the Vaadin plugin, we do something very similar. We create a @BookVaadinController.groovy@
+file and a @BookVaadinView.groovy@ file. This is then accessible from a browser
+via @http://localhost:8080/myapp#book/list@. Note the @'#'@ in the URL to denote
+the fragment! 
+
+{note}
+The naming convention for Vaadin controllers and views is important - their class name
+must end with @VaadinController@ and @VaadinView@ respectively.
+
+Note that this method of identifying artefacts through the use of standard naming
+conventions is very common in Grails!
+{note}
+

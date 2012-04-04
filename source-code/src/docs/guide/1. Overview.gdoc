@@ -1,0 +1,5 @@
+Vaadin is a Java-based framework that brings a [rich suite of UI components|http://demo.vaadin.com/sampler]
+to web-based applications. The components are based on GWT, but are implemented server-side.
+Please visit [http://vaadin.com|http://vaadin.com] for more information.
+
+This plugin adapts the Vaadin framework for use in a grails application.

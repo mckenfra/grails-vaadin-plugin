@@ -26,6 +26,9 @@ grails.project.source.level = 1.5
 grails.release.scm.enabled = false
 grails.project.repos.default = "grailsCentral"
 
+// For documentation
+grails.project.docs.output.dir = "docs"
+
 grails.project.dependency.resolution = {
     // inherit Grails' default dependencies
     inherits( "global" ) {
