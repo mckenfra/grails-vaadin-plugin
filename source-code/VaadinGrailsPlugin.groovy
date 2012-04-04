@@ -24,6 +24,8 @@ import com.vaadin.grails.terminal.gwt.server.GrailsAwareApplicationServlet
 import org.springframework.context.i18n.LocaleContextHolder
 import com.vaadin.grails.VaadinUtils
 import org.codehaus.groovy.grails.commons.GrailsApplication
+import org.grails.plugin.vaadin.VaadinApi
+import org.springframework.aop.scope.ScopedProxyFactoryBean
 
 class VaadinGrailsPlugin {
 
@@ -41,7 +43,14 @@ class VaadinGrailsPlugin {
     def dependsOn = [:]
     // resources that are excluded from plugin packaging
     def pluginExcludes = [
-        "web-app/**"
+        "docs/**/*",
+        "grails-app/conf/**/*",
+        "grails-app/controllers/**/*",
+        "grails-app/views/**/*",
+        "web-app/css/**/*",
+        "web-app/images/**/*",
+        "web-app/js/**/*",
+        "i18n/**/*"
     ]
     def artefacts = [VaadinArtefactHandler]
     def watchedResources = [
@@ -51,30 +60,21 @@ class VaadinGrailsPlugin {
 
     def license = "APACHE"
     
+    def author = "Ondrej Kvasnovsky, Francis McKenzie"
+    def authorEmail = "ondrej.kvasnovsky@gmail.com, francis.mckenzie@gmail.com"
+    
     def developers = [
             [ name: "Daniel Bell", email: "daniel.r.bell@gmail.com" ],
             [ name: "Les Hazlewood", email: "les@katasoft.com" ],
-            [ name: "Ondrej Kvasnovsky", email: "ondrej.kvasnovsky@gmail.com" ] ]
+            [ name: "Ondrej Kvasnovsky", email: "ondrej.kvasnovsky@gmail.com" ],
+            [ name: "Francis McKenzie", email: "francis.mckenzie@gmail.com" ]
+    ]
     def issueManagement = [ system: "JIRA", url: "http://jira.grails.org/browse/GPVAADIN" ]
     def scm = [ url: "https://github.com/ondrej-kvasnovsky/grails-vaadin-plugin" ]
     
     def title = "Vaadin Grails Plugin"
-    def description = """
-        A plugin for creating a Vaadin application on Grails. This plugin will
-        automatically enable an application to specify a Vaadin Application class
-        from which the application will start.
-
-        After installing the plugin:
-
-        1) Create a class that extends com.vaadin.Application
-
-        2) Specify this class in the Vaadin configuration file
-           (grails-app/conf/VaadinConfig.groovy)
-
-        3) Remove any Grails URL mappings for the URL where you want to access the
-           Vaadin application (in (grails-app/conf/UrlMappings.groovy)
-
-        4) Execute grails run-app
+    def description = """\
+        A plugin for creating a Vaadin application in Grails.
     """
 
     // URL to the plugin's documentation
@@ -157,6 +157,20 @@ class VaadinGrailsPlugin {
         if (vaadinApplicationClass) {
             configureVaadinApplication.delegate = delegate
             configureVaadinApplication(vaadinApplicationClass, config)
+        }
+        
+        // Beans for scaffolded applications
+        vaadinApplicationHolder(ScopedProxyFactoryBean) {
+            targetBeanName = 'vaadinApplicationService'
+            proxyTargetClass = true
+        }
+        vaadinTransactionManager(ScopedProxyFactoryBean) {
+            targetBeanName = 'vaadinTransactionService'
+            proxyTargetClass = true
+        }
+        vaadinApi(VaadinApi) {
+            vaadinApplicationHolder = vaadinApplicationHolder
+            vaadinTransactionManager = vaadinTransactionManager
         }
     }
 
