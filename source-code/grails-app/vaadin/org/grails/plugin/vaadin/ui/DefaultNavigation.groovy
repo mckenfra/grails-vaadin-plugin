@@ -92,6 +92,7 @@ class DefaultNavigation extends HorizontalLayout {
         button.addStyleName("create")
         button.icon = icon
         this.addComponent(button)
+        return button
     }
     
     /**
@@ -112,5 +113,6 @@ class DefaultNavigation extends HorizontalLayout {
         button.addStyleName("list")
         button.icon = icon
         this.addComponent(button)
+        return button
     }
 }
