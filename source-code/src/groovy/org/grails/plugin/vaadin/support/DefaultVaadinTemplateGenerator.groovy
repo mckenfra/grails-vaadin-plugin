@@ -136,8 +136,8 @@ class DefaultVaadinTemplateGenerator extends DefaultGrailsTemplateGenerator {
         return true
     }
 
-    // Unfortunately private in superclass, so copied again here
-    private getTemplateText(String template) {
+    // Unfortunately private in superclass until grails 2.0.1, so copied again here
+    public getTemplateText(String template) {
         def application = grailsApplication
         // first check for presence of template in application
         if (resourceLoader && application?.warDeployed) {
