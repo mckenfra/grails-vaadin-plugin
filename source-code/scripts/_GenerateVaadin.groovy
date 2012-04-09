@@ -61,7 +61,7 @@ def generateForDomainClass(domainClass) {
     // So we have to load manually
     Class generator = classLoader.loadClass("org.grails.plugin.vaadin.support.DefaultVaadinTemplateGenerator", true)
     
-    def templateGenerator = generator.newInstance(classLoader, "${vaadinPluginDir})
+    def templateGenerator = generator.newInstance(classLoader, "${vaadinPluginDir}")
     templateGenerator.grailsApplication = grailsApp
     templateGenerator.pluginManager = pluginManager
     

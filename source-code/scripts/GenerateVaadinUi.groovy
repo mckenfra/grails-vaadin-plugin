@@ -7,7 +7,7 @@
  */
 
 includeTargets << grailsScript("_GrailsCreateArtifacts")
-includeTargets << new File("${vaadinScaffoldPluginDir}/scripts/_GenerateVaadin.groovy")
+includeTargets << new File("${vaadinPluginDir}/scripts/_GenerateVaadin.groovy")
 
 target ('default': "Generates a Vaadin CRUD interface (controller + views) for a domain class") {
     depends(checkVersion, parseArguments, packageApp)
