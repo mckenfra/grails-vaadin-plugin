@@ -9,7 +9,7 @@ plugins {
     // . . .
     // . . .
 
-    compile ':vaadin:latest.integration'
+    compile ':vaadin:1.6.1-SNAPSHOT'
 }
 {code}
 
@@ -18,7 +18,7 @@ we need to use scripts in the plugin beforehand, we also have to install the plu
 manually the first time. Run the following at the command line:
 
 {code}
-grails install-plugin vaadin
+grails install-plugin vaadin 1.6.1-SNAPSHOT
 {code}
 
 h4. Create the Application
@@ -30,16 +30,8 @@ create your Vaadin application:
 generate-vaadin-app com.somewhere.MyApp
 {code}
 
-This will:
-
-* *Create Application Class*
-** A class of type @com.vaadin.Application@ will be created with the specified name, in @grails-app/vaadin@
-* *Update VaadinConfig*
-** The @applicationClass@ setting in @grails-app/conf/VaadinConfig.groovy@ will be changed to the new name.
-* *Install Theme*
-** The grails theme for Vaadin will be installed in @web-app/VAADIN/themes/main@
-* *Disable UrlMappings*
-** Any entries in @grails-app/conf/UrlMappings.groovy@ will be commented out, as these are incompatible with Vaadin (currently).
+This will install the necessary files and apply configuration changes to your application,
+to make it ready for Vaadin. See details in the [generate-vaadin-app|Command Line] section. 
 
 h4. Run the Application
 

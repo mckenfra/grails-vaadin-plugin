@@ -1,5 +1,9 @@
-In this section, we will create a simple "Hello World" screen using Vaadin. We will
-assume you have already installed Vaadin following the instructions in the 
+In this section, we will create a simple "Hello World" screen using Vaadin. If you
+are new to Grails, it might be useful to familiarise yourself with the concepts
+in the [getting-started|http://grails.org/doc/latest/guide/gettingStarted.html#aHelloWorldExample]
+section of the [Grails User Guide|http://grails.org/doc/latest/guide].
+
+We will assume you have already installed Vaadin following the instructions in the 
 [Installation|guide:2. Installation] section. Now follow these steps:
 
 h4. 1. Create the Controller
@@ -10,21 +14,10 @@ Create a VaadinController by entering the following at the command line:
 grails create-vaadin-controller myapp.Hello
 {code}
 
-This simply creates an empty groovy class under the @grails-app/vaadin@ folder. Note that
+This simply creates an empty groovy class under the @grails-app/controllers@ folder. Note that
 @VaadinController@ is automatically appended to the class name.
 
-h4. 2. Create the View
-
-Create a new VaadinView by entering the following at the command line:
-
-{code}
-grails create-vaadin-view myapp.Hello
-{code}
-
-This simply creates an empty groovy class under the @grails-app/vaadin@ folder. Note that
-@VaadinView@ is automatically appended to the class name.
-
-h4. 3. Add an Action
+h4. 2. Add an Action
 
 In the HelloVaadinController class, add a @greetings@ method as follows:
 
@@ -34,16 +27,14 @@ class HelloVaadinController {
 }
 {code}
 
-In the HelloVaadinView class, add a @greetings@ method as follows:
+h4. 3. Create the View
+
+Create file @grails-app/views/hello/greetings.gsp@ with the following contents:
 
 {code}
-import com.vaadin.ui.Label
-
-class HelloVaadinView {
-	def greetings() {
-		application.mainWindow.body = new Label("Hello world!")
-	}
-}
+<div>
+  <v:label>Hello world!</v:label>
+</div>
 {code}
 
 h4. 4. Run the App
@@ -56,7 +47,7 @@ Finally, run the application using @grails run-app@ and then browse to
 grails project.)
 
 {note}
-You can create new Vaadin Controllers and Views while your app is running.
+You can create new Vaadin Controllers and GSP views while your app is running.
 They will automatically be available via your browser, after a short pause.
 Try it and see!
 {note}

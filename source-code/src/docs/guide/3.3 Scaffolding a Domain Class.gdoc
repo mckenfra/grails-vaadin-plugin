@@ -1,14 +1,28 @@
 One of Grails's (and indeed other frameworks such as Ruby) most useful features is its
 support for very quickly generating useable CRUD screens for your domain model. In
-Grails, this can be done by running the @generate-all@ and @generate-views@ commands.
+Grails, this can be done by running the
+[generate-controller|http://grails.org/doc/latest/ref/Command%20Line/generate-controller.html],
+[generate-views|http://grails.org/doc/latest/ref/Command%20Line/generate-views.html] and
+[generate-all|http://grails.org/doc/latest/ref/Command%20Line/generate-all.html] commands.
 
-The Vaadin plugin provides support for this type of scaffolding via the
-@generate-vaadin-ui@ command. For example, if you have a Domain Class called
+The Vaadin plugin provides the exact equivalent of the standard grails scaffolding
+scripts, as follows:
+
+{table}
+ *Command* | *Description*
+ [generate-vaadin-controller|Command Line] | Generates a new VaadinController in the @grails-app/controllers@ dir\\for the specified domain class.
+ [generate-vaadin-views|Command Line] | Generates the Vaadin CRUD GSP views in the @grails-app/views@ dir\\for the specified domain class. 
+ [generate-vaadin-all|Command Line] | Generates the Controller and Views for the specified domain class.
+ [create-vaadin-controller|Command Line] | Creates an empty VaadinController in the @grails-app/controllers@ dir
+ [install-vaadin-templates|Command Line] | Installs the templates used for the above scaffolding commands into\\@src/templates/vaadin@
+{table}
+
+For example, if you have a Domain Class called
 @com.somepackage.Author@, you should run the following at the command line to
 scaffold a CRUD interface:
 
 {code}
-grails generate-vaadin-ui com.somepackage.Author
+grails generate-vaadin-all com.somepackage.Author
 {code}
 
 You can then browse the CRUD interface by visiting @http://localhost:8080/myapp#author@.

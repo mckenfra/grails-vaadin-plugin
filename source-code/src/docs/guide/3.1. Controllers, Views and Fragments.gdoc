@@ -8,14 +8,14 @@ In Grails, we would create a @BookController.groovy@ file containing a @list()@ 
 and a @list.gsp@ file. This would then be accessible from a browser via
 @http://localhost:8080/myapp/book/list@
 
-With the Vaadin plugin, we do something very similar. We create a @BookVaadinController.groovy@
-file and a @BookVaadinView.groovy@ file. This is then accessible from a browser
+With the Vaadin plugin, we do exactly the same thing. We create a @BookVaadinController.groovy@
+file containing a @list()@ method, and a @list.gsp@ file. This is then accessible from a browser
 via @http://localhost:8080/myapp#book/list@. Note the @'#'@ in the URL to denote
 the fragment! 
 
 {note}
-The naming convention for Vaadin controllers and views is important - their class name
-must end with @VaadinController@ and @VaadinView@ respectively.
+The naming convention for Vaadin controllers is important - the class name
+must end with @VaadinController@.
 
 Note that this method of identifying artefacts through the use of standard naming
 conventions is very common in Grails!

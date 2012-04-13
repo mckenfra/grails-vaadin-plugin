@@ -3,8 +3,4 @@ The Vaadin plugin automatically scans your classpath for Vaadin classes.
 A class is considered a Vaadin Class if it:
 
 * Has @vaadin@ in the package name of itself, or any of its superclasses.
-* Is a Vaadin Artefact (see below)
-
-A class is considered a Vaadin Artefact if it:
-
-* Has @VaadinController@ or @VaadinView@ at the end of the class name.
+* Is a Vaadin Artefact - i.e. it has @VaadinController@ at the end of the class name.
