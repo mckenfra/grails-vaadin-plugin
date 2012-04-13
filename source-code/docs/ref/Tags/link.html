@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>Vaadin Grails Plugin 1.6.1-SNAPSHOT</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass(el) {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+
+<div id="navigation">
+    <ul>
+        <li>
+            <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                <a href="../../guide/index.html" class="button">Table of contents</a>
+
+                <div id="nav-summary-childs">
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/1.%20Overview.html"><strong>1</strong><span>Overview</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/2.%20Installation.html"><strong>2</strong><span>Installation</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/3.%20Concepts%20and%20Usage.html"><strong>3</strong><span>Concepts and Usage</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Technical%20Details.html"><strong>5</strong><span>Technical Details</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/6.%20Version%20History.html"><strong>6</strong><span>Version History</span></a>
+                    </div>
+                    
+                </div>
+            </div>
+        </li>
+        <li class="separator selected">
+            <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+        </li>
+    </ul>
+</div>
+<div id="header">
+    <div class="images clearfix">
+        
+        
+    </div>
+    <p>        A plugin for creating a Vaadin application in Grails.
+    </p>
+</div>
+
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="reference corner-all">
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                <h1>link</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Adds a <a href="../../gapi/org/grails/plugin/vaadin/ui/GrailsButton.html" class="api">GrailsButton</a> component to the parent container.<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/>Example controller for an application called "shop":<p class="paragraph"/><div class="code"><pre>class BookController &#123;
+    <span class="java&#45;keyword">static</span> defaultAction = <span class="java&#45;quote">"list"</span><p class="paragraph"/>    def list() &#123;
+        &#91;books: Book.list(params)&#93;
+    &#125;<p class="paragraph"/>    def show() &#123;
+        &#91;book: Book.get(params.id)&#93;
+    &#125;<p class="paragraph"/>    def edit() &#123;
+        &#91;book: params.instance&#93;
+    &#125;
+&#125;</pre></div><p class="paragraph"/>Example usages for above controller:<p class="paragraph"/><div class="code"><pre>&#60;v:link action=<span class="java&#45;quote">"show"</span> id=<span class="java&#45;quote">"1"</span>&#62;Book 1&#60;/v:link&#62;<p class="paragraph"/>&#60;v:link action=<span class="java&#45;quote">"show"</span> id=<span class="java&#45;quote">"$&#123;currentBook.id&#125;"</span>&#62;$&#123;currentBook.name&#125;&#60;/v:link&#62;<p class="paragraph"/>&#60;v:link action=<span class="java&#45;quote">"edit"</span> instance=<span class="java&#45;quote">"$&#123;currentBook&#125;"</span>&#62;$&#123;currentBook.name&#125;&#60;/v:link&#62;<p class="paragraph"/>&#60;v:link controller=<span class="java&#45;quote">"book"</span>&#62;Book Home&#60;/v:link&#62;<p class="paragraph"/>&#60;v:link controller=<span class="java&#45;quote">"book"</span> action=<span class="java&#45;quote">"list"</span>&#62;Book List&#60;/v:link&#62;<p class="paragraph"/>&#60;v:link action=<span class="java&#45;quote">"list"</span> params=<span class="java&#45;quote">"&#91;sort: 'title', order: 'asc',
+                               author: currentBook.author&#93;"</span>&#62;
+     Book List
+&#60;/v:link&#62;<p class="paragraph"/>&#60;v:link fragment=<span class="java&#45;quote">"&#35;book/list"</span>&#62;Book List&#60;/v:link&#62;</pre></div><p class="paragraph"/>When calling this tag as a GSP method, use the <code>createLink</code> method as follows:<p class="paragraph"/><div class="code"><pre>$&#123;v.createLink(action:'list',controller:'book',caption:'Book List')&#125;</pre></div><p class="paragraph"/><h2>Description</h2><p class="paragraph"/><h4>Body</h4>
+<ul class="star">
+<li>Used as the <code>caption</code> of the button, unless overridden by the <code>caption</code> attribute.</li>
+</ul><p class="paragraph"/><h4>Attributes</h4><p class="paragraph"/><h5>Specific </h5>
+<ul class="star">
+<li><code>caption</code> (optional) The caption of the button. Overrides the value in the body.</li>
+<li><code>icon</code> (optional) The button icon. Can be specified as a Vaadin <a href="http://vaadin.com/api/com/vaadin/terminal/Resource.html" target="blank">Resource</a>, or as a String path to the resource within the Vaadin theme dir for the application.</li>
+<li><code>action</code> (optional) The action of the Vaadin controller to link to. If omitted, defaults to 'index'</li>
+<li><code>controller</code> (optional) The Vaadin controller to link to. If omitted, defaults to the controller of the current 'request'.</li>
+<li><code>id</code> (optional) The id parameter to use in the link.</li>
+<li><code>instance</code> (optional) The domain class instance parameter to use in the link.</li>
+<li><code>fragment</code> (optional) The fragment to link to, for example <code>#book/list</code></li>
+<li><code>onclick</code> (optional) Similar to the HTML onclick attribute. Here, the attribute expects a closure that takes a <code>dispatch</code> parameter. If the closure does not return false, the link is followed. If the closure returns false, the link is not followed, but the closure can subsequently cause the link to be followed by executing the dispatch() parameter.</li>
+</ul><p class="paragraph"/><h5>General </h5>
+<ul class="star">
+<li><code>var</code> (optional) Uses Grails's <a href="http://grails.org/doc/latest/ref/Tags/set.html" target="blank">set</a> tag to set the value of the specified variable to be this component.</li>
+<li><code>class</code> (optional) The CSS class name to add to the component using the addStyleName() method</li>
+<li><code>sizeUndefined</code> (optional) Calls setSizeUndefined() on the component. (Attribute value is ignored)</li>
+<li><code>sizeFull</code> (optional) Calls setSizeFull() on the component. (Attribute value is ignored)</li>
+<li><code>location</code> (optional) The location slot in the parent container to which this component should be added.</li>
+</ul><p class="paragraph"/><blockquote class="note">
+See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Button.html" target="blank">Button</a> API docs for full list of allowed attributes for a button.
+</blockquote><p class="paragraph"/><h2>Special Use Cases</h2><p class="paragraph"/><h4>Confirm on Delete</h4><p class="paragraph"/>A tag method <code>v.confirm</code> is available for use in the <code>onclick</code> attribute. This displays a popup
+window with OK and Cancel buttons. Typically, it is used to prompt the user to confirm before
+deleting a record. It is intended to mimic Javascript's <code>confirm()</code> function.<p class="paragraph"/><div class="code"><pre>&#60;v:link action=<span class="java&#45;quote">"delete"</span> id=<span class="java&#45;quote">"1"</span> onclick=<span class="java&#45;quote">"$&#123;v.confirm(message:message(
+    code:'<span class="java&#45;keyword">default</span>.button.delete.confirm.message', <span class="java&#45;keyword">default</span>:'Are you sure?'))&#125;"</span>&#62;
+  Delete
+&#60;/v:link&#62;</pre></div><p class="paragraph"/><h4>Commit Form on Save</h4><p class="paragraph"/>A tag method <code>v.commit</code> is available for use in the <code>onclick</code> attribute. This commits the
+Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Form.html" target="blank">Form</a> component before following the link.
+Typically it is used when clicking the Submit-type button on form, to write the form's changes
+through to the domain class instance, before that instance is then written to the database.<p class="paragraph"/><div class="code"><pre>&#60;v:link action=<span class="java&#45;quote">"delete"</span> id=<span class="java&#45;quote">"1"</span> onclick=<span class="java&#45;quote">"$&#123;v.commit(form:'myForm')&#125;"</span>&#62;
+  Save
+&#60;/v:link&#62;</pre></div><p class="paragraph"/>Note that the form is referenced by the name set in the <code>var</code> attribute of the <a href="../../ref/Tags/form.html" class="Tags">form</a>
+tag - in this example 'myForm'.
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                    <div class="menu-block">
+                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Command Line</h1>
+                        <div class="menu-sub">
+                            
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/create-vaadin-controller.html">create-vaadin-controller</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-all.html">generate-vaadin-all</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-app.html">generate-vaadin-app</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-controller.html">generate-vaadin-controller</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-views.html">generate-vaadin-views</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/install-vaadin-templates.html">install-vaadin-templates</a>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="menu-block">
+                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Tags</h1>
+                        <div class="menu-sub selected">
+                            
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/column.html">column</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/error.html">error</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/field.html">field</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/form.html">form</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/horizontalLayout.html">horizontalLayout</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/label.html">label</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/layout.html">layout</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/link.html">link</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/location.html">location</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/table.html">table</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/verticalLayout.html">verticalLayout</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/warning.html">warning</a>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    
+    
+</div>
+
+
+<script type="text/javascript" src="../../js/docs.js"></script>
+
+</body>
+</html>

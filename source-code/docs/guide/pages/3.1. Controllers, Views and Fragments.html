@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>3.1 Controllers, Views and Fragments 1.6-SNAPSHOT</title>
+    <title>3.1 Controllers, Views and Fragments 1.6.1-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -81,7 +81,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Ondrej Kvasnovsky, Francis McKenzie</p>
 
-                    <p><strong>Version:</strong> 1.6-SNAPSHOT</p>
+                    <p><strong>Version:</strong> 1.6.1-SNAPSHOT</p>
 
                     
                 </div>
@@ -97,12 +97,12 @@ rather than a conventional Request-Response framework, we do not map
 <strong class="bold">URLs</strong> to controllers but instead map <strong class="bold">Fragments</strong> to controllers.<p class="paragraph"/>As an example, say we want to create a screen for displaying a list of books.
 In Grails, we would create a <code>BookController.groovy</code> file containing a <code>list()</code> method,
 and a <code>list.gsp</code> file. This would then be accessible from a browser via
-<code>http://localhost:8080/myapp/book/list</code><p class="paragraph"/>With the Vaadin plugin, we do something very similar. We create a <code>BookVaadinController.groovy</code>
-file and a <code>BookVaadinView.groovy</code> file. This is then accessible from a browser
+<code>http://localhost:8080/myapp/book/list</code><p class="paragraph"/>With the Vaadin plugin, we do exactly the same thing. We create a <code>BookVaadinController.groovy</code>
+file containing a <code>list()</code> method, and a <code>list.gsp</code> file. This is then accessible from a browser
 via <code>http://localhost:8080/myapp#book/list</code>. Note the <code>'#'</code> in the URL to denote
 the fragment!<p class="paragraph"/><blockquote class="note">
-The naming convention for Vaadin controllers and views is important - their class name
-must end with <code>VaadinController</code> and <code>VaadinView</code> respectively.<p class="paragraph"/>Note that this method of identifying artefacts through the use of standard naming
+The naming convention for Vaadin controllers is important - the class name
+must end with <code>VaadinController</code>.<p class="paragraph"/>Note that this method of identifying artefacts through the use of standard naming
 conventions is very common in Grails!
 </blockquote><p class="paragraph"/>
 
@@ -123,6 +123,72 @@ conventions is very common in Grails!
                     <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
                 </div>
                 <div class="menu">
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Command Line</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/create-vaadin-controller.html">create-vaadin-controller</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-all.html">generate-vaadin-all</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-app.html">generate-vaadin-app</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-controller.html">generate-vaadin-controller</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-views.html">generate-vaadin-views</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/install-vaadin-templates.html">install-vaadin-templates</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Tags</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/column.html">column</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/error.html">error</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/field.html">field</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/form.html">form</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/horizontalLayout.html">horizontalLayout</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/label.html">label</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/layout.html">layout</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/link.html">link</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/location.html">location</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/table.html">table</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/verticalLayout.html">verticalLayout</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/warning.html">warning</a>
+                            </div>
+                            
+                            </div>
+                    </div>
                     
                 </div>
             </div>

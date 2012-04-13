@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>2 Installation 1.6-SNAPSHOT</title>
+    <title>2 Installation 1.6.1-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -81,7 +81,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Ondrej Kvasnovsky, Francis McKenzie</p>
 
-                    <p><strong>Version:</strong> 1.6-SNAPSHOT</p>
+                    <p><strong>Version:</strong> 1.6.1-SNAPSHOT</p>
 
                     
                 </div>
@@ -95,28 +95,12 @@ function addJsClass() {
 in <code>grails-app/conf/BuildConfig.groovy</code>, i.e.:<p class="paragraph"/><div class="code"><pre>plugins &#123;
     // Other plugin dependencies here
     // . . .
-    // . . .<p class="paragraph"/>    compile ':vaadin:latest.integration'
-&#125;</pre></div><p class="paragraph"/>This will trigger installation of the plugin when we run our app. But since we
-need to use scripts in the plugin beforehand, we also have to install the plugin
-manually the first time. Run the following at the command line:<p class="paragraph"/><div class="code"><pre>grails install&#45;plugin vaadin</pre></div><p class="paragraph"/><h4>Create the Application</h4><p class="paragraph"/>After installing the plugin using either of the above methods, you should run
-the following at the command line to create your Vaadin application:<p class="paragraph"/><div class="code"><pre>generate&#45;vaadin&#45;app com.somewhere.MyApp</pre></div><p class="paragraph"/>This will:
-<ul class="star">
-<li><strong class="bold">Create Application Class</strong></li>
-<ul class="star">
-<li>A class of type <code>com.vaadin.Application</code> will be created with the specified name, in <code>grails-app/vaadin</code></li>
-</ul>
-<li><strong class="bold">Update VaadinConfig</strong></li>
-<ul class="star">
-<li>The <code>applicationClass</code> setting in <code>grails-app/conf/VaadinConfig.groovy</code> will be changed to the new name.</li>
-</ul>
-<li><strong class="bold">Install Theme</strong></li>
-<ul class="star">
-<li>The grails theme for Vaadin will be installed in <code>web-app/VAADIN/themes/main</code></li>
-</ul>
-<li><strong class="bold">Disable UrlMappings</strong></li>
-<ul class="star">
-<li>Any entries in <code>grails-app/conf/UrlMappings.groovy</code> will be commented out, as these are incompatible with Vaadin (currently).</li>
-</ul></ul><p class="paragraph"/><h4>Run the Application</h4><p class="paragraph"/>If you now execute the following at the command line, you should see the default Grails
+    // . . .<p class="paragraph"/>    compile ':vaadin:1.6.1&#45;SNAPSHOT'
+&#125;</pre></div><p class="paragraph"/>This will trigger installation of the plugin when we compile or run our app. But since
+we need to use scripts in the plugin beforehand, we also have to install the plugin
+manually the first time. Run the following at the command line:<p class="paragraph"/><div class="code"><pre>grails install&#45;plugin vaadin 1.6.1&#45;SNAPSHOT</pre></div><p class="paragraph"/><h4>Create the Application</h4><p class="paragraph"/>After installing the plugin, you should run the following at the command line to
+create your Vaadin application:<p class="paragraph"/><div class="code"><pre>generate&#45;vaadin&#45;app com.somewhere.MyApp</pre></div><p class="paragraph"/>This will install the necessary files and apply configuration changes to your application,
+to make it ready for Vaadin. See details in the <a href="../ref/Command Line/generate-vaadin-app.html" class="Command Line">generate-vaadin-app</a> section.<p class="paragraph"/><h4>Run the Application</h4><p class="paragraph"/>If you now execute the following at the command line, you should see the default Grails
 home page - however note this is implemented in Vaadin, even though it (should) look
 identical to the standard home page provided by Grails!<p class="paragraph"/><div class="code"><pre>grails run&#45;app</pre></div>
 
@@ -138,6 +122,72 @@ identical to the standard home page provided by Grails!<p class="paragraph"/><di
                     <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
                 </div>
                 <div class="menu">
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Command Line</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../ref/Command%20Line/create-vaadin-controller.html">create-vaadin-controller</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Command%20Line/generate-vaadin-all.html">generate-vaadin-all</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Command%20Line/generate-vaadin-app.html">generate-vaadin-app</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Command%20Line/generate-vaadin-controller.html">generate-vaadin-controller</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Command%20Line/generate-vaadin-views.html">generate-vaadin-views</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Command%20Line/install-vaadin-templates.html">install-vaadin-templates</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Tags</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../ref/Tags/column.html">column</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Tags/error.html">error</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Tags/field.html">field</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Tags/form.html">form</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Tags/horizontalLayout.html">horizontalLayout</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Tags/label.html">label</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Tags/layout.html">layout</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Tags/link.html">link</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Tags/location.html">location</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Tags/table.html">table</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Tags/verticalLayout.html">verticalLayout</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Tags/warning.html">warning</a>
+                            </div>
+                            
+                            </div>
+                    </div>
                     
                 </div>
             </div>

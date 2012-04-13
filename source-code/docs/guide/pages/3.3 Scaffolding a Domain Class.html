@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>3.3 Scaffolding a Domain Class 1.6-SNAPSHOT</title>
+    <title>3.3 Scaffolding a Domain Class 1.6.1-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -81,7 +81,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Ondrej Kvasnovsky, Francis McKenzie</p>
 
-                    <p><strong>Version:</strong> 1.6-SNAPSHOT</p>
+                    <p><strong>Version:</strong> 1.6.1-SNAPSHOT</p>
 
                     
                 </div>
@@ -93,10 +93,13 @@ function addJsClass() {
 <h2 id="3.3 Scaffolding a Domain Class">3.3 Scaffolding a Domain Class</h2>
 One of Grails's (and indeed other frameworks such as Ruby) most useful features is its
 support for very quickly generating useable CRUD screens for your domain model. In
-Grails, this can be done by running the <code>generate-all</code> and <code>generate-views</code> commands.<p class="paragraph"/>The Vaadin plugin provides support for this type of scaffolding via the
-<code>generate-vaadin-ui</code> command. For example, if you have a Domain Class called
+Grails, this can be done by running the
+<a href="http://grails.org/doc/latest/ref/Command%20Line/generate-controller.html" target="blank">generate-controller</a>,
+<a href="http://grails.org/doc/latest/ref/Command%20Line/generate-views.html" target="blank">generate-views</a> and
+<a href="http://grails.org/doc/latest/ref/Command%20Line/generate-all.html" target="blank">generate-all</a> commands.<p class="paragraph"/>The Vaadin plugin provides the exact equivalent of the standard grails scaffolding
+scripts, as follows:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Command</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td><a href="../ref/Command Line/generate-vaadin-controller.html" class="Command Line">generate-vaadin-controller</a></td><td>Generates a new VaadinController in the <code>grails-app/controllers</code> dir<br/>for the specified domain class.</td></tr><tr class="table-even"><td><a href="../ref/Command Line/generate-vaadin-views.html" class="Command Line">generate-vaadin-views</a></td><td>Generates the Vaadin CRUD GSP views in the <code>grails-app/views</code> dir<br/>for the specified domain class.</td></tr><tr class="table-odd"><td><a href="../ref/Command Line/generate-vaadin-all.html" class="Command Line">generate-vaadin-all</a></td><td>Generates the Controller and Views for the specified domain class.</td></tr><tr class="table-even"><td><a href="../ref/Command Line/create-vaadin-controller.html" class="Command Line">create-vaadin-controller</a></td><td>Creates an empty VaadinController in the <code>grails-app/controllers</code> dir</td></tr><tr class="table-odd"><td><a href="../ref/Command Line/install-vaadin-templates.html" class="Command Line">install-vaadin-templates</a></td><td>Installs the templates used for the above scaffolding commands into<br/><code>src/templates/vaadin</code></td></tr></table><p class="paragraph"/>For example, if you have a Domain Class called
 <code>com.somepackage.Author</code>, you should run the following at the command line to
-scaffold a CRUD interface:<p class="paragraph"/><div class="code"><pre>grails generate&#45;vaadin&#45;ui com.somepackage.Author</pre></div><p class="paragraph"/>You can then browse the CRUD interface by visiting <code>http://localhost:8080/myapp#author</code>.<p class="paragraph"/>Some of the benefits of Vaadin should now become apparent! Notice the
+scaffold a CRUD interface:<p class="paragraph"/><div class="code"><pre>grails generate&#45;vaadin&#45;all com.somepackage.Author</pre></div><p class="paragraph"/>You can then browse the CRUD interface by visiting <code>http://localhost:8080/myapp#author</code>.<p class="paragraph"/>Some of the benefits of Vaadin should now become apparent! Notice the
 lazy-loading, infinitely scrollable table on the list screen. Also, for any Date fields
 in your domain class, notice the Date Picker that gets automatically inserted. If that
 is not enough, you should definitely visit the <a href="http://demo.vaadin.com/sampler" target="blank">Vaadin Sampler</a>
@@ -120,6 +123,72 @@ page and check out all the other ways you can spruce up your user interface!
                     <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
                 </div>
                 <div class="menu">
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Command Line</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/create-vaadin-controller.html">create-vaadin-controller</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-all.html">generate-vaadin-all</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-app.html">generate-vaadin-app</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-controller.html">generate-vaadin-controller</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-views.html">generate-vaadin-views</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/install-vaadin-templates.html">install-vaadin-templates</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Tags</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/column.html">column</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/error.html">error</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/field.html">field</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/form.html">form</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/horizontalLayout.html">horizontalLayout</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/label.html">label</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/layout.html">layout</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/link.html">link</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/location.html">location</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/table.html">table</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/verticalLayout.html">verticalLayout</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/warning.html">warning</a>
+                            </div>
+                            
+                            </div>
+                    </div>
                     
                 </div>
             </div>

@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>3.4 Views and Tags 1.6.1-SNAPSHOT</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass() {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <ul>
+        <li>
+            <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                <a href="../../guide/index.html" class="button">Table of contents</a>
+
+                <div id="nav-summary-childs" style="display:none;">
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/1.%20Overview.html"><strong>1</strong><span>Overview</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/2.%20Installation.html"><strong>2</strong><span>Installation</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/3.%20Concepts%20and%20Usage.html"><strong>3</strong><span>Concepts and Usage</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Technical%20Details.html"><strong>5</strong><span>Technical Details</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/6.%20Version%20History.html"><strong>6</strong><span>Version History</span></a>
+                    </div>
+                    
+                </div>
+            </div>
+        </li>
+        <li class="separator selected">
+            <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+        </li>
+    </ul>
+</div>
+<div id="header">
+    <div class="images clearfix">
+        
+        
+    </div>
+    <p>        A plugin for creating a Vaadin application in Grails.
+    </p>
+</div>
+
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../../guide/2.%20Installation.html">&lt;&lt; <strong>2</strong><span>Installation</span></a></div>
+                
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                
+                    <div class="toc-item next-right"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span> >></a></div>
+                
+
+
+                <div class="project">
+                    <h1>3.4 Views and Tags - Reference Documentation</h1>
+
+                    <p><strong>Authors:</strong> Ondrej Kvasnovsky, Francis McKenzie</p>
+
+                    <p><strong>Version:</strong> 1.6.1-SNAPSHOT</p>
+
+                    
+                </div>
+
+                
+
+                
+
+<h2 id="3.4 Views and Tags">3.4 Views and Tags</h2>
+In the Vaadin view GSPs, you can use all of the 
+<a href="http://grails.org/doc/latest/guide/theWebLayer.html#tags" target="blank">Grails tags</a> as you would in a
+normal Grails GSP.<p class="paragraph"/><blockquote class="note">
+Sitemesh layout tags are currently not supported. Please use the Vaadin <a href="../ref/Tags/layout.html" class="Tags">layout</a> tag instead.
+</blockquote><p class="paragraph"/>In addition, you can embed Vaadin components in GSPs using the tag library provided by this plugin:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Tag</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td><a href="../ref/Tags/horizontalLayout.html" class="Tags">horizontalLayout</a></td><td>Adds a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/HorizontalLayout.html" target="blank">HorizontalLayout</a> component to the parent container.</td></tr><tr class="table-even"><td><a href="../ref/Tags/verticalLayout.html" class="Tags">verticalLayout</a></td><td>Adds a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/VerticalLayout.html" target="blank">VerticalLayout</a> component to the parent container.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/label.html" class="Tags">label</a></td><td>Adds a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Label.html" target="blank">Label</a> component to the parent container.</td></tr><tr class="table-even"><td><a href="../ref/Tags/layout.html" class="Tags">layout</a></td><td>Adds a 'template-and-content' <a href="../gapi/org/grails/plugin/vaadin/ui/GspLayout.html" class="api">GspLayout</a> to the parent container.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/location.html" class="Tags">location</a></td><td>Adds a 'content-only' <a href="../gapi/org/grails/plugin/vaadin/ui/GspLayout.html" class="api">GspLayout</a> component to the location in the parent container.</td></tr><tr class="table-even"><td><a href="../ref/Tags/link.html" class="Tags">link</a></td><td>Adds a <a href="../gapi/org/grails/plugin/vaadin/ui/GrailsButton.html" class="api">GrailsButton</a> component to the parent container.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/table.html" class="Tags">table</a></td><td>Adds a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Table.html" target="blank">Table</a> component to the parent container.</td></tr><tr class="table-even"><td><a href="../ref/Tags/column.html" class="Tags">column</a></td><td>Configures a single column of the parent Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Table.html" target="blank">Table</a> component.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/form.html" class="Tags">form</a></td><td>Adds a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Form.html" target="blank">Form</a> component to the parent container.</td></tr><tr class="table-even"><td><a href="../ref/Tags/field.html" class="Tags">field</a></td><td>Configures a single field of the parent Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Form.html" target="blank">Form</a> component.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/warning.html" class="Tags">warning</a></td><td>Shows a warning-type <a href="http://vaadin.com/api/com/vaadin/ui/Window.Notification.html" target="blank">Window.Notification</a> in the application's main window.</td></tr><tr class="table-even"><td><a href="../ref/Tags/error.html" class="Tags">error</a></td><td>Shows an error-type <a href="http://vaadin.com/api/com/vaadin/ui/Window.Notification.html" target="blank">Window.Notification</a> in the application's main window.</td></tr></table>
+
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../../guide/2.%20Installation.html">&lt;&lt; <strong>2</strong><span>Installation</span></a></div>
+                
+                    <div class="toc-item next-right"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span> >></a></div>
+                
+                <div style="clear:both"></div>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Command Line</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/create-vaadin-controller.html">create-vaadin-controller</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-all.html">generate-vaadin-all</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-app.html">generate-vaadin-app</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-controller.html">generate-vaadin-controller</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-views.html">generate-vaadin-views</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/install-vaadin-templates.html">install-vaadin-templates</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Tags</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/column.html">column</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/error.html">error</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/field.html">field</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/form.html">form</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/horizontalLayout.html">horizontalLayout</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/label.html">label</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/layout.html">layout</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/link.html">link</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/location.html">location</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/table.html">table</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/verticalLayout.html">verticalLayout</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/warning.html">warning</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    
+    
+</div>
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
+</body>
+</html>

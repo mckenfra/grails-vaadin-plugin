@@ -2,5 +2,8 @@ DefaultPackage
 com.vaadin.grails
 com.vaadin.grails.terminal.gwt.server
 org.grails.plugin.vaadin
-org.grails.plugin.vaadin.support
+org.grails.plugin.vaadin.gsp
+org.grails.plugin.vaadin.scaffolding
+org.grails.plugin.vaadin.services
+org.grails.plugin.vaadin.taglib
 org.grails.plugin.vaadin.ui

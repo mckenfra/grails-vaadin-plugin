@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>3 Concepts and Usage 1.6-SNAPSHOT</title>
+    <title>3 Concepts and Usage 1.6.1-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -81,7 +81,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Ondrej Kvasnovsky, Francis McKenzie</p>
 
-                    <p><strong>Version:</strong> 1.6-SNAPSHOT</p>
+                    <p><strong>Version:</strong> 1.6.1-SNAPSHOT</p>
 
                     
                 </div>
@@ -97,6 +97,9 @@ function addJsClass() {
                     </div>
                     
                     <div class="toc-item" style="margin-left:0px"><a href="#3.3%20Scaffolding%20a%20Domain%20Class"><strong>3.3</strong><span>Scaffolding a Domain Class</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#3.4%20Views%20and%20Tags"><strong>3.4</strong><span>Views and Tags</span></a>
                     </div>
                     
                 </div>
@@ -115,32 +118,31 @@ rather than a conventional Request-Response framework, we do not map
 <strong class="bold">URLs</strong> to controllers but instead map <strong class="bold">Fragments</strong> to controllers.<p class="paragraph"/>As an example, say we want to create a screen for displaying a list of books.
 In Grails, we would create a <code>BookController.groovy</code> file containing a <code>list()</code> method,
 and a <code>list.gsp</code> file. This would then be accessible from a browser via
-<code>http://localhost:8080/myapp/book/list</code><p class="paragraph"/>With the Vaadin plugin, we do something very similar. We create a <code>BookVaadinController.groovy</code>
-file and a <code>BookVaadinView.groovy</code> file. This is then accessible from a browser
+<code>http://localhost:8080/myapp/book/list</code><p class="paragraph"/>With the Vaadin plugin, we do exactly the same thing. We create a <code>BookVaadinController.groovy</code>
+file containing a <code>list()</code> method, and a <code>list.gsp</code> file. This is then accessible from a browser
 via <code>http://localhost:8080/myapp#book/list</code>. Note the <code>'#'</code> in the URL to denote
 the fragment!<p class="paragraph"/><blockquote class="note">
-The naming convention for Vaadin controllers and views is important - their class name
-must end with <code>VaadinController</code> and <code>VaadinView</code> respectively.<p class="paragraph"/>Note that this method of identifying artefacts through the use of standard naming
+The naming convention for Vaadin controllers is important - the class name
+must end with <code>VaadinController</code>.<p class="paragraph"/>Note that this method of identifying artefacts through the use of standard naming
 conventions is very common in Grails!
 </blockquote><p class="paragraph"/>
 
 
 <h2 id="3.2 A Simple Tutorial">3.2 A Simple Tutorial</h2>
-In this section, we will create a simple "Hello World" screen using Vaadin. We will
-assume you have already installed Vaadin following the instructions in the 
-<a href="../guide/single.html#2.%20Installation" class="guide">Installation</a> section. Now follow these steps:<p class="paragraph"/><h4>1. Create the Controller</h4><p class="paragraph"/>Create a VaadinController by entering the following at the command line:<p class="paragraph"/><div class="code"><pre>grails create&#45;vaadin&#45;controller myapp.Hello</pre></div><p class="paragraph"/>This simply creates an empty groovy class under the <code>grails-app/vaadin</code> folder. Note that
-<code>VaadinController</code> is automatically appended to the class name.<p class="paragraph"/><h4>2. Create the View</h4><p class="paragraph"/>Create a new VaadinView by entering the following at the command line:<p class="paragraph"/><div class="code"><pre>grails create&#45;vaadin&#45;view myapp.Hello</pre></div><p class="paragraph"/>This simply creates an empty groovy class under the <code>grails-app/vaadin</code> folder. Note that
-<code>VaadinView</code> is automatically appended to the class name.<p class="paragraph"/><h4>3. Add an Action</h4><p class="paragraph"/>In the HelloVaadinController class, add a <code>greetings</code> method as follows:<p class="paragraph"/><div class="code"><pre>class HelloVaadinController &#123;
+In this section, we will create a simple "Hello World" screen using Vaadin. If you
+are new to Grails, it might be useful to familiarise yourself with the concepts
+in the <a href="http://grails.org/doc/latest/guide/gettingStarted.html#aHelloWorldExample" target="blank">getting-started</a>
+section of the <a href="http://grails.org/doc/latest/guide" target="blank">Grails User Guide</a>.<p class="paragraph"/>We will assume you have already installed Vaadin following the instructions in the 
+<a href="../guide/single.html#2.%20Installation" class="guide">Installation</a> section. Now follow these steps:<p class="paragraph"/><h4>1. Create the Controller</h4><p class="paragraph"/>Create a VaadinController by entering the following at the command line:<p class="paragraph"/><div class="code"><pre>grails create&#45;vaadin&#45;controller myapp.Hello</pre></div><p class="paragraph"/>This simply creates an empty groovy class under the <code>grails-app/controllers</code> folder. Note that
+<code>VaadinController</code> is automatically appended to the class name.<p class="paragraph"/><h4>2. Add an Action</h4><p class="paragraph"/>In the HelloVaadinController class, add a <code>greetings</code> method as follows:<p class="paragraph"/><div class="code"><pre>class HelloVaadinController &#123;
 	def greetings() &#123;&#125;
-&#125;</pre></div><p class="paragraph"/>In the HelloVaadinView class, add a <code>greetings</code> method as follows:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> com.vaadin.ui.Label<p class="paragraph"/>class HelloVaadinView &#123;
-	def greetings() &#123;
-		application.mainWindow.body = <span class="java&#45;keyword">new</span> Label(<span class="java&#45;quote">"Hello world!"</span>)
-	&#125;
-&#125;</pre></div><p class="paragraph"/><h4>4. Run the App</h4><p class="paragraph"/>Finally, run the application using <code>grails run-app</code> and then browse to
+&#125;</pre></div><p class="paragraph"/><h4>3. Create the View</h4><p class="paragraph"/>Create file <code>grails-app/views/hello/greetings.gsp</code> with the following contents:<p class="paragraph"/><div class="code"><pre>&#60;div&#62;
+  &#60;v:label&#62;Hello world!&#60;/v:label&#62;
+&#60;/div&#62;</pre></div><p class="paragraph"/><h4>4. Run the App</h4><p class="paragraph"/>Finally, run the application using <code>grails run-app</code> and then browse to
 <code>http://localhost:8080/myapp#hello/greetings</code>. You should see the
 "Hello World!" message displayed, within the familiar Grails theme.<p class="paragraph"/>(Note that you will need to replace <code>'myapp'</code> in the above URL with the name of your
 grails project.)<p class="paragraph"/><blockquote class="note">
-You can create new Vaadin Controllers and Views while your app is running.
+You can create new Vaadin Controllers and GSP views while your app is running.
 They will automatically be available via your browser, after a short pause.
 Try it and see!
 </blockquote>
@@ -150,14 +152,26 @@ Try it and see!
 <h2 id="3.3 Scaffolding a Domain Class">3.3 Scaffolding a Domain Class</h2>
 One of Grails's (and indeed other frameworks such as Ruby) most useful features is its
 support for very quickly generating useable CRUD screens for your domain model. In
-Grails, this can be done by running the <code>generate-all</code> and <code>generate-views</code> commands.<p class="paragraph"/>The Vaadin plugin provides support for this type of scaffolding via the
-<code>generate-vaadin-ui</code> command. For example, if you have a Domain Class called
+Grails, this can be done by running the
+<a href="http://grails.org/doc/latest/ref/Command%20Line/generate-controller.html" target="blank">generate-controller</a>,
+<a href="http://grails.org/doc/latest/ref/Command%20Line/generate-views.html" target="blank">generate-views</a> and
+<a href="http://grails.org/doc/latest/ref/Command%20Line/generate-all.html" target="blank">generate-all</a> commands.<p class="paragraph"/>The Vaadin plugin provides the exact equivalent of the standard grails scaffolding
+scripts, as follows:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Command</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td><a href="../ref/Command Line/generate-vaadin-controller.html" class="Command Line">generate-vaadin-controller</a></td><td>Generates a new VaadinController in the <code>grails-app/controllers</code> dir<br/>for the specified domain class.</td></tr><tr class="table-even"><td><a href="../ref/Command Line/generate-vaadin-views.html" class="Command Line">generate-vaadin-views</a></td><td>Generates the Vaadin CRUD GSP views in the <code>grails-app/views</code> dir<br/>for the specified domain class.</td></tr><tr class="table-odd"><td><a href="../ref/Command Line/generate-vaadin-all.html" class="Command Line">generate-vaadin-all</a></td><td>Generates the Controller and Views for the specified domain class.</td></tr><tr class="table-even"><td><a href="../ref/Command Line/create-vaadin-controller.html" class="Command Line">create-vaadin-controller</a></td><td>Creates an empty VaadinController in the <code>grails-app/controllers</code> dir</td></tr><tr class="table-odd"><td><a href="../ref/Command Line/install-vaadin-templates.html" class="Command Line">install-vaadin-templates</a></td><td>Installs the templates used for the above scaffolding commands into<br/><code>src/templates/vaadin</code></td></tr></table><p class="paragraph"/>For example, if you have a Domain Class called
 <code>com.somepackage.Author</code>, you should run the following at the command line to
-scaffold a CRUD interface:<p class="paragraph"/><div class="code"><pre>grails generate&#45;vaadin&#45;ui com.somepackage.Author</pre></div><p class="paragraph"/>You can then browse the CRUD interface by visiting <code>http://localhost:8080/myapp#author</code>.<p class="paragraph"/>Some of the benefits of Vaadin should now become apparent! Notice the
+scaffold a CRUD interface:<p class="paragraph"/><div class="code"><pre>grails generate&#45;vaadin&#45;all com.somepackage.Author</pre></div><p class="paragraph"/>You can then browse the CRUD interface by visiting <code>http://localhost:8080/myapp#author</code>.<p class="paragraph"/>Some of the benefits of Vaadin should now become apparent! Notice the
 lazy-loading, infinitely scrollable table on the list screen. Also, for any Date fields
 in your domain class, notice the Date Picker that gets automatically inserted. If that
 is not enough, you should definitely visit the <a href="http://demo.vaadin.com/sampler" target="blank">Vaadin Sampler</a>
 page and check out all the other ways you can spruce up your user interface!
+
+
+
+<h2 id="3.4 Views and Tags">3.4 Views and Tags</h2>
+In the Vaadin view GSPs, you can use all of the 
+<a href="http://grails.org/doc/latest/guide/theWebLayer.html#tags" target="blank">Grails tags</a> as you would in a
+normal Grails GSP.<p class="paragraph"/><blockquote class="note">
+Sitemesh layout tags are currently not supported. Please use the Vaadin <a href="../ref/Tags/layout.html" class="Tags">layout</a> tag instead.
+</blockquote><p class="paragraph"/>In addition, you can embed Vaadin components in GSPs using the tag library provided by this plugin:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Tag</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td><a href="../ref/Tags/horizontalLayout.html" class="Tags">horizontalLayout</a></td><td>Adds a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/HorizontalLayout.html" target="blank">HorizontalLayout</a> component to the parent container.</td></tr><tr class="table-even"><td><a href="../ref/Tags/verticalLayout.html" class="Tags">verticalLayout</a></td><td>Adds a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/VerticalLayout.html" target="blank">VerticalLayout</a> component to the parent container.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/label.html" class="Tags">label</a></td><td>Adds a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Label.html" target="blank">Label</a> component to the parent container.</td></tr><tr class="table-even"><td><a href="../ref/Tags/layout.html" class="Tags">layout</a></td><td>Adds a 'template-and-content' <a href="../gapi/org/grails/plugin/vaadin/ui/GspLayout.html" class="api">GspLayout</a> to the parent container.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/location.html" class="Tags">location</a></td><td>Adds a 'content-only' <a href="../gapi/org/grails/plugin/vaadin/ui/GspLayout.html" class="api">GspLayout</a> component to the location in the parent container.</td></tr><tr class="table-even"><td><a href="../ref/Tags/link.html" class="Tags">link</a></td><td>Adds a <a href="../gapi/org/grails/plugin/vaadin/ui/GrailsButton.html" class="api">GrailsButton</a> component to the parent container.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/table.html" class="Tags">table</a></td><td>Adds a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Table.html" target="blank">Table</a> component to the parent container.</td></tr><tr class="table-even"><td><a href="../ref/Tags/column.html" class="Tags">column</a></td><td>Configures a single column of the parent Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Table.html" target="blank">Table</a> component.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/form.html" class="Tags">form</a></td><td>Adds a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Form.html" target="blank">Form</a> component to the parent container.</td></tr><tr class="table-even"><td><a href="../ref/Tags/field.html" class="Tags">field</a></td><td>Configures a single field of the parent Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Form.html" target="blank">Form</a> component.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/warning.html" class="Tags">warning</a></td><td>Shows a warning-type <a href="http://vaadin.com/api/com/vaadin/ui/Window.Notification.html" target="blank">Window.Notification</a> in the application's main window.</td></tr><tr class="table-even"><td><a href="../ref/Tags/error.html" class="Tags">error</a></td><td>Shows an error-type <a href="http://vaadin.com/api/com/vaadin/ui/Window.Notification.html" target="blank">Window.Notification</a> in the application's main window.</td></tr></table>
 
 
 
@@ -177,6 +191,72 @@ page and check out all the other ways you can spruce up your user interface!
                     <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
                 </div>
                 <div class="menu">
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Command Line</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../ref/Command%20Line/create-vaadin-controller.html">create-vaadin-controller</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Command%20Line/generate-vaadin-all.html">generate-vaadin-all</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Command%20Line/generate-vaadin-app.html">generate-vaadin-app</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Command%20Line/generate-vaadin-controller.html">generate-vaadin-controller</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Command%20Line/generate-vaadin-views.html">generate-vaadin-views</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Command%20Line/install-vaadin-templates.html">install-vaadin-templates</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Tags</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../ref/Tags/column.html">column</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Tags/error.html">error</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Tags/field.html">field</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Tags/form.html">form</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Tags/horizontalLayout.html">horizontalLayout</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Tags/label.html">label</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Tags/layout.html">layout</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Tags/link.html">link</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Tags/location.html">location</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Tags/table.html">table</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Tags/verticalLayout.html">verticalLayout</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Tags/warning.html">warning</a>
+                            </div>
+                            
+                            </div>
+                    </div>
                     
                 </div>
             </div>
