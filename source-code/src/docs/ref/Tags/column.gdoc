@@ -1,0 +1,44 @@
+h1. column
+
+h2. Purpose
+
+Configures a single column of the parent Vaadin [Table|http://vaadin.com/api/com/vaadin/ui/Table.html] component.
+
+h2. Examples
+
+{code:java}
+<v:table containerDataSource="${new BeanItemContainer(Book.class, bookInstanceList)}">
+  <v:column name="id" generator="${{item->
+    v.createLink(action:'show', class:'link',
+      id:item.getItemProperty('id'),
+      caption:item.getItemProperty('name'))
+    }}">Id</v:column>
+  <v:column name="title">Title</v:column>
+  <v:column name="author">Author</v:column>
+</v:table>
+{code}
+
+h2. Description
+
+The Table component is configured using nested [column|Tags] tags. These
+are used to set the @visibleColumns@ and @columnHeaders@ properties of the table component.
+
+Note that the [column|Tags] tags do not create any Vaadin components,
+but only provide configuration settings for the parent Table component.
+
+A column can be configured as a generated column, by specifying a Closure in the
+generator attribute, which will be translated into a
+[Table.ColumnGenerator|http://vaadin.com/api/com/vaadin/ui/Table.ColumnGenerator.html] 
+
+h4. Body
+
+* Contains the header for the column
+
+h4. Attributes
+
+* @name@ (required) The property name of the column
+
+* @header@ (optional) The header of the column. Overrides the body content. 
+
+* @generator@ (optional) Must be a Closure that expects a single @item@ parameter, which is a Vaadin [Item|http://vaadin.com/api/com/vaadin/data/Item.html] object, corresponding to the data in the current row. The closure should return a Vaadin Component.
+ 

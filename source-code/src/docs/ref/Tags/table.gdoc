@@ -1,0 +1,50 @@
+h1. table
+
+h2. Purpose
+
+Adds a Vaadin [Table|http://vaadin.com/api/com/vaadin/ui/Table.html] component to the parent container.
+
+h2. Examples
+
+{code:java}
+<v:table containerDataSource="${new BeanItemContainer(Book.class, bookInstanceList)}">
+  <v:column name="id" generator="${{item->
+    v.createLink(action:'show', class:'link',
+      id:item.getItemProperty('id'),
+      caption:item.getItemProperty('name'))
+    }}">Id</v:column>
+  <v:column name="title">Title</v:column>
+  <v:column name="author">Author</v:column>
+</v:table>
+{code}
+
+h2. Description
+
+The Table component is configured using nested [column|Tags] tags. These are used to set the
+@visibleColumns@ and @columnHeaders@ properties of the table component.
+
+h4. Body
+
+* [column|Tags] tags should be specified in the body. Any HTML is ignored.
+
+h4. Attributes
+
+h5. Specific 
+
+* @containerDataSource@ (optional) The [Container|http://vaadin.com/api/com/vaadin/data/Container.html] object to use to provide the underlying table data.
+
+h5. General 
+
+* @var@ (optional) Uses Grails's [set|http://grails.org/doc/latest/ref/Tags/set.html] tag to set the value of the specified variable to be this component.
+
+* @class@ (optional) The CSS class name to add to the component using the addStyleName() method
+
+* @sizeUndefined@ (optional) Calls setSizeUndefined() on the component. (Attribute value is ignored)
+
+* @sizeFull@ (optional) Calls setSizeFull() on the component. (Attribute value is ignored)
+
+* @location@ (optional) The location slot in the parent container to which this component should be added.
+
+{note}
+See Vaadin [Table|http://vaadin.com/api/com/vaadin/ui/Table.html] API docs for full list of allowed attributes. 
+{note}

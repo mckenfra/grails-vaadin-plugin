@@ -1,0 +1,54 @@
+h1. layout
+
+h2. Purpose
+
+Adds a 'template-and-content' [GspLayout|api:org.grails.plugin.vaadin.ui.GspLayout] to the parent container.
+
+h2. Examples
+
+Take a GSP layout template called @/grails-app/views/layouts/greetinglayout.gsp@ with the following content:  
+
+{code:java}
+<h1>Greeting<h1>
+<div location="mygreeting"></div>
+{code}
+
+This could then be applied as a layout template for another GSP, like so:
+
+{code:java}
+<v:layout name="greetinglayout">
+  <v:location name="mygreeting">
+    <div>Hello World!</div>
+  </v:location>
+</v:label>
+{code}
+
+The resulting HTML would (effectively) be:
+
+{code:java}
+<h1>Greeting<h1>
+<div location="mygreeting"><div>Hello World!</div></div>
+{code}
+
+{note}
+This is an indication of the type of HTML that would be created, but it is not
+exact as Vaadin has its own rules for rendering CustomLayout components.
+{note}
+
+h2. Description
+
+This tag facilitates using another GSP as a layout template for the current GSP. It is similar
+to the [Sitemesh layout|http://grails.org/doc/latest/guide/theWebLayer.html#layouts] functionality.
+
+The GSP used as the layout template should contain HTML tags with a 'location' attribute. The name
+specified by this 'location' attribute is then referenced by the <v:location> tag in the current GSP.
+
+See Vaadin [CustomLayout|http://vaadin.com/api/com/vaadin/ui/CustomLayout.html] API docs for full list of allowed attributes.
+
+h4. Body
+
+* Should contain <v:location> tags OR a list of Vaadin tags each with a 'location' attribute set.
+
+h4. Attributes
+
+* @name@ (required) The name of the GSP layout template. Must be relative to directory @grails-app/views/layouts@

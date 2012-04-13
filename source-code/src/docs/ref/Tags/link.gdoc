@@ -1,0 +1,127 @@
+h1. link
+
+h2. Purpose
+
+Adds a [GrailsButton|api:org.grails.plugin.vaadin.ui.GrailsButton] component to the parent container.
+
+h2. Examples
+
+Example controller for an application called "shop":
+
+{code:java}
+class BookController {
+    static defaultAction = "list"
+
+    def list() {
+        [books: Book.list(params)]
+    }
+
+    def show() {
+        [book: Book.get(params.id)]
+    }
+    
+    def edit() {
+        [book: params.instance]
+    }
+}
+{code}
+
+Example usages for above controller:
+
+{code:java}
+<v:link action="show" id="1">Book 1</v:link>
+
+<v:link action="show" id="${currentBook.id}">${currentBook.name}</v:link>
+
+<v:link action="edit" instance="${currentBook}">${currentBook.name}</v:link>
+
+<v:link controller="book">Book Home</v:link>
+
+<v:link controller="book" action="list">Book List</v:link>
+
+<v:link action="list" params="[sort: 'title', order: 'asc',
+                               author: currentBook.author]">
+     Book List
+</v:link>
+
+<v:link fragment="#book/list">Book List</v:link>
+{code}
+
+When calling this tag as a GSP method, use the @createLink@ method as follows:
+
+{code:java}
+${v.createLink(action:'list',controller:'book',caption:'Book List')}
+{code}
+
+h2. Description
+
+h4. Body
+
+* Used as the @caption@ of the button, unless overridden by the @caption@ attribute.
+
+h4. Attributes
+
+h5. Specific 
+
+* @caption@ (optional) The caption of the button. Overrides the value in the body.
+
+* @icon@ (optional) The button icon. Can be specified as a Vaadin [Resource|http://vaadin.com/api/com/vaadin/terminal/Resource.html], or as a String path to the resource within the Vaadin theme dir for the application.
+
+* @action@ (optional) The action of the Vaadin controller to link to. If omitted, defaults to 'index'
+
+* @controller@ (optional) The Vaadin controller to link to. If omitted, defaults to the controller of the current 'request'.
+
+* @id@ (optional) The id parameter to use in the link.
+
+* @instance@ (optional) The domain class instance parameter to use in the link. 
+
+* @fragment@ (optional) The fragment to link to, for example @#book/list@
+
+* @onclick@ (optional) Similar to the HTML onclick attribute. Here, the attribute expects a closure that takes a @dispatch@ parameter. If the closure does not return false, the link is followed. If the closure returns false, the link is not followed, but the closure can subsequently cause the link to be followed by executing the dispatch() parameter.
+
+h5. General 
+
+* @var@ (optional) Uses Grails's [set|http://grails.org/doc/latest/ref/Tags/set.html] tag to set the value of the specified variable to be this component.
+
+* @class@ (optional) The CSS class name to add to the component using the addStyleName() method
+
+* @sizeUndefined@ (optional) Calls setSizeUndefined() on the component. (Attribute value is ignored)
+
+* @sizeFull@ (optional) Calls setSizeFull() on the component. (Attribute value is ignored)
+
+* @location@ (optional) The location slot in the parent container to which this component should be added.
+
+{note}
+See Vaadin [Button|http://vaadin.com/api/com/vaadin/ui/Button.html] API docs for full list of allowed attributes for a button.
+{note}
+
+h2. Special Use Cases
+
+h4. Confirm on Delete
+
+A tag method @v.confirm@ is available for use in the @onclick@ attribute. This displays a popup
+window with OK and Cancel buttons. Typically, it is used to prompt the user to confirm before
+deleting a record. It is intended to mimic Javascript's @confirm()@ function.
+
+{code:java}
+<v:link action="delete" id="1" onclick="${v.confirm(message:message(
+    code:'default.button.delete.confirm.message', default:'Are you sure?'))}">
+  Delete
+</v:link>
+{code}
+
+h4. Commit Form on Save
+
+A tag method @v.commit@ is available for use in the @onclick@ attribute. This commits the
+Vaadin [Form|http://vaadin.com/api/com/vaadin/ui/Form.html] component before following the link.
+Typically it is used when clicking the Submit-type button on form, to write the form's changes
+through to the domain class instance, before that instance is then written to the database. 
+
+{code:java}
+<v:link action="delete" id="1" onclick="${v.commit(form:'myForm')}">
+  Save
+</v:link>
+{code}
+
+Note that the form is referenced by the name set in the @var@ attribute of the [form|Tags]
+tag - in this example 'myForm'.

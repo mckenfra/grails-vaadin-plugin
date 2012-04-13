@@ -1,0 +1,25 @@
+In the Vaadin view GSPs, you can use all of the 
+[Grails tags|http://grails.org/doc/latest/guide/theWebLayer.html#tags] as you would in a
+normal Grails GSP.
+
+{note}
+Sitemesh layout tags are currently not supported. Please use the Vaadin [layout|Tags] tag instead.
+{note}
+
+In addition, you can embed Vaadin components in GSPs using the tag library provided by this plugin:
+
+{table}
+ *Tag* | *Description*
+ [horizontalLayout|Tags] | Adds a Vaadin [HorizontalLayout|http://vaadin.com/api/com/vaadin/ui/HorizontalLayout.html] component to the parent container.
+ [verticalLayout|Tags] | Adds a Vaadin [VerticalLayout|http://vaadin.com/api/com/vaadin/ui/VerticalLayout.html] component to the parent container.
+ [label|Tags] | Adds a Vaadin [Label|http://vaadin.com/api/com/vaadin/ui/Label.html] component to the parent container.
+ [layout|Tags] | Adds a 'template-and-content' [GspLayout|api:org.grails.plugin.vaadin.ui.GspLayout] to the parent container.
+ [location|Tags] | Adds a 'content-only' [GspLayout|api:org.grails.plugin.vaadin.ui.GspLayout] component to the location in the parent container.
+ [link|Tags] | Adds a [GrailsButton|api:org.grails.plugin.vaadin.ui.GrailsButton] component to the parent container.
+ [table|Tags] | Adds a Vaadin [Table|http://vaadin.com/api/com/vaadin/ui/Table.html] component to the parent container.
+ [column|Tags] | Configures a single column of the parent Vaadin [Table|http://vaadin.com/api/com/vaadin/ui/Table.html] component.
+ [form|Tags] | Adds a Vaadin [Form|http://vaadin.com/api/com/vaadin/ui/Form.html] component to the parent container.
+ [field|Tags] | Configures a single field of the parent Vaadin [Form|http://vaadin.com/api/com/vaadin/ui/Form.html] component.
+ [warning|Tags] | Shows a warning-type [Window.Notification|http://vaadin.com/api/com/vaadin/ui/Window.Notification.html] in the application's main window.
+ [error|Tags] | Shows an error-type [Window.Notification|http://vaadin.com/api/com/vaadin/ui/Window.Notification.html] in the application's main window.
+{table}

@@ -1,0 +1,35 @@
+h1. install-vaadin-templates
+
+h2. Purpose
+
+Copies the the templates used by the Grails Vaadin Plugin during code generation to your project directory
+
+h2. Examples
+
+{code:java}
+grails install-vaadin-templates
+{code}
+
+h2. Description
+
+Usage:
+
+{code:java}
+grails install-vaadin-templates
+{code}
+
+The @install-vaadin-templates@ command will copy the templates the Grails Vaadin Plugin uses for all code generation activities to the application's @src/templates/vaadin@ directory. The templates directories include:
+
+{code:java}
+src
+   templates
+       vaadin
+           artifacts
+           scaffolding
+{code}
+
+The @artifacts@ directory contains the templates used by the @create-* @ commands.
+The @scaffolding@ directory contains templates used by the @generate-* @ commands.
+
+Note that this command is identical to Grails's [install-templates|http://grails.org/doc/latest/ref/Command%20Line/install-templates.html]
+except that it uses a different template location.

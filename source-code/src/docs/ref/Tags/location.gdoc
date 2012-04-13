@@ -1,0 +1,49 @@
+h1. location
+
+h2. Purpose
+
+Adds a 'content-only' [GspLayout|api:org.grails.plugin.vaadin.ui.GspLayout] component to the location in the parent container.
+
+h2. Examples
+
+Take a GSP layout template called @/grails-app/views/layouts/greetinglayout.gsp@ with the following content:  
+
+{code:java}
+<h1>Greeting<h1>
+<div location="mygreeting"></div>
+{code}
+
+This could then be applied as a layout template for another GSP, like so:
+
+{code:java}
+<v:layout name="greetinglayout">
+  <v:location name="mygreeting">
+    <div>Hello World!</div>
+  </v:location>
+</v:label>
+{code}
+
+The resulting HTML would (effectively) be:
+
+{code:java}
+<h1>Greeting<h1>
+<div location="mygreeting"><div>Hello World!</div></div>
+{code}
+
+{note}
+This is an indication of the type of HTML that would be created, but it is not
+exact as Vaadin has its own rules for rendering CustomLayout components.
+{note}
+
+h2. Description
+
+This tag should be always be used with the [layout|Tags] tag, for constructing GSPs
+using layout templates.
+
+h4. Body
+
+* Can contain any GSP content.
+
+h4. Attributes
+
+* @name@ (required) The location name in the parent container to which this GSP content should be added.

@@ -1,0 +1,23 @@
+h1. error
+
+h2. Purpose
+
+Shows an error-type [Window.Notification|http://vaadin.com/api/com/vaadin/ui/Window.Notification.html] in the application's main window.
+
+h2. Examples
+
+{code:java}
+<v:error>Hello world!</v:error>
+{code}
+
+h2. Description 
+
+h4. Body
+
+* Used as the notification message - can be raw HTML.
+
+h4. Attributes
+
+{note}
+See Vaadin [Window.Notification|http://vaadin.com/api/com/vaadin/ui/Window.Notification.html] API docs for full list of allowed attributes
+{note}

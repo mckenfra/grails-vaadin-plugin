@@ -1,0 +1,32 @@
+h1. generate-vaadin-app
+
+h2. Purpose
+
+Sets up an application for use with Vaadin.
+
+h2. Examples
+
+{code:java}
+grails generate-vaadin-app
+grails generate-vaadin-app org.bookstore.MyApp
+{code}
+
+h2. Description
+
+This installs the necessary files and applies configuration changes to your application,
+to make it ready for Vaadin. Specifically it does the following:
+
+* *Create Application Class*
+** A class of type @com.vaadin.Application@ will be created with the specified name, in @grails-app/vaadin@
+* *Update VaadinConfig*
+** The @applicationClass@ setting in @grails-app/conf/VaadinConfig.groovy@ will be changed to the new name.
+* *Install Theme*
+** The grails theme for Vaadin will be installed in @web-app/VAADIN/themes/main@
+* *Install Base Views*
+** The Vaadin home page view and layout template will be installed to @grails-app/views@
+* *Disable UrlMappings*
+** Any entries in @grails-app/conf/UrlMappings.groovy@ will be commented out, as these are incompatible with Vaadin (currently).
+
+{note}
+You cannot use the name @VaadinApplication@ for your application - please choose another name!
+{note}

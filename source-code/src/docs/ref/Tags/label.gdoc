@@ -1,0 +1,57 @@
+h1. label
+
+h2. Purpose
+
+Adds a Vaadin [Label|http://vaadin.com/api/com/vaadin/ui/Label.html] component to the parent container.
+
+h2. Examples
+
+{code:java}
+<v:label>Hello world!</v:label>
+
+<v:label contentMode="preformatted">Hello World!</v:label>
+
+<v:label contentMode="raw"><span><b>Hello World!</b></span></v:label>
+
+<v:label contentMode="text">Hello World!</v:label>
+
+<v:label contentMode="xhtml"><some><xhtml></xhtml></some></v:label>
+
+<v:label contentMode="xml"><some><xml/></some></v:label>
+{code}
+
+When calling this tag as a GSP method, use the @createLabel@ method as follows:
+
+{code:java}
+${v.createLabel(value:'Hello World!')}
+{code}
+
+h2. Description
+
+h4. Body
+
+* Used as the @value@ of the label, unless overriden by the @value@ attribute.
+
+h4. Attributes
+
+h5. Specific 
+
+* @value@ (optional) The value of the label (i.e. the displayed caption). Overrides the value in the body.
+
+* @contentMode@ (optional) The content mode for the label. The label component expects an integer for this property. If a String is passed through, it is automatically parsed and converted to the Vaadin Label.CONTENT_* type. Allowed String values: 'preformatted', 'raw', 'text', 'xhtml', 'xml', 'default'
+
+h5. General 
+
+* @var@ (optional) Uses Grails's [set|http://grails.org/doc/latest/ref/Tags/set.html] tag to set the value of the specified variable to be this component.
+
+* @class@ (optional) The CSS class name to add to the component using the addStyleName() method
+
+* @sizeUndefined@ (optional) Calls setSizeUndefined() on the component. (Attribute value is ignored)
+
+* @sizeFull@ (optional) Calls setSizeFull() on the component. (Attribute value is ignored)
+
+* @location@ (optional) The location slot in the parent container to which this component should be added.
+
+{note}
+See Vaadin [Label|http://vaadin.com/api/com/vaadin/ui/Label.html] API docs for full list of allowed attributes 
+{note}

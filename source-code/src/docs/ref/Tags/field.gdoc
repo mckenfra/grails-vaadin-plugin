@@ -1,0 +1,44 @@
+h1. field
+
+h2. Purpose
+
+Configures a single [Field|http://vaadin.com/api/com/vaadin/ui/AbstractField.html] component of the parent Vaadin [Form|http://vaadin.com/api/com/vaadin/ui/Form.html] component.
+
+h2. Examples
+
+{code:java}
+<v:form itemDataSource="${new BeanItem<Book>(bookInstance)}" writeThrough="false">
+  <v:field name="title" readOnly="false" required="true" requiredError="Please enter a Title">
+    Title
+  </v:field>
+  <v:field name="author" readOnly="false" required="true" requiredError="Please enter an Author">
+    Author
+  </v:field>
+  <v:field name="description" readOnly="false" required="false"/>
+    Description
+  </v:field>
+</v:form>
+{code}
+
+h2. Description
+
+The Form component is configured using nested [field|Tags] tags. These are used to configure the
+@formFieldFactory@ and set the @visibleItemProperties@ properties of the form component.
+
+The attributes of the field tag are applied to the
+[Field|http://vaadin.com/api/com/vaadin/ui/AbstractField.html] component that is created
+in a [DefaultFieldFactory|http://vaadin.com/api/com/vaadin/ui/DefaultFieldFactory.html].
+
+h4. Body
+
+* Contains the caption for the field
+
+h4. Attributes
+
+* @name@ (required) The property name of the column
+
+* @caption@ (optional) The caption of the field. Overrides the body content.
+
+{note}
+See Vaadin [Field|http://vaadin.com/api/com/vaadin/ui/AbstractField.html] API docs for full list of allowed attributes.
+{note} 

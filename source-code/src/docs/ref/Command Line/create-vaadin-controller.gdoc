@@ -1,0 +1,26 @@
+h1. create-vaadin-controller
+
+h2. Purpose
+
+Creates an empty Vaadin controller and associated unit test
+
+h2. Examples
+
+{code:java}
+grails create-vaadin-controller
+grails create-vaadin-controller org.bookstore.Book
+{code}
+
+h2. Description
+
+Creates an empty VaadinController in the @grails-app/controllers@ dir
+
+Note that this command is identical to Grails's [create-controller|http://grails.org/doc/latest/ref/Command%20Line/create-controller.html]
+except that it uses a different template - located at @src/templates/vaadin/artifact/VaadinController@
+
+The @generate-vaadin-controller@ command generates just the controller (and associated unit test) that implements CRUD for the given domain class. The argument is optional, but if you don't include it the command will ask you for the name of the domain class to scaffold. So for a domain class @org.bookstore.Book@, this command will generate the controller @BookVaadinController.groovy@ in @grails-app/controllers/org/bookstore@.
+
+Usage:
+{code:java}
+grails create-vaadin-controller [controller name]
+{code}
