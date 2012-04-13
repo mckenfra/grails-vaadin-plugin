@@ -1,4 +1,4 @@
-package org.grails.plugin.vaadin.support
+package org.grails.plugin.vaadin.services
 
 import com.vaadin.Application
 

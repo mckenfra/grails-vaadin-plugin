@@ -1,4 +1,4 @@
-package org.grails.plugin.vaadin.support
+package org.grails.plugin.vaadin.services
 
 /**
  * Executes specified closure in a transaction.
