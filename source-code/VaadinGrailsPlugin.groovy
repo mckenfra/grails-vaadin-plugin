@@ -28,8 +28,8 @@ import com.vaadin.grails.VaadinUtils
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.grails.plugin.vaadin.VaadinApi
 import org.springframework.aop.scope.ScopedProxyFactoryBean
-import org.grails.plugin.vaadin.support.GspResourcePageRenderer
-import org.grails.plugin.vaadin.support.GspResourceLocator
+import org.grails.plugin.vaadin.gsp.GspResourcePageRenderer
+import org.grails.plugin.vaadin.gsp.GspResourceLocator
 
 class VaadinGrailsPlugin {
 
