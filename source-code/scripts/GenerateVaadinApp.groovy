@@ -45,7 +45,7 @@ target ('createVaadinApp': 'Creates Vaadin Application class') {
     depends(initGenerateVaadinApp)
     
     // Create application
-    createArtifact(name:vaadinApplicationFullName, suffix: "", type: "VaadinApplication", path: "grails-app/vaadin")
+    createArtifact(name:vaadinApplicationFullName, suffix: "", type: "VaadinApplication", path: "grails-app/vaadin", templatePath: "templates/vaadin/artifacts")
 }
 
 target ('updateVaadinConfig': 'Sets applicationClass in VaadinConfig.groovy') {
@@ -100,6 +100,22 @@ target ('installVaadinTheme': "Installs Vaadin grails theme resources") {
     }
 }
 
+target ('installVaadinViews': "Installs Vaadin fiew files") {
+    // No dependencies
+
+    // Ensure views dir exists
+    def viewsSrcDir = "${vaadinPluginDir}/grails-app/views"
+    def viewsTgtDir = "${basedir}/grails-app/views"
+    ant.mkdir(dir:viewsTgtDir)
+    
+    // Recursive copy
+    ant.copy(todir:viewsTgtDir, overwrite:false) {
+        fileset(dir:viewsSrcDir)
+    }
+    
+    event("StatusUpdate", ["Installed Vaadin base views"])
+}
+
 target ('disableUrlMappings': 'Comments out all mappings in UrlMappings.groovy') {
     // No dependencies
     
@@ -121,7 +137,7 @@ target ('disableUrlMappings': 'Comments out all mappings in UrlMappings.groovy')
 }
 
 target ('default': "Creates a new Vaadin Application") {
-    depends(createVaadinApp, updateVaadinConfig, installVaadinTheme, disableUrlMappings)
+    depends(createVaadinApp, updateVaadinConfig, installVaadinTheme, installVaadinViews, disableUrlMappings)
     
     event("StatusFinal", ["Finished Vaadin application generation"])
 }

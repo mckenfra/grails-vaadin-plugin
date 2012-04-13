@@ -20,6 +20,8 @@ import java.util.Locale;
 import org.codehaus.groovy.grails.commons.ApplicationHolder;
 import org.springframework.beans.BeansException;
 import org.springframework.context.MessageSource;
+import org.springframework.context.MessageSourceResolvable;
+import org.springframework.context.NoSuchMessageException;
 
 /**
  * Vaadin plugin utility methods - mostly used for supporting dynamic method.
@@ -88,6 +90,33 @@ public class VaadinUtils {
         if (message == null) {
             // if fetching values fails, return the key
             message = "[" + key + "]";
+        }
+        return message;
+    }
+    
+    /**
+     * Localization methods, providing access to i18n values.
+     * 
+     * @param resolvable
+     *            for localization properties
+     * @param locale
+     *            locale
+     * @return value from properties file or key (if key value is not found)
+     */
+    String getMessage(MessageSourceResolvable resolvable, Locale locale) throws NoSuchMessageException {
+        String message = null;
+        try {
+            message = VaadinUtils.getMessageSource().getMessage(resolvable, locale);
+        } catch (final Throwable t) {
+            System.err.println(t.getMessage());
+        }
+        if (message == null) {
+            if (resolvable != null && resolvable.getCodes().length > 0) {
+                // if fetching values fails, return the last code
+                message = "[" + resolvable.getCodes()[resolvable.getCodes().length-1] + "]";
+            } else {
+                message = "[Error]";
+            }
         }
         return message;
     }

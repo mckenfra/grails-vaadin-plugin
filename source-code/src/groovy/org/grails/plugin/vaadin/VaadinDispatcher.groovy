@@ -2,16 +2,19 @@ package org.grails.plugin.vaadin
 
 import org.codehaus.groovy.grails.plugins.metadata.GrailsPlugin
 import org.codehaus.groovy.grails.web.util.TypeConvertingMap
+import org.grails.plugin.vaadin.ui.GspLayout;
 
 import com.vaadin.Application;
 import com.vaadin.ui.UriFragmentUtility
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedListener;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 
 import org.apache.commons.logging.LogFactory
 
 /**
- * Wires VaadinControllers to VaadinViews using the concept of a VaadinRequest.
+ * Wires VaadinControllers to GSP views using the concept of a VaadinRequest.
  * <p>
  * Note that a {@link org.grails.plugin.vaadin.VaadinRequest} is not a
  * JavaEE ServletRequest. It is simply a construct for capturing a (user's)
@@ -33,7 +36,6 @@ class VaadinDispatcher {
     def vaadinTransactionManager
         
     protected controllers = [:]
-    protected views = [:]
     
     protected VaadinRequest activeRequest = new VaadinRequest()
     
@@ -56,7 +58,7 @@ class VaadinDispatcher {
     protected boolean fragmentListenerStarted = false
     
     /**
-     * Registers the controllers and views to use for dispatching. Note that unlike
+     * Registers the controllers to use for dispatching. Note that unlike
      * Grails, a single instance of a controller and view is used - the instance
      * is created in this method. Grails, by contrast, creates a new controller instance
      * for every request.
@@ -65,24 +67,14 @@ class VaadinDispatcher {
      * class is in the main project, rather than a plugin, takes precedence.
      * 
      * @param controllerClasses The list of controller classes in the app
-     * @param viewClasses The list of view classes in the app
      */
-    def init(List<VaadinClass> controllerClasses, List<VaadinClass> viewClasses) {
+    def init(List<VaadinClass> controllerClasses) {
         controllers = [:]
         controllerClasses.each {
             // Don't replace an existing class with a class from a plugin
             if (! (controllers.containsKey(it.logicalPropertyName) &&
                 it.clazz.isAnnotationPresent(GrailsPlugin.class)) ) {
                 controllers[it.logicalPropertyName] = it.clazz.newInstance()
-            }
-        }
-
-        views = [:]
-        viewClasses.each {
-            // Don't replace an existing class with a class from a plugin
-            if (! (views.containsKey(it.logicalPropertyName) &&
-                it.clazz.isAnnotationPresent(GrailsPlugin.class)) ) {
-                views[it.logicalPropertyName] = it.clazz.newInstance()
             }
         }
     }
@@ -146,9 +138,19 @@ class VaadinDispatcher {
      * @param args The args containing the details of the request
      */
     def dispatch(Map args) {
+        // Timing logging
+        Date startTime = new Date()
+
+        // Dispatch request
         def request = new VaadinRequest()
         request.newRequest(activeRequest, args, [controller:"home", action:"index"])
         dispatch(request)
+        
+        // Log timing
+        if (log.isDebugEnabled()) {
+            long time = new Date().time - startTime.time
+            log.debug "TIME TAKEN: ${time}"
+        }
     }
     
     /**
@@ -183,7 +185,7 @@ class VaadinDispatcher {
         
         // Log result
         if (log.isDebugEnabled()) {
-            log.debug "RETURNED: ${activeRequest} -> ${result}"
+            log.debug "RETURNED: ${activeRequest} -> ${VaadinUtils.toString(result)}"
         }
         
         // Check not redirected
@@ -195,14 +197,12 @@ class VaadinDispatcher {
             getOrCreateFragmentUtility().setFragment(request.fragment, false)
     
             // Show view
-            def viewInstance = views[activeRequest.controller]
-            if (viewInstance) {
-                def viewMethod = viewInstance.metaClass.getMetaMethod(activeRequest.view)
-                if (viewMethod) {
-                    viewMethod.invoke(viewInstance)
-                }
+            def oldView = application.mainWindow.componentIterator.find { ! (it instanceof UriFragmentUtility) }
+            def newView = new GspLayout(activeRequest.viewFullName, activeRequest.params, activeRequest.model, activeRequest.flash)
+            if (oldView) {
+                application.mainWindow.replaceComponent(oldView, newView)
             } else {
-                log.warn "MISSING VIEW: [controller:'${activeRequest.controller}', view:'${activeRequest.view}']"
+                application.mainWindow.addComponent(newView)
             }
             
         // Redirected

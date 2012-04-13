@@ -1,5 +1,5 @@
-@artifact.package@import org.grails.plugin.vaadin.VaadinApplication
-import org.grails.plugin.vaadin.ui.DefaultWindow
+@artifact.package@import com.vaadin.ui.Window
+import org.grails.plugin.vaadin.VaadinApplication
 
 class @artifact.name@ extends VaadinApplication {
     /**
@@ -10,6 +10,7 @@ class @artifact.name@ extends VaadinApplication {
         setTheme("main")
         
         // Attach top-level window
-        this.mainWindow = new DefaultWindow("Grails")
+        this.mainWindow = new Window("Grails")
+        this.mainWindow.content.setMargin(false)
     }
 }

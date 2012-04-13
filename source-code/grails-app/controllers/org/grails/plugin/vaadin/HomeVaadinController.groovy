@@ -10,5 +10,7 @@ package org.grails.plugin.vaadin
  * @author Francis McKenzie
  */
 class HomeVaadinController {
-    def index() {}
+    def index() {
+        render view:"/vaadin"
+    }
 }

@@ -1,13 +1,13 @@
 package org.grails.plugin.vaadin
 
 /**
- * A Vaadin Artefact, e.g. a VaadinController or VaadinView.
+ * A Vaadin Artefact, e.g. a VaadinController.
  * 
  * @author Francis McKenzie
  */
 class VaadinClass {
     /**
-     * The type name of the artefact - e.g. 'controller' or 'view'
+     * The type name of the artefact - e.g. 'controller'
      */
     protected String type
     /**
@@ -22,7 +22,7 @@ class VaadinClass {
     /**
      * Construct the Vaadin artefact using the specified parameters.
      * 
-     * @param type The type name of the artefact - e.g. 'controller' or 'view'
+     * @param type The type name of the artefact - e.g. 'controller'
      * @param clazz The referenced class of the artefact - e.g. BookVaadinController
      * @param logicalPropertyName The logical property name of the artefact - e.g. 'book'
      */
@@ -33,7 +33,7 @@ class VaadinClass {
     }
     
     /**
-     * Get the type name of the class - e.g. 'controller' or 'view'
+     * Get the type name of the class - e.g. 'controller'
      */
     public String getType() { type }
     /**

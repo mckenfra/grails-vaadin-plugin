@@ -21,11 +21,15 @@ import com.vaadin.grails.terminal.gwt.server.RestartingApplicationHttpServletReq
 import org.slf4j.LoggerFactory
 import org.slf4j.Logger
 import com.vaadin.grails.terminal.gwt.server.GrailsAwareApplicationServlet
+
+import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.i18n.LocaleContextHolder
 import com.vaadin.grails.VaadinUtils
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.grails.plugin.vaadin.VaadinApi
 import org.springframework.aop.scope.ScopedProxyFactoryBean
+import org.grails.plugin.vaadin.support.GspResourcePageRenderer
+import org.grails.plugin.vaadin.support.GspResourceLocator
 
 class VaadinGrailsPlugin {
 
@@ -36,17 +40,18 @@ class VaadinGrailsPlugin {
     private static final transient Logger log = LoggerFactory.getLogger("org.codehaus.groovy.grails.plugins.VaadinGrailsPlugin");
 
     // the plugin version
-    def version = "1.6-SNAPSHOT"
+    def version = "1.6.1-SNAPSHOT"
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "1.1 > *"
     // the other plugins this plugin depends on
-    def dependsOn = [:]
+    def dependsOn = [
+        'servlets': '2.0.0 > *',
+        'groovyPages': '2.0.0 > *'
+    ]
     // resources that are excluded from plugin packaging
     def pluginExcludes = [
         "docs/**/*",
         "grails-app/conf/**/*",
-        "grails-app/controllers/**/*",
-        "grails-app/views/**/*",
         "web-app/css/**/*",
         "web-app/images/**/*",
         "web-app/js/**/*",
@@ -109,6 +114,9 @@ class VaadinGrailsPlugin {
         clazz.metaClass.i18n = {String key, String defaultMsg, Collection args = null, Locale locale = LocaleContextHolder.getLocale() ->
             Object[] oArgs = args ? args as Object[] : null
             return VaadinUtils.i18n(key, oArgs, defaultMsg, locale);
+        }
+        clazz.metaClass.i18n = {MessageSourceResolvable resolvable, Locale locale = LocaleContextHolder.getLocale() ->
+            return VaadinUtils.i18n(resolvable, locale);
         }
 
         //Dynamic Spring bean instance lookup methods:
@@ -175,6 +183,19 @@ class VaadinGrailsPlugin {
         vaadinApi(VaadinApi) {
             vaadinApplicationHolder = vaadinApplicationHolder
             vaadinTransactionManager = vaadinTransactionManager
+        }
+        
+        // Beans for using Vaadin in GSPs
+        gspResourcePageRenderer(GspResourcePageRenderer, ref("groovyPagesTemplateEngine")) { bean ->
+            bean.lazyInit = true
+            groovyPageLocator = groovyPageLocator
+            grailsResourceLocator = grailsResourceLocator
+        }
+        
+        gspResourceLocator(GspResourceLocator) { bean ->
+            bean.lazyInit = true
+            groovyPageLocator = groovyPageLocator
+            grailsResourceLocator = grailsResourceLocator
         }
     }
 

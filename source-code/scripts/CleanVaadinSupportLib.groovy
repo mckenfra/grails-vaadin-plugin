@@ -1,0 +1,5 @@
+includeTargets << new File("${vaadinPluginDir}/scripts/_VaadinSupportLib.groovy")
+
+target(default: "Cleans library") {
+    clean()
+}

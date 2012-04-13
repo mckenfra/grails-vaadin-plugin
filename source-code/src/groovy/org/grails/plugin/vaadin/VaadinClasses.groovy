@@ -16,7 +16,7 @@ import org.codehaus.groovy.grails.commons.GrailsApplication;
  * <p>
  * A class is considered a Vaadin Artefact if it:
  * <ul>
- * <li>Has 'VaadinController' or 'VaadinView' at the end of the class name.</li>
+ * <li>Has 'VaadinController' at the end of the class name.</li>
  * </ul>
  * 
  * @author Francis McKenzie
@@ -37,8 +37,7 @@ class VaadinClasses {
      * type if found
      */
     static Map<String,String> VAADIN_ARTEFACT_IDENTIFIERS = [
-        "VaadinController": "controller",
-        "VaadinView": "view"
+        "VaadinController": "controller"
     ]
 
     /**
@@ -67,7 +66,7 @@ class VaadinClasses {
     /**
      * Get the list of Vaadin Artefacts for the specified type.
      * 
-     * @param type E.g. 'controller' or 'view'
+     * @param type E.g. 'controller'
      * @return List of Vaadin Artefacts for the specified type in the Grails Application.
      */
     public List<VaadinClass> getArtefacts(String type) {
@@ -89,7 +88,7 @@ class VaadinClasses {
      * 'BookVaadinController' class by specifying property name 'book'
      * and type 'controller'
      * 
-     * @param type The artefact type, e.g. 'controller', 'view'
+     * @param type The artefact type, e.g. 'controller'
      * @param propertyName The logical property name, e.g. 'book'
      * @return The Vaadin artefact for the specified type and name
      */

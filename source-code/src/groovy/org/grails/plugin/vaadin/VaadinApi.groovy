@@ -1,11 +1,10 @@
 package org.grails.plugin.vaadin
 
 import com.vaadin.Application
-import com.vaadin.grails.VaadinUtils
 import grails.persistence.Entity
 import org.apache.commons.logging.LogFactory
-import org.grails.plugin.vaadin.support.VaadinApplicationService
-import org.grails.plugin.vaadin.support.VaadinTransactionService
+import org.grails.plugin.vaadin.services.VaadinApplicationService
+import org.grails.plugin.vaadin.services.VaadinTransactionService
 import org.springframework.context.i18n.LocaleContextHolder
 
 /**
@@ -14,7 +13,7 @@ import org.springframework.context.i18n.LocaleContextHolder
  * Note that a class is considered a Vaadin class if it:
  * <ul>
  * <li>Has 'vaadin' in the package name of itself, or any of its superclasses.</li>
- * <li>Has 'VaadinController' or 'VaadinView' at the end of the class name.</li>
+ * <li>Has 'VaadinController' at the end of the class name.</li>
  * </ul>
  * <p>
  * Note that injection can be disabled for a particular class by annotating
@@ -39,19 +38,14 @@ import org.springframework.context.i18n.LocaleContextHolder
  * <li><b>render</b>: Mimics Grails's render function for controllers</li>
  * </ul>
  * 
- * <h3>Vaadin Views</h3>
- * <ul>
- * <li><b>params</b>: Gets params map for the current 'request'</li>
- * <li><b>model</b>: Gets the model set by the controller for the current 'request'</li>
- * </ul>
  * <p>
  * Please note that in the above description, 'request' does not refer to a
  * JavaEE ServletRequest. It is an internal construct for referring to a call
  * to the dispatch() method of {@link org.grails.plugin.vaadin.VaadinDispatcher},
  * in order to display a particular Vaadin 'page', using a VaadinController class
- * and a VaadinView class.
+ * and a GSP view.
  * <p>
- * The resulting construction of Vaadin Components by the VaadinView class may
+ * The resulting construction of Vaadin Components in the GSP view may
  * lead to round trip requests to the server, but this is all hidden by Vaadin
  * and handled automatically with Ajax.
  * Refer to <a href="http://vaadin.com">http://vaadin.com</a> for more information.  
@@ -90,11 +84,8 @@ class VaadinApi {
         // Controllers
         injectControllersApi(vaadinClasses)
         
-        // Views
-        injectViewsApi(vaadinClasses)
-        
         // Start the dispatcher
-        application.dispatcher.init(vaadinClasses.getArtefacts("controller"), vaadinClasses.getArtefacts("view"))
+        application.dispatcher.init(vaadinClasses.getArtefacts("controller"))
     }
 
     /**
@@ -125,8 +116,8 @@ class VaadinApi {
                 
                 // Message
                 it.metaClass.message = {Map args ->
-                    if (args.error) {
-                        return VaadinUtils.messageSource.getMessage(args.error, (args?.locale ?: LocaleContextHolder.getLocale()))
+                    if (args?.error) {
+                        return vaadinApplicationHolder.application.i18n(args?.error, (args?.locale ?: LocaleContextHolder.getLocale()))
                     } else {
                         return vaadinApplicationHolder.application.i18n(args?.code, args?.default, args?.args, (args?.locale ?: LocaleContextHolder.getLocale()))
                     }
@@ -170,24 +161,6 @@ class VaadinApi {
             }
             clazz.metaClass.render = {Map args ->
                 vaadinApplicationHolder.application.dispatcher.activeRequest.render(args)
-            }
-        }
-    }
-    
-    /**
-     * Injects the Vaadin Views API into the specified Vaadin Classes.
-     * 
-     * @param vaadinClasses Holds all Vaadin Classes and Artefacts.
-     */
-    protected injectViewsApi(VaadinClasses vaadinClasses) {
-        vaadinClasses.getArtefacts("view").each { artefact ->
-            Class clazz = artefact.clazz
-            clazz.metaClass.static.getVaadinClass = {-> artefact }
-            clazz.metaClass.getParams = {
-                vaadinApplicationHolder.application.dispatcher.activeRequest.params.asImmutable()
-            }
-            clazz.metaClass.getModel = {
-                vaadinApplicationHolder.application.dispatcher.activeRequest.model.asImmutable()
             }
         }
     }

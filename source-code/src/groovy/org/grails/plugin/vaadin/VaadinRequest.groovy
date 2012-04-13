@@ -169,6 +169,19 @@ class VaadinRequest {
     }
     
     /**
+     * Gets view uri of this request, minus params, e.g. book/show.
+     * <p>
+     * Note that if the view name starts with "/" then it is resolved
+     * using the root views directory. Otherwise the request's controller
+     * name is prepended to the view.
+     * 
+     * @return Uri of view
+     */
+    public String getViewFullName() {
+        return this.view?.startsWith('/') ? this.view : "/${controller}/${view}"
+    }
+    
+    /**
      * Initialises this 'request' based on the 'request' that is currently active, and using
      * the specified set of defaults args.
      * <p>
@@ -273,13 +286,13 @@ class VaadinRequest {
         // Don't print out the whole params & model maps...
         def props = this.properties
         if (props.params) {
-            props.params = '[' + props.params.collect { "${it.key}:${it.value instanceof Collection ? '[>' + it.size() + ']' : it.value}" }.join(', ') + ']'
+            props.params = VaadinUtils.toString(props.params)
         }
         if (props.model) {
-            props.model = '[' + props.model.collect { "${it.key}:${it.value instanceof Collection ? '[>' + it.size() + ']' : it.value}" }.join(', ') + ']'
+            props.model = VaadinUtils.toString(props.model)
         }
         if (props.flash) {
-            props.flash = '[' + props.flash.collect { "${it.key}:${it.value instanceof Collection ? '[>' + it.size() + ']' : it.value}" }.join(', ') + ']'
+            props.flash = VaadinUtils.toString(props.flash)
         }
         return props.toString()
     }
