@@ -1,5 +1,6 @@
 /**
- * Gant script that generates a Vaadin CRUD controller and matching views for a given domain class
+ * Gant script that generates a Vaadin CRUD controller and matching views for a given domain class,
+ * or all domain classes in an app.
  * 
  * Based on GenerateAll script in Grails Core.
  *
@@ -7,9 +8,12 @@
  */
 
 includeTargets << grailsScript("_GrailsCreateArtifacts")
-includeTargets << new File("${vaadinScaffoldPluginDir}/scripts/_GenerateVaadin.groovy")
+includeTargets << new File("${vaadinPluginDir}/scripts/_GenerateVaadin.groovy")
 
-target ('default': "Generates a Vaadin CRUD interface (controller + views) for a domain class") {
+generateViews = true
+generateController = true
+
+target ('default': "Generates a Vaadin CRUD interface (controller + views) for one or all domain classes") {
     depends(checkVersion, parseArguments, packageApp)
     promptForName(type: "Domain Class")
 
