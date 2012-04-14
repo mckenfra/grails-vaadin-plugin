@@ -3,8 +3,10 @@ package org.grails.plugin.vaadin.ui
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomLayout;
 
+import org.apache.commons.logging.LogFactory;
 import org.grails.plugin.vaadin.gsp.GspComponentNode;
 import org.grails.plugin.vaadin.gsp.GspContext;
+import org.grails.plugin.vaadin.utils.Stopwatch;
 
 /**
  * A Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/CustomLayout.html">CustomLayout</a>
@@ -26,6 +28,8 @@ import org.grails.plugin.vaadin.gsp.GspContext;
  * @author Francis McKenzie
  */
 class GspLayout extends CustomLayout {
+    def log = LogFactory.getLog(this.class)
+
     /**
      * The uri of the GSP. Only used for logging purposes.
      */
@@ -41,9 +45,17 @@ class GspLayout extends CustomLayout {
      */
     public GspLayout(String gsp, Map params = null, Map model = null, Map flash = null) {
         super()
-        application.context.session.removeAttribute("org.grails.plugin.vaadin.component")
         this.gspUri = gsp
+        application.context.session.removeAttribute("org.grails.plugin.vaadin.component")
+        
+        // Timing logging
+        def stopwatch = Stopwatch.enabled ? new Stopwatch(gsp, this.class) : null
+        
+        // Create GSP
         initTemplateContentsFromGsp(gsp, null, params, model, flash)
+        
+        // Timing logging
+        stopwatch?.stop()
     }
     
     /**
