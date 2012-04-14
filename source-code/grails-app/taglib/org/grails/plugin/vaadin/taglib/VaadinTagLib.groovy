@@ -436,7 +436,7 @@ class VaadinTagLib implements ApplicationContextAware {
         evaluateAttributes(component, attrs)
         
         // Only collect body if no attribute
-        def withBody = !bodyProperty || !attrs || attrs.containsKey(bodyProperty) ? null : { text->
+        def withBody = !bodyProperty || attrs.containsKey(bodyProperty) ? null : { text->
              component."${bodyProperty}" = text
         }
         
