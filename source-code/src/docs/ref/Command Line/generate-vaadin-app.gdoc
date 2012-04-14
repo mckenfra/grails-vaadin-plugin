@@ -17,7 +17,7 @@ This installs the necessary files and applies configuration changes to your appl
 to make it ready for Vaadin. Specifically it does the following:
 
 * *Create Application Class*
-** A class of type @com.vaadin.Application@ will be created with the specified name, in @grails-app/vaadin@
+** A Vaadin [Application|http://vaadin.com/api/com/vaadin/Application.html] will be created with the specified name, in @grails-app/vaadin@
 * *Update VaadinConfig*
 ** The @applicationClass@ setting in @grails-app/conf/VaadinConfig.groovy@ will be changed to the new name.
 * *Install Theme*
