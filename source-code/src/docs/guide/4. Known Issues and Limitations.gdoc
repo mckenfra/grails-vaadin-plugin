@@ -1,11 +1,5 @@
 The following is a list of known issues/limitations with the Vaadin plugin:
 
-h4. Firefox
-
-There is currently an issue with Firefox, in that refreshing the page does not
-seem to pick up changes to your GSPs. This issue does not affect Safari/Chrome.
-We are currently looking into the issue and hope to have a fix soon.
-
 h4. Sitemesh
 
 The Vaadin plugin supports constructing Vaadin interfaces using GSP views. However,

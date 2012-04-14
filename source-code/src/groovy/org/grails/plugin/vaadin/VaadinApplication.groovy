@@ -3,10 +3,16 @@ package org.grails.plugin.vaadin
 import java.net.URL;
 import java.util.Properties;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.vaadin.Application;
 import com.vaadin.service.ApplicationContext;
+import com.vaadin.terminal.Terminal;
+import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
 
 import org.apache.commons.logging.LogFactory
+import org.grails.plugin.vaadin.utils.Stopwatch;
 
 /**
  * Users should override this class, when creating the Application class for
@@ -27,9 +33,9 @@ import org.apache.commons.logging.LogFactory
  * 
  * @author Francis McKenzie
  */
-abstract class VaadinApplication extends Application {
-    def log = LogFactory.getLog(this.class)
-    
+abstract class VaadinApplication extends Application implements HttpServletRequestListener {
+    def log = LogFactory.getLog(VaadinApplication.class)
+
     /**
      * Injects Vaadin API into all project Vaadin classes,
      * and starts URL Fragment listener.
@@ -38,10 +44,11 @@ abstract class VaadinApplication extends Application {
     public void start(URL applicationUrl, Properties applicationProperties,
         ApplicationContext context) {
         
-        // Log starting status
-        if (log.isDebugEnabled()) {
-            log.debug "STARTING: ${this}"
-        }
+        // Log start status
+        log.info "STARTING ${this.class.simpleName}....."
+        
+        // Timing
+        def stopwatch = Stopwatch.enabled ? new Stopwatch("Startup", this.class) : null
         
         // Inject API into all Vaadin classes
         def vaadinApi = getBean("vaadinApi")
@@ -57,11 +64,40 @@ abstract class VaadinApplication extends Application {
         super.start(applicationUrl, applicationProperties, context)
         
         // Start listener to respond to URI fragment changes
+        // (Note - dispatcher has has just been injected by above api call)
         dispatcher.startFragmentListener()
         
-        // Log started status
-        if (log.isDebugEnabled()) {
-            log.debug "STARTED: ${this}"
+        // Log start status
+        log.info "STARTED ${this.class.simpleName}"
+        
+        // Log timing
+        stopwatch?.stop()
+    }
+    
+    /**
+     * Fixes an issue where a browser refresh does not trigger a repaint of the
+     * interface, if the refresh fails to expire the session.
+     * <p>
+     * In this case, we manually dispatch the existing 'request' again.
+     */
+    public void onRequestStart(HttpServletRequest request, HttpServletResponse response) {
+        // Ignore /appName/UIDL requests - these are the AJAX calls
+        // Otherwise, assume it's the main request
+        // Then, if the app is already running we have a problem - no repaint
+        // will be called. So manually trigger the refresh.
+        if (! request.requestURL.toString().endsWith("UIDL") && isRunning()) {
+            // Log
+            if (log.isDebugEnabled()) {
+                log.debug "Browser refresh detected!"
+            }
+            
+            // Refresh
+            dispatcher.refresh()
         }
     }
+    
+    /**
+     * Not used
+     */
+    public void onRequestEnd(HttpServletRequest request, HttpServletResponse response) {}
 }
