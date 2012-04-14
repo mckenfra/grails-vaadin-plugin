@@ -78,7 +78,7 @@
 					<%  displayedProps.each { p-> %>
 					<v:field name="${p.fullName}" readOnly="false" required="${true && p.required}" requiredError="Please enter a ${p.property.naturalName}" invalidCommitted="true"
 						componentError="\${${propertyName}.errors?.hasFieldErrors('${p.fullName}') ? message(error:${propertyName}.errors.getFieldError('${p.fullName}'), args:[${propertyName}]) : null}">
-						<g:message code="${domainClass.propertyName}.${p.fullName}.label" default="${p.naturalName}"/>
+						<g:message code="${domainClass.propertyName}.${p.fullName}.label" default="${p.property.naturalName}"/>
 					</v:field>
 					<%  } %>
 				</v:form>
