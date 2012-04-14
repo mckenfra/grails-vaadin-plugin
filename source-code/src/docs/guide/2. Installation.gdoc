@@ -27,7 +27,7 @@ After installing the plugin, you should run the following at the command line to
 create your Vaadin application:
 
 {code}
-generate-vaadin-app com.somewhere.MyApp
+grails generate-vaadin-app com.somewhere.MyApp
 {code}
 
 This will install the necessary files and apply configuration changes to your application,
