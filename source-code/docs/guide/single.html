@@ -155,13 +155,16 @@ section of the <a href="http://grails.org/doc/latest/guide" target="blank">Grail
   &#60;v:label&#62;Hello world!&#60;/v:label&#62;
 &#60;/div&#62;</pre></div><p class="paragraph"/><h4>4. Run the App</h4><p class="paragraph"/>Finally, run the application using <code>grails run-app</code> and then browse to
 <code>http://localhost:8080/myapp#hello/greetings</code>. You should see the
-"Hello World!" message displayed, within the familiar Grails theme.<p class="paragraph"/>(Note that you will need to replace <code>'myapp'</code> in the above URL with the name of your
-grails project.)<p class="paragraph"/><blockquote class="note">
-You can create new Vaadin Controllers and GSP views while your app is running.
-They will automatically be available via your browser, after a short pause.
-Try it and see!
-</blockquote>
-
+"Hello World!" message displayed.<p class="paragraph"/>(Note that you will need to replace <code>'myapp'</code> in the above URL with the name of your
+grails project.)<p class="paragraph"/><h4>5. Use the Grails Theme</h4><p class="paragraph"/>Let's improve the appearance of our new page. Change the text in file
+<code>grails-app/views/hello/greetings.gsp</code> to the following:<p class="paragraph"/><div class="code"><pre>&#60;v:layout name=<span class="java&#45;quote">"vaadin"</span>&#62;
+  &#60;v:label location=<span class="java&#45;quote">"body"</span>&#62;Hello world!&#60;/v:label&#62;
+&#60;/v:layout&#62;</pre></div><p class="paragraph"/>Now refresh your browser page - you should see your "Hello World!" message again,
+but this time within the familiar Grails theme.<p class="paragraph"/><blockquote class="note">
+Notice we used the special tag <code>&#60;v:layout name="vaadin"&#62;</code> in the final step. This
+<a href="../ref/Tags/layout.html" class="Tags">layout</a> tag looks for a <code>.gsp</code> file with the specified name in <code>grails-app/views/layouts</code>.
+Take a look at <code>vaadin.gsp</code> in this directory in your app!
+</blockquote> 
 
 
 <h2 id="3.3 Scaffolding a Domain Class">3.3 Scaffolding a Domain Class</h2>
