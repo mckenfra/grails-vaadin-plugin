@@ -81,20 +81,20 @@ class GspResourceLocator implements ServletContextAware {
      **/
     protected File findGspResourceFile(uri) {
         if (log.isDebugEnabled()) {
-            log.debug "Finding GSP Resource ${uri} ..."
+            log.debug "FINDING: GSP Resource ${uri}....."
         }
         File result;
         try {
             Resource resource = grailsResourceLocator.findResourceForURI(uri)
             if (resource) {
-                if (log.isDebugEnabled()) {
-                    log.debug "Checking if is a GSP: ${resource.file}"
-                }
-                
                 // Check if GSP
                 File file = resource.file
                 if (isGsp(file)) {
                     result = file
+                } else {
+                    if (log.isDebugEnabled()) {
+                        log.debug "IGNORING: ${file}"
+                    }
                 }
             }
         } catch(err) {
@@ -108,20 +108,20 @@ class GspResourceLocator implements ServletContextAware {
      **/
     protected File findGspViewFile(uri) {
         if (log.isDebugEnabled()) {
-            log.debug "Finding GSP View ${uri} ..."
+            log.debug "FINDING: GSP View ${uri}....."
         }
         File result;
         try {
             GroovyPageScriptSource resource = groovyPageLocator.findViewByPath(uri.toString())
             if (resource) {
-                if (log.isDebugEnabled()) {
-                    log.debug "Checking if is a GSP: ${resource.URI} ..."
-                }
-                
                 // Check if GSP
                 File file = new File(servletContext.getRealPath(resource.URI))
                 if (isGsp(file)) {
                     result = file
+                } else {
+                    if (log.isDebugEnabled()) {
+                        log.debug "IGNORING: ${file}"
+                    }
                 }
             }
         } catch(err) {
@@ -135,20 +135,20 @@ class GspResourceLocator implements ServletContextAware {
      **/
     protected File findGspTemplateFile(uri) {
         if (log.isDebugEnabled()) {
-            log.debug "Finding GSP Template ${uri} ..."
+            log.debug "FINDING: GSP Template ${uri}....."
         }
         File result;
         try {
             GroovyPageScriptSource resource = groovyPageLocator.findTemplateByPath(uri.toString())
             if (resource) {
-                if (log.isDebugEnabled()) {
-                    log.debug "Checking if is a GSP: ${resource.URI} ..."
-                }
-
                 // Check if GSP
                 File file = new File(servletContext.getRealPath(resource.URI))
                 if (isGsp(file)) {
                     result = file
+                } else {
+                    if (log.isDebugEnabled()) {
+                        log.debug "IGNORING: ${file}"
+                    }
                 }
             }
         } catch(err) {
