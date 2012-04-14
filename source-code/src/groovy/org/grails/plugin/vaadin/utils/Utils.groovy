@@ -1,11 +1,11 @@
-package org.grails.plugin.vaadin
+package org.grails.plugin.vaadin.utils
 
 /**
  * Utility methods for Vaadin classes.
  * 
  * @author Francis McKenzie
  */
-public class VaadinUtils {
+public class Utils {
     /**
      * Converts an object to a String. Main benefit is that it creates a smaller
      * representation of a Map containing long lists of objects, than is created
