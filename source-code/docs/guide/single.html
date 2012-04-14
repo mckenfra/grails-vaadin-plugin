@@ -191,9 +191,7 @@ Sitemesh layout tags are currently not supported. Please use the Vaadin <a href=
 
 
 <h1 id="4. Known Issues and Limitations">4 Known Issues and Limitations</h1>
-The following is a list of known issues/limitations with the Vaadin plugin:<p class="paragraph"/><h4>Firefox</h4><p class="paragraph"/>There is currently an issue with Firefox, in that refreshing the page does not
-seem to pick up changes to your GSPs. This issue does not affect Safari/Chrome.
-We are currently looking into the issue and hope to have a fix soon.<p class="paragraph"/><h4>Sitemesh</h4><p class="paragraph"/>The Vaadin plugin supports constructing Vaadin interfaces using GSP views. However,
+The following is a list of known issues/limitations with the Vaadin plugin:<p class="paragraph"/><h4>Sitemesh</h4><p class="paragraph"/>The Vaadin plugin supports constructing Vaadin interfaces using GSP views. However,
 the GSP views are rendered using a mock HttpRequest/HttpResponse. The implementation
 does not currently support Sitemesh layouts. However, you can easily use the
 <a href="../ref/Tags/layout.html" class="Tags">layout</a> tag to use another GSP as a layout template.<p class="paragraph"/><h4>Vaadin &#38; Grails in the Same App</h4><p class="paragraph"/>It is not possible to mix standard Grails pages and Vaadin in the same

@@ -7,3 +7,4 @@ org.grails.plugin.vaadin.scaffolding
 org.grails.plugin.vaadin.services
 org.grails.plugin.vaadin.taglib
 org.grails.plugin.vaadin.ui
+org.grails.plugin.vaadin.utils
