@@ -59,7 +59,8 @@ class VaadinGrailsPlugin {
     ]
     def artefacts = [VaadinArtefactHandler]
     def watchedResources = [
-        "file:./grails-app/vaadin/**/*.groovy"
+        "file:./grails-app/vaadin/**/*.groovy",
+        "file:./grails-app/controllers/**/*.groovy"
     ]
     // release-plugin --zipOnly
 
