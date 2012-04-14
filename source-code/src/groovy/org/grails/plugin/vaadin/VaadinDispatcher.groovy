@@ -3,6 +3,8 @@ package org.grails.plugin.vaadin
 import org.codehaus.groovy.grails.plugins.metadata.GrailsPlugin
 import org.codehaus.groovy.grails.web.util.TypeConvertingMap
 import org.grails.plugin.vaadin.ui.GspLayout;
+import org.grails.plugin.vaadin.utils.Stopwatch;
+import org.grails.plugin.vaadin.utils.Utils;
 
 import com.vaadin.Application;
 import com.vaadin.ui.UriFragmentUtility
@@ -32,6 +34,9 @@ import org.apache.commons.logging.LogFactory
 class VaadinDispatcher {
     def log = LogFactory.getLog(this.class)
 
+    // Set by api - provides access to application
+    def vaadinApplicationHolder
+    final getApplication() { vaadinApplicationHolder.application }
     // Set by api - provides hibernate transaction around controllers
     def vaadinTransactionManager
         
@@ -132,25 +137,35 @@ class VaadinDispatcher {
     }
     
     /**
+     * Dispatches the active request again, or goes to home page if no active request
+     */
+    def refresh() {
+        if (activeRequest) {
+            dispatch(activeRequest)
+        } else {
+            dispatch([:])
+        }
+    }
+    
+    /**
      * Dispatches a 'request' to show a particular Vaadin 'page' using the
      * specified args, containing e.g. 'controller', 'action', 'id' etc.
      * 
      * @param args The args containing the details of the request
      */
     def dispatch(Map args) {
-        // Timing logging
-        Date startTime = new Date()
-
-        // Dispatch request
+        // Prepare request
         def request = new VaadinRequest()
         request.newRequest(activeRequest, args, [controller:"home", action:"index"])
+        
+        // Timing logging
+        def stopwatch = Stopwatch.enabled ? new Stopwatch("#${request.fragment}", this.class) : null
+
+        // Dispatch
         dispatch(request)
         
-        // Log timing
-        if (log.isDebugEnabled()) {
-            long time = new Date().time - startTime.time
-            log.debug "TIME TAKEN: ${time}"
-        }
+        // Timing logging
+        stopwatch?.stop()
     }
     
     /**
@@ -185,7 +200,7 @@ class VaadinDispatcher {
         
         // Log result
         if (log.isDebugEnabled()) {
-            log.debug "RETURNED: ${activeRequest} -> ${VaadinUtils.toString(result)}"
+            log.debug "RETURNED: ${activeRequest} ${Utils.toString(result)}"
         }
         
         // Check not redirected

@@ -14,6 +14,7 @@ import org.springframework.context.i18n.LocaleContextHolder
  * <ul>
  * <li>Has 'vaadin' in the package name of itself, or any of its superclasses.</li>
  * <li>Has 'VaadinController' at the end of the class name.</li>
+ * <li>Is located under the grails-app directory</li>
  * </ul>
  * <p>
  * Note that injection can be disabled for a particular class by annotating
@@ -96,6 +97,7 @@ class VaadinApi {
     protected injectBaseApi(VaadinClasses vaadinClasses) {
         final dispatcher = new VaadinDispatcher()
         dispatcher.vaadinTransactionManager = vaadinTransactionManager
+        dispatcher.vaadinApplicationHolder = vaadinApplicationHolder
         vaadinClasses.allClasses.each {
             // Don't inject if there's an explicit annotation
             if ( it.isAnnotationPresent(NoVaadinApi.class) ||
