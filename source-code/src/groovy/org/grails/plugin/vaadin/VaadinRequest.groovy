@@ -2,6 +2,7 @@ package org.grails.plugin.vaadin
 
 import org.apache.commons.logging.LogFactory
 import org.codehaus.groovy.grails.web.util.TypeConvertingMap;
+import org.grails.plugin.vaadin.utils.Utils;
 
 /**
  * An internal construct for mimicking a user's request to display
@@ -286,13 +287,13 @@ class VaadinRequest {
         // Don't print out the whole params & model maps...
         def props = this.properties
         if (props.params) {
-            props.params = VaadinUtils.toString(props.params)
+            props.params = Utils.toString(props.params)
         }
         if (props.model) {
-            props.model = VaadinUtils.toString(props.model)
+            props.model = Utils.toString(props.model)
         }
         if (props.flash) {
-            props.flash = VaadinUtils.toString(props.flash)
+            props.flash = Utils.toString(props.flash)
         }
         return props.toString()
     }
