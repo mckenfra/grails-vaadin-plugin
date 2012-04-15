@@ -60,7 +60,7 @@ class VaadinGrailsPlugin {
     def artefacts = [VaadinArtefactHandler]
     def watchedResources = [
         "file:./grails-app/vaadin/**/*.groovy",
-        "file:./grails-app/controllers/**/*.groovy"
+        "file:./grails-app/controllers/**/*VaadinController.groovy"
     ]
     // release-plugin --zipOnly
 
@@ -252,6 +252,9 @@ class VaadinGrailsPlugin {
         }
 
         def contextRelativePath = config.contextRelativePath ? config.contextRelativePath : "/";
+        if (!contextRelativePath.startsWith("/")) {
+            contextRelativePath = "/" + contextRelativePath;
+        }
         if (!contextRelativePath.endsWith("/")) {
             contextRelativePath += "/";
         }
@@ -361,6 +364,8 @@ class VaadinGrailsPlugin {
             RestartingApplicationHttpServletRequest.restartToken = UUID.randomUUID().toString()
 
             log.info "Vaadin artefact ${changedClass} has changed.  Browser refresh required."
+        } else {
+            log.info "Changed class is not a Vaadin class: ${changedClass}"
         }
     }
 
