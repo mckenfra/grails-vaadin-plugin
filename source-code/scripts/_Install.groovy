@@ -26,7 +26,10 @@
 //    ant.mkdir(dir:"${basedir}/grails-app/jobs")
 //
 //Ant.mkdir(dir:"${basedir}/grails-app/jobs")
-ant.copy(file:"${pluginBasedir}/src/samples/_VaadinConfig.groovy",
-         tofile:"${basedir}/grails-app/conf/VaadinConfig.groovy")
+
+if (!(new File("${basedir}/grails-app/conf/VaadinConfig.groovy")).exists()) {
+    ant.copy(file:"${pluginBasedir}/src/samples/_VaadinConfig.groovy",
+             tofile:"${basedir}/grails-app/conf/VaadinConfig.groovy")
+}
 
 ant.mkdir(dir:"${basedir}/grails-app/vaadin")
