@@ -25,23 +25,29 @@ import javax.servlet.http.HttpSession;
 import com.vaadin.Application;
 import com.vaadin.terminal.gwt.server.GAEApplicationServlet;
 
-import org.codehaus.groovy.grails.commons.ApplicationHolder;
 import org.codehaus.groovy.grails.commons.GrailsApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 
 /**
  * @author Les Hazlewood
  * @author Rodney Schneider
+ * @author Francis McKenzie
  */
 @SuppressWarnings("serial")
 public class GrailsAwareGAEApplicationServlet extends GAEApplicationServlet {
 
     private static final transient Logger log = LoggerFactory.getLogger(GrailsAwareGAEApplicationServlet.class);
 
+    public GrailsApplication getGrailsApplication() {
+        ApplicationContext applicationContext = (ApplicationContext) getServletContext().getAttribute("org.springframework.web.context.WebApplicationContext.ROOT");
+        return (GrailsApplication) applicationContext.getBean(GrailsApplication.APPLICATION_ID, GrailsApplication.class); 
+    }
+    
     /**
      * Name of the class that extends com.vaadin.Application. We don't retain
      * the actual Class instance directly due to Grails class reloading - the
@@ -53,7 +59,7 @@ public class GrailsAwareGAEApplicationServlet extends GAEApplicationServlet {
     private String applicationClassName;
 
     private ClassLoader doGetClassLoader() {
-        return ApplicationHolder.getApplication().getClassLoader();
+        return getGrailsApplication().getClassLoader();
     }
 
     @Override
@@ -83,7 +89,7 @@ public class GrailsAwareGAEApplicationServlet extends GAEApplicationServlet {
         Application app = null;
 
         try {
-            app = (Application) ApplicationHolder.getApplication().getMainContext()
+            app = (Application) getGrailsApplication().getMainContext()
                     .getBean(GrailsAwareApplicationServlet.VAADIN_APPLICATION_BEAN_NAME);
         } catch (BeansException e) {
             if (log.isInfoEnabled()) {

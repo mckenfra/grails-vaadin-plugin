@@ -25,17 +25,18 @@ import javax.servlet.http.HttpSession;
 import com.vaadin.Application;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 
-import org.codehaus.groovy.grails.commons.ApplicationHolder;
 import org.codehaus.groovy.grails.commons.GrailsApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 
 /**
  * @author Les Hazlewood
  * @author Daniel Bell
+ * @author Francis McKenzie
  */
 @SuppressWarnings("serial")
 public class GrailsAwareApplicationServlet extends AbstractApplicationServlet {
@@ -43,6 +44,11 @@ public class GrailsAwareApplicationServlet extends AbstractApplicationServlet {
     public static final String VAADIN_APPLICATION_BEAN_NAME = "vaadinApplication";
 
     private static final transient Logger log = LoggerFactory.getLogger(GrailsAwareApplicationServlet.class);
+
+    public GrailsApplication getGrailsApplication() {
+        ApplicationContext applicationContext = (ApplicationContext) getServletContext().getAttribute("org.springframework.web.context.WebApplicationContext.ROOT");
+        return (GrailsApplication) applicationContext.getBean(GrailsApplication.APPLICATION_ID, GrailsApplication.class); 
+    }
 
     /**
      * Name of the class that extends com.vaadin.Application. We don't retain
@@ -55,7 +61,7 @@ public class GrailsAwareApplicationServlet extends AbstractApplicationServlet {
     private String applicationClassName;
 
     private ClassLoader doGetClassLoader() {
-        return ApplicationHolder.getApplication().getClassLoader();
+        return getGrailsApplication().getClassLoader();
     }
 
     @Override
@@ -81,7 +87,7 @@ public class GrailsAwareApplicationServlet extends AbstractApplicationServlet {
         Application app = null;
 
         try {
-            app = (Application) ApplicationHolder.getApplication().getMainContext()
+            app = (Application) getGrailsApplication().getMainContext()
                     .getBean(VAADIN_APPLICATION_BEAN_NAME);
         } catch (BeansException e) {
             if (log.isInfoEnabled()) {
