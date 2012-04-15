@@ -28,7 +28,7 @@ target ('default': "Generates a Vaadin CRUD interface (controller + views) for o
         }
     }
     catch (Exception e) {
-        logError("Error running vaadin-generate-ui", e)
+        logError("Error running generate-vaadin-all", e)
         exit(1)
     }
 }
