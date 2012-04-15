@@ -43,9 +43,11 @@ class DefaultVaadinTemplateGenerator extends DefaultGrailsTemplateGenerator {
      */
     DefaultVaadinTemplateGenerator() { super() }
 
-    // Copied from superclass - calls overridden getTemplateText()
-    // (This was private in superclass in grails 2.0.1, therefore invisible
-    // to this class)
+    /**
+     * Copied from superclass - calls overridden getTemplateText()
+     * (This was private in superclass in grails 2.0.1, therefore invisible
+     * to this class)
+     */
     void generateView(GrailsDomainClass domainClass, String viewName, Writer out) {
         def templateText = getTemplateText("${viewName}.gsp")
 
@@ -68,9 +70,42 @@ class DefaultVaadinTemplateGenerator extends DefaultGrailsTemplateGenerator {
         }
 
     }
+    
+    /**
+     * Copied from superclass - target Controller name is hardcoded, so have to
+     * copy in the entire method here just so we can change the name...
+     */
+    @Override
+    void generateController(GrailsDomainClass domainClass, String destdir) {
+        Assert.hasText destdir, "Argument [destdir] not specified"
 
-    // Copied from superclass - calls overridden getTemplateText() and uses
-    // name VaadinController.groovy
+        if (domainClass) {
+            def fullName = domainClass.fullName
+            def pkg = ""
+            def pos = fullName.lastIndexOf('.')
+            if (pos != -1) {
+                // Package name with trailing '.'
+                pkg = fullName[0..pos]
+            }
+
+            def destFile = new File("${destdir}/grails-app/controllers/${pkg.replace('.' as char, '/' as char)}${domainClass.shortName}VaadinController.groovy")
+            if (canWrite(destFile)) {
+                destFile.parentFile.mkdirs()
+
+                destFile.withWriter { w ->
+                    generateController(domainClass, w)
+                }
+
+                LOG.info("Controller generated at ${destFile}")
+            }
+        }
+    }
+
+    /**
+     * Copied from superclass - calls overridden getTemplateText() and uses
+     * name VaadinController.groovy
+     */
+    @Override
     void generateController(GrailsDomainClass domainClass, Writer out) {
         def templateText = getTemplateText("VaadinController.groovy")
 
