@@ -109,10 +109,12 @@ deleting a record. It is intended to mimic Javascript's <code>confirm()</code> f
 &#60;/v:link&#62;</pre></div><p class="paragraph"/><h4>Commit Form on Save</h4><p class="paragraph"/>A tag method <code>v.commit</code> is available for use in the <code>onclick</code> attribute. This commits the
 Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Form.html" target="blank">Form</a> component before following the link.
 Typically it is used when clicking the Submit-type button on form, to write the form's changes
-through to the domain class instance, before that instance is then written to the database.<p class="paragraph"/><div class="code"><pre>&#60;v:link action=<span class="java&#45;quote">"delete"</span> id=<span class="java&#45;quote">"1"</span> onclick=<span class="java&#45;quote">"$&#123;v.commit(form:'myForm')&#125;"</span>&#62;
+through to the domain class instance, before that instance is then written to the database.<p class="paragraph"/><div class="code"><pre>&#60;v:form <span class="java&#45;keyword">var</span>=<span class="java&#45;quote">"myForm"</span>&#62;
+  &#60;v:field name=<span class="java&#45;quote">"author"</span>&#62;Author&#60;/v:field&#62;
+&#60;/v:form&#62;<p class="paragraph"/>&#60;v:link action=<span class="java&#45;quote">"delete"</span> id=<span class="java&#45;quote">"1"</span> onclick=<span class="java&#45;quote">"$&#123;v.commit(form:'myForm')&#125;"</span>&#62;
   Save
-&#60;/v:link&#62;</pre></div><p class="paragraph"/>Note that the form is referenced by the name set in the <code>var</code> attribute of the <a href="../../ref/Tags/form.html" class="Tags">form</a>
-tag - in this example 'myForm'.
+&#60;/v:link&#62;</pre></div>
+
             </div>
         </td>
         <td id="col2">

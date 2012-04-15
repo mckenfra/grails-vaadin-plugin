@@ -94,10 +94,7 @@ function addJsClass() {
 The following is a list of known issues/limitations with the Vaadin plugin:<p class="paragraph"/><h4>Sitemesh</h4><p class="paragraph"/>The Vaadin plugin supports constructing Vaadin interfaces using GSP views. However,
 the GSP views are rendered using a mock HttpRequest/HttpResponse. The implementation
 does not currently support Sitemesh layouts. However, you can easily use the
-<a href="../ref/Tags/layout.html" class="Tags">layout</a> tag to use another GSP as a layout template.<p class="paragraph"/><h4>Vaadin &#38; Grails in the Same App</h4><p class="paragraph"/>It is not possible to mix standard Grails pages and Vaadin in the same
-application, since Vaadin requires that you remove all settings from your
-<code>UrlMappings.groovy</code> file. Eventually, we hope to find a way to support both
-models in the same app.<p class="paragraph"/><h4>Vaadin API</h4><p class="paragraph"/>Although the Vaadin plugin's support for Controllers is a lot like
+<a href="../ref/Tags/layout.html" class="Tags">layout</a> tag to use another GSP as a layout template.<p class="paragraph"/><h4>Vaadin API</h4><p class="paragraph"/>Although the Vaadin plugin's support for Controllers is a lot like
 standard Grails, it is a separate implementation. Therefore some of the methods
 that you expect to find in Grails Controllers  <em class="italic">may</em>  not be available in 
 VaadinControllers. However, let us know if anything important is missing, and we'll

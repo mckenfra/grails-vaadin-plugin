@@ -91,11 +91,13 @@ function addJsClass() {
                 
 
 <h2 id="5.2 Vaadin Classes">5.2 Vaadin Classes</h2>
-The Vaadin plugin automatically scans your classpath for Vaadin classes.<p class="paragraph"/>A class is considered a Vaadin Class if it:
+A class is considered a Vaadin Class if it:
 <ul class="star">
-<li>Has <code>vaadin</code> in the package name of itself, or any of its superclasses.</li>
-<li>Is a Vaadin Artefact - i.e. it has <code>VaadinController</code> at the end of the class name.</li>
-</ul><p class="paragraph"/>
+<li>Has <code>vaadin</code> in the package name of itself, or any of its superclasses, OR</li>
+<li>Is a Vaadin Controller - i.e. it has <code>VaadinController</code> at the end of the class name.</li>
+</ul><p class="paragraph"/><blockquote class="note">
+Only classes under the <code>grails-app</code> directory can be Vaadin Classes.
+</blockquote>
 
 
                 <div style="clear:both;margin-top:15px;"></div>
