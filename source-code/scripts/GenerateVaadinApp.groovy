@@ -268,7 +268,7 @@ boolean createExcludes(File file) {
         // Vaadin static files
         "/VAADIN/*",
         // Vaadin controllers
-        "**/*Vaadin/**"
+        "**/*Vaadin/*"
     ]
 """
     return replaceTextInFile(file:file, pattern:pattern, replacement:replacement, within:withinUrlMappings)
@@ -277,7 +277,7 @@ boolean createExcludes(File file) {
 boolean addExcludes(File file) {
     return replaceTextInFile(file:file, within:withinExcludes, replacers:[
         excludesReplacer.curry("/VAADIN/*", "Vaadin static files"),
-        excludesReplacer.curry("**/*Vaadin/**", "Vaadin controllers")
+        excludesReplacer.curry("**/*Vaadin/*", "Vaadin controllers")
     ])
 }
 
