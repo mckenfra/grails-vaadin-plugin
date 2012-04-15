@@ -125,6 +125,22 @@ class DefaultVaadinTemplateGenerator extends DefaultGrailsTemplateGenerator {
     private String getPropertyName(GrailsDomainClass domainClass) { "${domainClass.propertyName}${domainSuffix}" }
 
     // Unfortunately private in superclass, so copied again here
+    private canWrite(File testFile) {
+        if (!overwrite && testFile.exists()) {
+            try {
+                def response = GrailsConsole.getInstance().userInput("File ${makeRelativeIfPossible(testFile.absolutePath, basedir)} already exists. Overwrite?",['y','n','a'] as String[])
+                overwrite = overwrite || response == "a"
+                return overwrite || response == "y"
+            }
+            catch (Exception e) {
+                // failure to read from standard in means we're probably running from an automation tool like a build server
+                return true
+            }
+        }
+        return true
+    }
+    
+    // Unfortunately private in superclass, so copied again here
     public getTemplateText(String template) {
         def application = grailsApplication
         // first check for presence of template in application
