@@ -187,13 +187,13 @@ class VaadinGrailsPlugin {
         }
         
         // Beans for using Vaadin in GSPs
-        gspResourcePageRenderer(GspResourcePageRenderer, ref("groovyPagesTemplateEngine")) { bean ->
+        vaadinGspRenderer(GspResourcePageRenderer, ref("groovyPagesTemplateEngine")) { bean ->
             bean.lazyInit = true
             groovyPageLocator = groovyPageLocator
             grailsResourceLocator = grailsResourceLocator
         }
         
-        gspResourceLocator(GspResourceLocator) { bean ->
+        vaadinGspLocator(GspResourceLocator) { bean ->
             bean.lazyInit = true
             groovyPageLocator = groovyPageLocator
             grailsResourceLocator = grailsResourceLocator

@@ -91,7 +91,7 @@ class GspLayout extends CustomLayout {
      * using the specified GSP as the template.
      * <p>
      * The GSP is retrieved using a {@link org.grails.plugin.vaadin.gsp.GspResourceLocator},
-     * and rendered using a {@link org.grails.plugin.vaadin.gsp.GspPageRenderer}.
+     * and rendered using a {@link org.grails.plugin.vaadin.gsp.GspResourcePageRenderer}.
      * <p>
      * Note that a tag body closure can be specified, if the GSP is being used as a template for another
      * GSP (whose contents is contained in the body closure).
@@ -107,21 +107,21 @@ class GspLayout extends CustomLayout {
      */
     protected void initTemplateContentsFromGsp(String gspUri, Closure body = null, Map params = null, Map model = null, Map flash = null) {
         // Get required classes
-        def gspResourceLocator = getBean("gspResourceLocator")
-        def gspResourcePageRenderer = getBean("gspResourcePageRenderer")
-        if (! gspResourceLocator || ! gspResourcePageRenderer) {
+        def vaadinGspLocator = getBean("vaadinGspLocator")
+        def vaadinGspRenderer = getBean("vaadinGspRenderer")
+        if (! vaadinGspLocator || ! vaadinGspRenderer) {
             throw new Exception("GSP locator and renderer classes required, but not found!")
         }
         
         // Find GSP
-        def gsp = gspResourceLocator.findGsp(gspUri)
+        def gsp = vaadinGspLocator.findGsp(gspUri)
         if (! gsp) {
             throw new Exception("GSP not found '${gspUri}'")
         }
         
         // Create input stream using gsp
         def textBuilder = {
-            def result = gspResourcePageRenderer.render([ (gsp.type) : gsp.uri, params: params, model: model, flash: flash, session: application.context.httpSession ])
+            def result = vaadinGspRenderer.render([ (gsp.type) : gsp.uri, params: params, model: model, flash: flash, session: application.context.httpSession ])
             if (body) { body() }
             return result
         }
