@@ -14,6 +14,9 @@ vaadinApplicationShortName = ""
 vaadinApplicationPackage = ""
 vaadinApplicationFullName = ""
 
+/**
+* TARGETS
+*/
 target ('initGenerateVaadinApp': 'Initialises required parameters and dependencies') {
     depends(checkVersion, parseArguments)
     
@@ -21,7 +24,7 @@ target ('initGenerateVaadinApp': 'Initialises required parameters and dependenci
     
     // Get the class and package
     def name = argsMap["params"][0]
-    checkName(name)
+    checkApplicationName(name)
     def pkg = null
     def pos = name.lastIndexOf('.')
     if (pos != -1) {
@@ -116,18 +119,20 @@ target ('installVaadinViews': "Installs Vaadin fiew files") {
     event("StatusUpdate", ["Installed Vaadin base views"])
 }
 
-target ('disableUrlMappings': 'Comments out all mappings in UrlMappings.groovy') {
+target ('updateUrlMappings': 'Adds Vaadin exclusions to UrlMappings.groovy') {
     // No dependencies
     
     // Update UrlMappings
     def mappingsFile = new File("${basedir}/grails-app/conf/UrlMappings.groovy")
     if (mappingsFile.exists()) {
-        def within = /(?ims)\A(.*(?<=^|\s|\/)class\s+UrlMappings\s*\{\s*static\s+mappings\s*=\s*\{.*?)(^.*)(^.*\}\s*\}\s*)\z/
-        def pattern = /(?ims)^(?!\/\/)/
-        def replacement = "//"
-        boolean succeeded = replaceTextInFile(file:mappingsFile, pattern:pattern, replacement:replacement, within:within)
+        boolean succeeded
+        if (containsExcludes(mappingsFile)) {
+            succeeded = addExcludes(mappingsFile)
+        } else {
+            succeeded = createExcludes(mappingsFile)
+        }
         if (succeeded) {
-            event("StatusUpdate", ["Disabled UrlMappings.groovy"])
+            event("StatusUpdate", ["Updated UrlMappings.groovy"])
         } else {
             grailsConsole.updateStatus "No changes made to UrlMappings.groovy"
         }
@@ -137,14 +142,55 @@ target ('disableUrlMappings': 'Comments out all mappings in UrlMappings.groovy')
 }
 
 target ('default': "Creates a new Vaadin Application") {
-    depends(createVaadinApp, updateVaadinConfig, installVaadinTheme, installVaadinViews, disableUrlMappings)
+    depends(createVaadinApp, updateVaadinConfig, installVaadinTheme, installVaadinViews, updateUrlMappings)
     
     event("StatusFinal", ["Finished Vaadin application generation"])
+}
+
+/**
+ * INIT METHODS
+ */
+def checkApplicationName(name) {
+    if (!name) {
+        fatalError "You must specify a name!"
+    }
+    if (! (name ==~ /([\w\d]+\.)*\w[\w\d]*/) ) {
+        fatalError "That name is invalid! '${name}'"
+    }
+    if (name.endsWith("VaadinApplication")) {
+        fatalError "Please use a different name!"
+    }
+}
+
+def createRootPackage() {
+    compile()
+    createConfig()
+    return (config.grails.project.groupId ?: grailsAppName).replace('-','.').toLowerCase()
+}
+
+/**
+ * UTILITY METHODS
+ */
+def fatalError(msg) {
+    event("StatusUpdate", ["ERROR: ${msg}"])
+    Ant.fail(message: msg)
 }
 
 boolean replaceTextInFile(Map args) {
     boolean succeeded = false
     
+    // Prepare replacers
+    def replacers = args.replacers
+    if (! replacers) {
+        if (args.pattern && args.replacement) {
+            replacers = [patternReplacer.curry(args.pattern, args.replacement)]
+        }
+    }
+    
+    if (! replacers) {
+        throw new IllegalArgumentException("Invalid args: ${args}")
+    }
+            
     // Get file contents
     def file = args.file instanceof File ? args.file : new File("${args.file}")
     def text = file.text
@@ -158,52 +204,97 @@ boolean replaceTextInFile(Map args) {
             def oldText = m[0][2]
             def afterText = m[0][3]
             
-            boolean foundPattern = text =~ args.pattern
-            if (foundPattern) {
+            try {
+                def newText = applyReplacers(oldText, replacers)
                 file.withWriter {
                     it << beforeText
-                    it << replaceAllOccurrences(oldText, args.pattern, args.replacement)
+                    it << newText
                     it << afterText
                 }
                 succeeded = true
-            }
+            } catch (err) { /* No replacers matched */ }
         }
         
     // Just replace text, wherever it is
     } else {
-        boolean foundPattern = text =~ args.pattern
-        if (foundPattern) {
-            file.text = replaceAllOccurrences(text, args.pattern, args.replacement)
+        try {
+            def newText = applyReplacers(text, replacers)
+            file.text = newText
             succeeded = true
-        }
+        } catch (err) { /* No replacers matched */ }
     }
     
     return succeeded
 }
 
-String replaceAllOccurrences(text, pattern, replacement) {
-    return text && pattern && replacement ? text.replaceAll(pattern, replacement) : text
+String applyReplacers(text, replacers) {
+    boolean oneMatch = false
+    replacers.each {
+        try {
+            text = it(text)
+            oneMatch = true
+        } catch (err) { /* No match */ }
+    }
+    if (!oneMatch) {
+        throw new Exception("No matches!")
+    }
+    return text
 }
 
-def createRootPackage() {
-    compile()
-    createConfig()
-    return (config.grails.project.groupId ?: grailsAppName).replace('-','.').toLowerCase()
+// This should be curried, e.g.: patternReplacer.curry(/mypattern/, 'myreplacement')
+patternReplacer = { pattern, replacement, text ->
+    boolean foundPattern = text =~ pattern
+    if (! foundPattern) {
+        throw new Exception("No match!")
+    }
+    return text.replaceAll(pattern, replacement)
 }
 
-def checkName(name) {
-    if (!name) {
-        fatalError "You must specify a name!"
-    }
-    if (! (name ==~ /([\w\d]+\.)*\w[\w\d]*/) ) {
-        fatalError "That name is invalid! '${name}'"
-    }
-    if (name.endsWith("VaadinApplication")) {
-        fatalError "Please use a different name!"
-    }
+/**
+ * URL MAPPINGS METHODS
+ */
+withinUrlMappings = /(?ims)\A(.*(?<=^|\s)class\s+UrlMappings\s*\{)()(.*)\z/
+withinExcludes = /(?ims)\A(.*(?<=^|\s)class\s+UrlMappings\s*\{.*(?<=^|\s|\{)static\s+excludes\s*=\s*\[)([^\]]*)(\].*)\z/
+
+boolean containsExcludes(File file) {
+    return file.text =~ withinExcludes
+}
+    
+boolean createExcludes(File file) {
+    def pattern = /^/
+    def replacement = """\
+
+    static excludes = [
+        // Vaadin static files
+        "/VAADIN/*",
+        // Vaadin controllers
+        "**/*Vaadin/**"
+    ]
+"""
+    return replaceTextInFile(file:file, pattern:pattern, replacement:replacement, within:withinUrlMappings)
 }
 
-def fatalError(msg) {
-    event("StatusUpdate", ["ERROR: ${msg}"])
-    Ant.fail(message: msg)
+boolean addExcludes(File file) {
+    return replaceTextInFile(file:file, within:withinExcludes, replacers:[
+        excludesReplacer.curry("/VAADIN/*", "Vaadin static files"),
+        excludesReplacer.curry("**/*Vaadin/**", "Vaadin controllers")
+    ])
+}
+
+// This should be curried, e.g.: excludeReplacer.curry('/my/path/**/*', 'Some comment about it')
+excludesReplacer = { exclude, comment, text ->
+    // Check actually have some excludes already, and not just comments or whitespace
+    def alreadyHasExcludesRegex = /(?m)^\s*[\"\']/
+    boolean alreadyHasExcludes = text =~ alreadyHasExcludesRegex
+    
+    // Add excludes
+    if (text.contains("'${exclude}'") || text.contains("\"${exclude}\"")) {
+        throw new Exception("Already contains!")
+    }
+    
+    return """\
+
+        // ${comment}
+        "${exclude}"${alreadyHasExcludes ? ',' : ''}
+${text}"""
 }
