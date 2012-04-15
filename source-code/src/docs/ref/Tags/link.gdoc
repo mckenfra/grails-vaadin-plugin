@@ -118,10 +118,11 @@ Typically it is used when clicking the Submit-type button on form, to write the 
 through to the domain class instance, before that instance is then written to the database. 
 
 {code:java}
+<v:form var="myForm">
+  <v:field name="author">Author</v:field>
+</v:form>
+
 <v:link action="delete" id="1" onclick="${v.commit(form:'myForm')}">
   Save
 </v:link>
 {code}
-
-Note that the form is referenced by the name set in the @var@ attribute of the [form|Tags]
-tag - in this example 'myForm'.

@@ -9,7 +9,7 @@ h3. All Vaadin Classes
  *flash* | Gets a Grails-like [flash|http://grails.org/doc/latest/ref/Tag%20Libraries/flash.html] object for the current 'request'.
  *message()* | Provides same functionality as the Grails [g:message|http://grails.org/doc/latest/ref/Tags/message.html] tag.
  *getBean()* | Specify a Spring bean to retrieve by name.
- *dispatcher* | Can be used to dispatch requests to display different Vaadin pages.
+ *dispatcher* | Can be used to [dispatch|api:org.grails.plugin.vaadin.VaadinDispatcher] requests to display different Vaadin pages.
 {table}
 
 h3. Vaadin Controllers
@@ -21,7 +21,7 @@ h3. Vaadin Controllers
  *render* | Mimics Grails's [render|http://grails.org/doc/latest/ref/Controllers/render.html] function for controllers
 {table}
 
-Please consult the Vaadin Plugin API docs for more information.
+Please consult the Vaadin Plugin [API docs|api:index] for more information.
 
 h3. Preventing API Injection
 

@@ -7,13 +7,6 @@ the GSP views are rendered using a mock HttpRequest/HttpResponse. The implementa
 does not currently support Sitemesh layouts. However, you can easily use the
 [layout|Tags] tag to use another GSP as a layout template.
 
-h4. Vaadin & Grails in the Same App
-
-It is not possible to mix standard Grails pages and Vaadin in the same
-application, since Vaadin requires that you remove all settings from your
-@UrlMappings.groovy@ file. Eventually, we hope to find a way to support both
-models in the same app.
-
 h4. Vaadin API
 
 Although the Vaadin plugin's support for Controllers is a lot like

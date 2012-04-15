@@ -1,7 +1,7 @@
 {table}
  *Version* | *Date* | *Description*
- 1.6.1 | 14-Apr 2012 | Added support for using GSPs to create Vaadin GUIs
- 1.6 | 5-Apr 2012 | Added initial scaffolding implementation
+ 1.6.1 | 15-Apr 2012 | *Improvements*:\\- Create Vaadin GUIs using GSPs & tags\\- Allow regular Grails controllers & Vaadin to be mixed together in one app 
+ 1.6 | 5-Apr 2012 | *Improvements*:\\- Controllers & Views framework, and Grails-style scaffolding\\- Instant setup of a new app with 'no-brainer' install script
  1.5.3 | 1-Mar 2012 | Vaadin updated to 6.7.5
  1.5 | Earlier | Possible to run it together with Grails 2.0.0.\\Vaadin updated to 6.7.4.\\Config option for custom servlet class name added.\\Automatic redeploy fixed (so you can do changes in\\Vaadin classes without restarting the application).
  1.4 | Earlier | Added the possibility to specify your own widgetset to be used by Vaadin servlet.\\This is very useful for using add-ons
