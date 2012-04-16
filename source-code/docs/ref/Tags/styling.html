@@ -68,12 +68,29 @@ function addJsClass(el) {
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
-                
-<h1>generate-vaadin-controller</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Generates a Vaadin controller and associated unit test for the given domain class<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/><div class="code"><pre>grails generate&#45;vaadin&#45;controller
-grails generate&#45;vaadin&#45;controller org.bookstore.Book</pre></div><p class="paragraph"/><h2>Description</h2><p class="paragraph"/>Generates a new VaadinController in the <code>grails-app/controllers</code> dir for the specified domain class.<p class="paragraph"/>Note that this command is identical to Grails's <a href="http://grails.org/doc/latest/ref/Command%20Line/generate-controller.html" target="blank">generate-controller</a>
-except that it uses a different template - located at <code>src/templates/vaadin/scaffolding/VaadinController</code><p class="paragraph"/>The <code>generate-vaadin-controller</code> command generates just the controller (and associated unit test) that implements CRUD for the given domain class. The argument is optional, but if you don't include it the command will ask you for the name of the domain class to scaffold. So for a domain class <code>org.bookstore.Book</code>, this command will generate the controller <code>BookVaadinController.groovy</code> in <code>grails-app/controllers/org/bookstore</code>.<p class="paragraph"/>Usage:
-<div class="code"><pre>grails generate&#45;vaadin&#45;controller &#91;domain class name&#93;</pre></div>
-
+                <h1>Styling for Tags</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>A Vaadin tag does not translate to a single HTML tag. Some additional tag attributes are provided
+to allow you to get the CSS effect you are after.<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/><div class="code"><pre>&#60;v:label class=<span class="java&#45;quote">"mylabel"</span>&#62;Hello World!&#60;/v:label&#62;<p class="paragraph"/>&#60;v:label class=<span class="java&#45;quote">"mylabel"</span> wrapperClass=<span class="java&#45;quote">"wrapper_for_mylabel"</span>&#62;Hello World!&#60;/v:label&#62;<p class="paragraph"/>&#60;v:label class=<span class="java&#45;quote">"mylabel"</span> wrapperStyle=<span class="java&#45;quote">"display:inline;"</span>&#62;Hello World!&#60;/v:label&#62;</pre></div><p class="paragraph"/><h2>Description</h2><p class="paragraph"/>When you insert a Vaadin tag into a <code>.gsp</code> page, be aware that it is not a simple HTML-style
+tag. Åttributes such as <code>class</code> and <code>style</code> may not behave as you would expect.<p class="paragraph"/>Vaadin constructs its components using varying numbers of <code>&#60;div&#62;</code> elements. For an understanding
+of the div styling rules for a particular Vaadin component type, you should look up the component
+in the <a href="http://vaadin.com/book/-/page/components.html" target="blank">Components Section</a> in the Book of Vaadin.
+For example, see the styles that apply to the <code>Table</code> component at the bottom of
+<a href="https://vaadin.com/book/-/page/components.table.html#components.table.css" target="blank">this page</a><p class="paragraph"/>However, Vaadin does provide a <code>class</code> attribute for all components. You can use this
+to set the CSS for a particular component, noting that it may also nest some divs within it.<p class="paragraph"/><blockquote class="note">
+The HTML/CSS <code>style</code> attribute is not available to Vaadin components!
+</blockquote><p class="paragraph"/><h4>CSS and Layouts</h4><p class="paragraph"/>If a Vaadin component tag is placed directly into a <code>.gsp</code> file without being wrapped by a layout
+tag such as <a href="../../ref/Tags/horizontalLayout.html" class="Tags">horizontalLayout</a>, then it gets automatically wrapped by a <code>&#60;div&#62;</code> tag. E.g. you may
+have the following in a file called <code>list.gsp</code>:<p class="paragraph"/><div class="code"><pre>&#60;!&#45;&#45; Wrapper CSS applied to automatically&#45;generated parent div &#45;&#45;&#62;<p class="paragraph"/>&#60;v:label wrapperStyle=<span class="java&#45;quote">"background: red;"</span>&#62;Hello World!&#60;/v:label&#62;</pre></div><p class="paragraph"/>The <a href="../../ref/Tags/label.html" class="Tags">label</a> will be rendered with a <code>&#60;div&#62;</code> wrapped around it.<p class="paragraph"/>To get the layout effect you want, you can use the <code>wrapperClass</code> and/or <code>wrapperStyle</code>
+attributes to apply a CSS class / inline-style to the wrapper <code>&#60;div&#62;</code> tag itself.<p class="paragraph"/>Note that if the Vaadin component tag is placed within a layout tag such as
+<a href="../../ref/Tags/horizontalLayout.html" class="Tags">horizontalLayout</a> then no <code>&#60;div&#62;</code> wrapper tag is placed around it, and the
+<code>wrapperClass</code> and <code>wrapperStyle</code> attributes will be ignored. E.g. if your <code>list.gsp</code> is as follows,
+then it will just be attached directly to the <code>&#60;v:horizontalLayout&#62;</code> with no <code>&#60;div&#62;</code> wrapper:<p class="paragraph"/><div class="code"><pre>&#60;!&#45;&#45; Wrapper CSS is ignored, as parent is a Vaadin layout tag &#45;&#45;&#62;<p class="paragraph"/>&#60;v:horizontalLayout&#62;
+  &#60;v:label wrapperStyle=<span class="java&#45;quote">"background: red"</span>&#62;Hello World!&#60;/v:label&#62;
+&#60;/v:horizontalLayout&#62;</pre></div><p class="paragraph"/><h2>Attributes</h2><p class="paragraph"/>The following attributes are available to all Vaadin component tags:
+<ul class="star">
+<li><code>class</code> (optional) The CSS class to apply to the component itself.</li>
+<li><code>wrapperClass</code> (optional) The CSS class to use for the <code>&#60;div&#62;</code> wrapper that contains this component (if it exists).</li>
+<li><code>wrapperStyle</code> (optional) The CSS inline-style to use for the <code>&#60;div&#62;</code> wrapper that contains this component (if it exists).</li>
+</ul><p class="paragraph"/>
             </div>
         </td>
         <td id="col2">
@@ -86,7 +103,7 @@ except that it uses a different template - located at <code>src/templates/vaadin
                     
                     <div class="menu-block">
                         <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Command Line</h1>
-                        <div class="menu-sub selected">
+                        <div class="menu-sub">
                             
                             
                             <div class="menu-item"><a href="../../ref/Command%20Line/create-vaadin-controller.html">create-vaadin-controller</a>
@@ -112,7 +129,7 @@ except that it uses a different template - located at <code>src/templates/vaadin
                     
                     <div class="menu-block">
                         <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Tags</h1>
-                        <div class="menu-sub">
+                        <div class="menu-sub selected">
                             
                             
                             <div class="menu-item"><a href="../../ref/Tags/column.html">column</a>

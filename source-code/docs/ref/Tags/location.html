@@ -81,10 +81,19 @@ exact as Vaadin has its own rules for rendering CustomLayout components.
 using layout templates.<p class="paragraph"/><h4>Body</h4>
 <ul class="star">
 <li>Can contain any GSP content.</li>
-</ul><p class="paragraph"/><h4>Attributes</h4>
+</ul><p class="paragraph"/><h4>Attributes</h4><p class="paragraph"/><h5>Specific</h5>
 <ul class="star">
-<li><code>name</code> (required) The location name in the parent container to which this GSP content should be added.</li>
-</ul><p class="paragraph"/>
+<li><code>name</code> or <code>location</code> (required) The location slot in the parent container to which this GSP content should be added.</li>
+</ul><p class="paragraph"/><h5>General </h5>
+<ul class="star">
+<li><code>var</code> (optional) Uses Grails's <a href="http://grails.org/doc/latest/ref/Tags/set.html" target="blank">set</a> tag to set the value of the specified variable to be this component.</li>
+<li><code>class</code> (optional) The CSS class name to add to the component using the addStyleName() method</li>
+<li><code>sizeUndefined</code> (optional) Calls setSizeUndefined() on the component. (Attribute value is ignored)</li>
+<li><code>sizeFull</code> (optional) Calls setSizeFull() on the component. (Attribute value is ignored)</li>
+<li><code>wrapperClass</code>, <code>wrapperStyle</code> (optional) Special <a href="../../ref/Tags/styling.html" class="Tags">styling</a> for wrapper <code>&#60;div&#62;</code>.</li>
+</ul><p class="paragraph"/><blockquote class="note">
+See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/CustomLayout.html" target="blank">CustomLayout</a> API docs for full list of allowed attributes.
+</blockquote>
             </div>
         </td>
         <td id="col2">
@@ -151,6 +160,9 @@ using layout templates.<p class="paragraph"/><h4>Body</h4>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/location.html">location</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/styling.html">styling</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/table.html">table</a>
