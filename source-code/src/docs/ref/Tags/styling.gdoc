@@ -1,0 +1,74 @@
+h1. Styling for Tags
+
+h2. Purpose
+
+A Vaadin tag does not translate to a single HTML tag. Some additional tag attributes are provided
+to allow you to get the CSS effect you are after.
+
+h2. Examples
+
+{code:java}
+<v:label class="mylabel">Hello World!</v:label>
+
+<v:label class="mylabel" wrapperClass="wrapper_for_mylabel">Hello World!</v:label>
+
+<v:label class="mylabel" wrapperStyle="display:inline;">Hello World!</v:label>
+{code}
+
+h2. Description
+
+When you insert a Vaadin tag into a @.gsp@ page, be aware that it is not a simple HTML-style
+tag. Åttributes such as @class@ and @style@ may not behave as you would expect.
+
+Vaadin constructs its components using varying numbers of @<div>@ elements. For an understanding
+of the div styling rules for a particular Vaadin component type, you should look up the component
+in the [Components Section|http://vaadin.com/book/-/page/components.html] in the Book of Vaadin.
+For example, see the styles that apply to the @Table@ component at the bottom of
+[this page|https://vaadin.com/book/-/page/components.table.html#components.table.css]
+
+However, Vaadin does provide a @class@ attribute for all components. You can use this
+to set the CSS for a particular component, noting that it may also nest some divs within it.
+
+{note}
+The HTML/CSS @style@ attribute is not available to Vaadin components!
+{note}
+
+h4. CSS and Layouts
+
+If a Vaadin component tag is placed directly into a @.gsp@ file without being wrapped by a layout
+tag such as [horizontalLayout|Tags], then it gets automatically wrapped by a @<div>@ tag. E.g. you may
+have the following in a file called @list.gsp@:
+
+{code:java}
+<!-- Wrapper CSS applied to automatically-generated parent div -->
+
+<v:label wrapperStyle="background: red;">Hello World!</v:label>
+{code}
+
+The [label|Tags] will be rendered with a @<div>@ wrapped around it.
+
+To get the layout effect you want, you can use the @wrapperClass@ and/or @wrapperStyle@
+attributes to apply a CSS class / inline-style to the wrapper @<div>@ tag itself.
+
+Note that if the Vaadin component tag is placed within a layout tag such as
+[horizontalLayout|Tags] then no @<div>@ wrapper tag is placed around it, and the
+@wrapperClass@ and @wrapperStyle@ attributes will be ignored. E.g. if your @list.gsp@ is as follows,
+then it will just be attached directly to the @<v:horizontalLayout>@ with no @<div>@ wrapper:
+
+{code:java}
+<!-- Wrapper CSS is ignored, as parent is a Vaadin layout tag -->
+ 
+<v:horizontalLayout>
+  <v:label wrapperStyle="background: red">Hello World!</v:label>
+</v:horizontalLayout>
+{code}
+
+h2. Attributes
+
+The following attributes are available to all Vaadin component tags:
+
+* @class@ (optional) The CSS class to apply to the component itself.
+
+* @wrapperClass@ (optional) The CSS class to use for the @<div>@ wrapper that contains this component (if it exists).
+
+* @wrapperStyle@ (optional) The CSS inline-style to use for the @<div>@ wrapper that contains this component (if it exists).
