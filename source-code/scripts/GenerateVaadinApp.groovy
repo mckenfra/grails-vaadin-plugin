@@ -9,6 +9,7 @@ import grails.util.GrailsNameUtils
 
 includeTargets << grailsScript("_GrailsInit")
 includeTargets << grailsScript("_GrailsCreateArtifacts")
+includeTargets << new File("${vaadinPluginDir}/scripts/_TextUtils.groovy")
 
 vaadinApplicationShortName = ""
 vaadinApplicationPackage = ""
@@ -174,80 +175,6 @@ def createRootPackage() {
 def fatalError(msg) {
     event("StatusUpdate", ["ERROR: ${msg}"])
     Ant.fail(message: msg)
-}
-
-boolean replaceTextInFile(Map args) {
-    boolean succeeded = false
-    
-    // Prepare replacers
-    def replacers = args.replacers
-    if (! replacers) {
-        if (args.pattern && args.replacement) {
-            replacers = [patternReplacer.curry(args.pattern, args.replacement)]
-        }
-    }
-    
-    if (! replacers) {
-        throw new IllegalArgumentException("Invalid args: ${args}")
-    }
-            
-    // Get file contents
-    def file = args.file instanceof File ? args.file : new File("${args.file}")
-    def text = file.text
-    
-    // Replace text within some block of text
-    if (args.within) {
-        def m = text =~ args.within
-        boolean foundWithin = m
-        if (foundWithin && m.groupCount() == 3) {
-            def beforeText = m[0][1]
-            def oldText = m[0][2]
-            def afterText = m[0][3]
-            
-            try {
-                def newText = applyReplacers(oldText, replacers)
-                file.withWriter {
-                    it << beforeText
-                    it << newText
-                    it << afterText
-                }
-                succeeded = true
-            } catch (err) { /* No replacers matched */ }
-        }
-        
-    // Just replace text, wherever it is
-    } else {
-        try {
-            def newText = applyReplacers(text, replacers)
-            file.text = newText
-            succeeded = true
-        } catch (err) { /* No replacers matched */ }
-    }
-    
-    return succeeded
-}
-
-String applyReplacers(text, replacers) {
-    boolean oneMatch = false
-    replacers.each {
-        try {
-            text = it(text)
-            oneMatch = true
-        } catch (err) { /* No match */ }
-    }
-    if (!oneMatch) {
-        throw new Exception("No matches!")
-    }
-    return text
-}
-
-// This should be curried, e.g.: patternReplacer.curry(/mypattern/, 'myreplacement')
-patternReplacer = { pattern, replacement, text ->
-    boolean foundPattern = text =~ pattern
-    if (! foundPattern) {
-        throw new Exception("No match!")
-    }
-    return text.replaceAll(pattern, replacement)
 }
 
 /**
