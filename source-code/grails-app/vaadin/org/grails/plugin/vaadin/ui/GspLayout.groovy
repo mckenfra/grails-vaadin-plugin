@@ -187,10 +187,20 @@ class GspLayout extends CustomLayout {
         }
         
         @Override
-        public CharSequence attachComponent(Component component, String location) {
-            location = location ?: "component_${components.size()}"
-            components[location] = component
-            return "<div location='${location}'></div>"
+        public CharSequence attachComponent(Component component, Map params = null) {
+            params = params ?: [:]
+
+            // Set location
+            params.location = params.location ?: "component_${components.size()}"
+            
+            // Store component in internal collection
+            components[params.location] = component
+            
+            // Format params as wrapper attributes
+            def attrs = params.findAll {k,v->k&&v}.collect { "${it.key}='${it.value}'" }.join(" ")
+            
+            // Return wrapper HTML
+            return "<div ${attrs}></div>"
         }
     }
     

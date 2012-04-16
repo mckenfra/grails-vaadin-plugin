@@ -89,16 +89,21 @@ class VaadinTagLib implements ApplicationContextAware {
      */
     Closure layout = { attrs, body ->
         // Ensure have layout name
-        if (!attrs.name) {
+        def name = attrs.remove('name')
+        if (!name) {
             throw new IllegalArgumentException("Tag <${namespace}:layout> must have 'name' attribute")
         }
-        def layoutName = "/layouts/${attrs.name}"
+        def layoutName = "/layouts/${name}"
         
         // Create component - automatically evaluates body
         def component = new GspLayout(layoutName, body, params, null, flash, controllerName)
         
+        // Evaluate attributes
+        def attachAttrs = removeAttachAttrs(attrs)
+        evaluateAttributes(component, attrs)
+        
         // Attach to parent (if any)
-        attachComponent(component, attrs.location)
+        attachComponent(component, attachAttrs)
     }
     
     /**
@@ -108,15 +113,22 @@ class VaadinTagLib implements ApplicationContextAware {
      */
     Closure location = { attrs, body ->
         // Ensure have location name
-        if (!attrs.name) {
+        def name = attrs.remove('name')
+        name = name ?: attrs.location
+        if (!name) {
             throw new IllegalArgumentException("Tag <${namespace}:location> must have 'name' attribute")
         }
+        attrs.location = name
         
         // Create component - automatically evaluates body
         def component = new GspLayout(body)
         
+        // Evaluate attributes
+        def attachAttrs = removeAttachAttrs(attrs)
+        evaluateAttributes(component, attrs)
+
         // Attach to parent (if any)
-        attachComponent(component, attrs.name)
+        attachComponent(component, attachAttrs)
     }
     
     /**
@@ -125,7 +137,8 @@ class VaadinTagLib implements ApplicationContextAware {
      * Components to be added to the layout should be specified as nested elements.
      */
     Closure horizontalLayout = { attrs, body ->
-        attachComponent(createHorizontalLayout(attrs, body), attrs.location)
+        def attachAttrs = removeAttachAttrs(attrs)
+        attachComponent(createHorizontalLayout(attrs, body), attachAttrs)
     }
 
     /**
@@ -141,7 +154,8 @@ class VaadinTagLib implements ApplicationContextAware {
      * Components to be added to the layout should be specified as nested elements.
      */
     Closure verticalLayout = { attrs, body ->
-        attachComponent(createVerticalLayout(attrs, body), attrs.location)
+        def attachAttrs = removeAttachAttrs(attrs)
+        attachComponent(createVerticalLayout(attrs, body), attachAttrs)
     }
     
     /**
@@ -177,7 +191,8 @@ class VaadinTagLib implements ApplicationContextAware {
      * Columns should be configured using nested &lt;v:column&gt; tags
      */
     Closure table = { attrs, body ->
-        attachComponent(createTable(attrs, body), attrs.location)
+        def attachAttrs = removeAttachAttrs(attrs)
+        attachComponent(createTable(attrs, body), attachAttrs)
     }
     
     /**
@@ -256,7 +271,8 @@ class VaadinTagLib implements ApplicationContextAware {
      * Fields should be configured using nested &lt;v:form&gt; tags
      */
     Closure form = { attrs, body ->
-        attachComponent(createForm(attrs, body), attrs.location)
+        def attachAttrs = removeAttachAttrs(attrs)
+        attachComponent(createForm(attrs, body), attachAttrs)
     }
     
     /**
@@ -327,7 +343,8 @@ class VaadinTagLib implements ApplicationContextAware {
      * The label message should be specified in the tag body.
      */
     Closure label = { attrs, body ->
-        attachComponent(createLabel(attrs, body), attrs.location)
+        def attachAttrs = removeAttachAttrs(attrs)
+        attachComponent(createLabel(attrs, body), attachAttrs)
     }
     
     /**
@@ -355,7 +372,8 @@ class VaadinTagLib implements ApplicationContextAware {
      * the link. Alternatively, simply return true from the closure to follow the link.
      */
     Closure link = { attrs, body ->
-        attachComponent(createLink(attrs, body), attrs.location)
+        def attachAttrs = removeAttachAttrs(attrs)
+        attachComponent(createLink(attrs, body), attachAttrs)
     }
     
     /**
@@ -463,10 +481,10 @@ class VaadinTagLib implements ApplicationContextAware {
         return component
     }
     
-    protected void attachComponent(Component component, String location = null) {
+    protected void attachComponent(Component component, Map attrs = null) {
         GspContext context = new GspContext(session)
         GspAttacher attacher = new GspAttacher(context, out)
-        attacher.attachComponent(component, location)
+        attacher.attachComponent(component, attrs)
     }
     
     protected void attachConfig(attrs, body, Class componentClass, String type, bodyProperty = null) {
@@ -480,6 +498,15 @@ class VaadinTagLib implements ApplicationContextAware {
         GspAttacher attacher = new GspAttacher(context, out)
         attacher.attachConfig(config)
     }
+    
+    protected Map removeAttachAttrs(Map attrs) {
+        Map result = [:]
+        result.location = attrs.remove('location')
+        result.style = attrs.remove('wrapperStyle')
+        result.'class' = attrs.remove('wrapperClass')
+        result.role = attrs.remove('role')
+        return result
+    }
 
     protected void setComponentProperties(Component component, Map attrs) {
         attrs.each { k,v ->
@@ -490,8 +517,6 @@ class VaadinTagLib implements ApplicationContextAware {
                 case "style": throw new IllegalArgumentException("CSS 'style' is not supported by Vaadin components"); break;
                 case "sizeundefined": component.setSizeUndefined(); break;
                 case "sizefull": component.setSizeFull(); break;
-                case "role": break; /* IGNORE */
-                case "location": break; /* IGNORE */
                 default: component."${k}" = (v == "false" ? false : (v == "true" ? true : v))
             }
         }

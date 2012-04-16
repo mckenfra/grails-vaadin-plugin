@@ -141,11 +141,11 @@ class GspComponentNode {
      * text when adding a child component.
      *  
      * @param child The child Vaadin Component to add to this node's container component
-     * @param location The location to use when adding the child component to this node's component 
+     * @param params The (optional) params to use when adding the child component to this node's component. Typically will contain 'location'
      * @return The text result of adding the child component - always returns null, because
      * this is only useful to subclasses.
      */
-    public CharSequence attachComponent(Component child, String location) {
+    public CharSequence attachComponent(Component child, Map params = null) {
         if (component instanceof CustomLayout && location) {
             component.addComponent(child, location)
         } else if (component instanceof ComponentContainer) {

@@ -37,11 +37,12 @@ class GspAttacher {
      * Attaches the specified Component to the context's active Vaadin Component.
      * 
      * @param component The Vaadin Component to attach
+     * @param params The (optional) params to use when adding the child component to this node's component. Typically will contain 'location'
      */
-    def attachComponent(Component component, String location = null) {
+    def attachComponent(Component component, Map params = null) {
         // Attach to parent
         if (context.node) {
-            def attachingText = context.node.attachComponent(component, location)
+            def attachingText = context.node.attachComponent(component, params)
             if (attachingText && out) {
                 out << attachingText
             }

@@ -47,6 +47,8 @@ h5. General
 
 * @location@ (optional) The location slot in the parent container to which this component should be added.
 
+* @wrapperClass@, @wrapperStyle@ (optional) Special [styling|Tags] for wrapper @<div>@.
+
 {note}
 See Vaadin [Form|http://vaadin.com/api/com/vaadin/ui/Form.html] API docs for full list of allowed attributes.
 {note}

@@ -51,4 +51,24 @@ h4. Body
 
 h4. Attributes
 
+h5. Specific 
+
 * @name@ (required) The name of the GSP layout template. Must be relative to directory @grails-app/views/layouts@
+
+h5. General 
+
+* @var@ (optional) Uses Grails's [set|http://grails.org/doc/latest/ref/Tags/set.html] tag to set the value of the specified variable to be this component.
+
+* @class@ (optional) The CSS class name to add to the component using the addStyleName() method
+
+* @sizeUndefined@ (optional) Calls setSizeUndefined() on the component. (Attribute value is ignored)
+
+* @sizeFull@ (optional) Calls setSizeFull() on the component. (Attribute value is ignored)
+
+* @location@ (optional) The location slot in the parent container to which this component should be added.
+
+* @wrapperClass@, @wrapperStyle@ (optional) Special [styling|Tags] for wrapper @<div>@.
+
+{note}
+See Vaadin [CustomLayout|http://vaadin.com/api/com/vaadin/ui/CustomLayout.html] API docs for full list of allowed attributes.
+{note}
