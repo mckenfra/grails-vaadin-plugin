@@ -1,0 +1,36 @@
+h1. optionGroup
+
+h2. Purpose
+
+Configures an [OptionGroup|http://vaadin.com/api/com/vaadin/ui/OptionGroup.html] field of the parent Vaadin [Form|http://vaadin.com/api/com/vaadin/ui/Form.html] component.
+
+h2. Examples
+
+{code:java}
+<v:form itemDataSource="${new BeanItem<Zoo>(zooInstance)}">
+  <v:optionGroup name="animal" from="${['Lion', 'Tiger', 'Snake']}">Animal</v:optionGroup>
+</v:form>
+{code}
+
+h2. Description
+
+The optionGroup tag is a special type of [field|Tags] tag, where the field component
+is a Vaadin [OptionGroup|http://vaadin.com/api/com/vaadin/ui/OptionGroup.html].
+
+h4. Body
+
+* Contains the caption for the field
+
+h4. Attributes
+
+* @name@ (required) The property name of the field
+
+* @caption@ (optional) The caption of the field. Overrides the body content.
+
+* @from@ (optional) Either a comma-separated String or a collection of items to set as the containerDataSource for the optionGroup.
+
+* @containerDataSource@ (optional) A [Container|http://vaadin.com/api/com/vaadin/data/Container.html] to set as the containerDataSource for the optionGroup.
+
+{note}
+See Vaadin [OptionGroup|http://vaadin.com/api/com/vaadin/ui/OptionGroup.html] API docs for full list of allowed attributes.
+{note}

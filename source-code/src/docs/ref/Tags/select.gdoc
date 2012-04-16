@@ -1,0 +1,36 @@
+h1. select
+
+h2. Purpose
+
+Configures a [Select|http://vaadin.com/api/com/vaadin/ui/Select.html] field of the parent Vaadin [Form|http://vaadin.com/api/com/vaadin/ui/Form.html] component.
+
+h2. Examples
+
+{code:java}
+<v:form itemDataSource="${new BeanItem<Zoo>(zooInstance)}">
+  <v:select name="animal" from="${['Lion', 'Tiger', 'Snake']}">Animal</v:select>
+</v:form>
+{code}
+
+h2. Description
+
+The select tag is a special type of [field|Tags] tag, where the field component
+is a Vaadin [Select|http://vaadin.com/api/com/vaadin/ui/Select.html].
+
+h4. Body
+
+* Contains the caption for the field
+
+h4. Attributes
+
+* @name@ (required) The property name of the field
+
+* @caption@ (optional) The caption of the field. Overrides the body content.
+
+* @from@ (optional) Either a comma-separated String or a collection of items to set as the containerDataSource for the select.
+
+* @containerDataSource@ (optional) A [Container|http://vaadin.com/api/com/vaadin/data/Container.html] to set as the containerDataSource for the select.
+
+{note}
+See Vaadin [Select|http://vaadin.com/api/com/vaadin/ui/Select.html] API docs for full list of allowed attributes.
+{note}

@@ -1,5 +1,7 @@
 package org.grails.plugin.vaadin.taglib
 
+import java.util.Iterator;
+
 import grails.artefact.Artefact;
 import groovy.lang.Closure;
 
@@ -14,6 +16,8 @@ import org.grails.plugin.vaadin.gsp.MapDrivenFieldFactory;
 import org.grails.plugin.vaadin.ui.GrailsButton;
 import org.grails.plugin.vaadin.ui.GspLayout;
 
+import com.vaadin.data.Container;
+import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
@@ -45,6 +49,11 @@ import com.vaadin.ui.Window.Notification;
  * <li>column</li>
  * <li>form</li>
  * <li>field</li>
+ * <li>checkBox</li>
+ * <li>comboBox</li>
+ * <li>date</li>
+ * <li>optionGroup</li>
+ * <li>select</li>
  * <li>label</li>
  * <li>link</li>
  * </ul>
@@ -300,6 +309,17 @@ class VaadinTagLib implements ApplicationContextAware {
                     def name = it.props.remove("name")
                     if (name) {
                         fields << name
+                        def fromList = it.props.remove("from")
+                        if (fromList) {
+                            if (! (fromList instanceof Collection) ) {
+                                 fromList = fromList.toString().split(",")   
+                            }
+                            Container c = new IndexedContainer()
+                            fromList.each {
+                                c.addItem(it)
+                            }
+                            it.props.containerDataSource = c
+                        }
                         fieldProps[name] = it.props
                     }
                 }
@@ -337,6 +357,61 @@ class VaadinTagLib implements ApplicationContextAware {
         attachConfig(attrs, body, Form.class, "field", "caption")
     }
 
+    /**
+     * <a href="http://vaadin.com/api/com/vaadin/ui/CheckBox.html">CheckBox</a> field
+     */
+    Closure checkBox = { attrs, body ->
+        attrs.type = 'checkBox'
+        field(attrs, body)
+    }
+    
+    /**
+     * <a href="http://vaadin.com/api/com/vaadin/ui/CheckBox.html">CheckBox</a> field
+     */
+    Closure checkbox = checkBox
+    
+    /**
+     * <a href="http://vaadin.com/api/com/vaadin/ui/ComboBox.html">ComboBox</a> field
+     */
+    Closure comboBox = { attrs, body ->
+        attrs.type = 'comboBox'
+        field(attrs, body)
+    }
+    
+    /**
+     * <a href="http://vaadin.com/api/com/vaadin/ui/ComboBox.html">ComboBox</a> field
+     */
+    Closure combobox = comboBox
+    
+    /**
+     * <a href="http://vaadin.com/api/com/vaadin/ui/DateField.html">DateField</a> field
+     */
+    Closure date = { attrs, body ->
+        attrs.type = 'dateField'
+        field(attrs, body)
+    }
+    
+    /**
+     * <a href="http://vaadin.com/api/com/vaadin/ui/OptionGroup.html">OptionGroup</a> field
+     */
+    Closure optionGroup = { attrs, body ->
+        attrs.type = 'optionGroup'
+        field(attrs, body)
+    }
+    
+    /**
+     * <a href="http://vaadin.com/api/com/vaadin/ui/OptionGroup.html">OptionGroup</a> field
+     */
+    Closure optiongroup = optionGroup
+    
+    /**
+     * <a href="http://vaadin.com/api/com/vaadin/ui/Select.html">Select</a> field
+     */
+    Closure select = { attrs, body ->
+        attrs.type = 'select'
+        field(attrs, body)
+    }
+    
     /**
      * Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Label.html">Label</a> tag
      * <p>

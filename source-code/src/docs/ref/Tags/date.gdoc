@@ -1,0 +1,32 @@
+h1. date
+
+h2. Purpose
+
+Configures a [DateField|http://vaadin.com/api/com/vaadin/ui/DateField.html] of the parent Vaadin [Form|http://vaadin.com/api/com/vaadin/ui/Form.html] component.
+
+h2. Examples
+
+{code:java}
+<v:form itemDataSource="${new BeanItem<Book>(bookInstance)}">
+  <v:date name="datePublished">Date Published</v:date>
+</v:form>
+{code}
+
+h2. Description
+
+The date tag is a special type of [field|Tags] tag, where the field component
+is a Vaadin [DateField|http://vaadin.com/api/com/vaadin/ui/DateField.html].
+
+h4. Body
+
+* Contains the caption for the field
+
+h4. Attributes
+
+* @name@ (required) The property name of the field
+
+* @caption@ (optional) The caption of the field. Overrides the body content.
+
+{note}
+See Vaadin [DateField|http://vaadin.com/api/com/vaadin/ui/DateField.html] API docs for full list of allowed attributes.
+{note}

@@ -19,7 +19,12 @@ In addition, you can embed Vaadin components in GSPs using the tag library provi
  [table|Tags] | Adds a Vaadin [Table|http://vaadin.com/api/com/vaadin/ui/Table.html] component to the parent container.
  [column|Tags] | Configures a single column of the parent Vaadin [Table|http://vaadin.com/api/com/vaadin/ui/Table.html] component.
  [form|Tags] | Adds a Vaadin [Form|http://vaadin.com/api/com/vaadin/ui/Form.html] component to the parent container.
- [field|Tags] | Configures a single field of the parent Vaadin [Form|http://vaadin.com/api/com/vaadin/ui/Form.html] component.
+ [field|Tags] | Configures a single [Field|http://vaadin.com/api/com/vaadin/ui/AbstractField.html] of the parent Vaadin Form component.
+ [checkBox|Tags] | Configures a [CheckBox|http://vaadin.com/api/com/vaadin/ui/CheckBox.html] field of the parent Vaadin Form component.
+ [comboBox|Tags] | Configures a [ComboBox|http://vaadin.com/api/com/vaadin/ui/ComboBox.html] field of the parent Vaadin Form component.
+ [date|Tags] | Configures a [DateField|http://vaadin.com/api/com/vaadin/ui/DateField.html] of the parent Vaadin Form component.
+ [optionGroup|Tags] | Configures an [OptionGroup|http://vaadin.com/api/com/vaadin/ui/OptionGroup.html] field of the parent Vaadin Form component.
+ [select|Tags] | Configures a [Select|http://vaadin.com/api/com/vaadin/ui/Select.html] field of the parent Vaadin Form component.
  [warning|Tags] | Shows a warning-type [Window.Notification|http://vaadin.com/api/com/vaadin/ui/Window.Notification.html] in the application's main window.
  [error|Tags] | Shows an error-type [Window.Notification|http://vaadin.com/api/com/vaadin/ui/Window.Notification.html] in the application's main window.
 {table}

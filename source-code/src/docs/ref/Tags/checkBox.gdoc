@@ -1,0 +1,32 @@
+h1. checkBox
+
+h2. Purpose
+
+Configures a [CheckBox|http://vaadin.com/api/com/vaadin/ui/CheckBox.html] field of the parent Vaadin [Form|http://vaadin.com/api/com/vaadin/ui/Form.html] component.
+
+h2. Examples
+
+{code:java}
+<v:form itemDataSource="${new BeanItem<Book>(bookInstance)}">
+  <v:checkBox name="bestseller">Bestseller</v:checkBox>
+</v:form>
+{code}
+
+h2. Description
+
+The checkBox tag is a special type of [field|Tags] tag, where the field component
+is a Vaadin [CheckBox|http://vaadin.com/api/com/vaadin/ui/CheckBox.html].
+
+h4. Body
+
+* Contains the caption for the field
+
+h4. Attributes
+
+* @name@ (required) The property name of the field
+
+* @caption@ (optional) The caption of the field. Overrides the body content.
+
+{note}
+See Vaadin [CheckBox|http://vaadin.com/api/com/vaadin/ui/CheckBox.html] API docs for full list of allowed attributes.
+{note}

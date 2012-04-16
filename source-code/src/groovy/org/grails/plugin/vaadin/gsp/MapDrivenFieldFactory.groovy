@@ -1,9 +1,16 @@
 package org.grails.plugin.vaadin.gsp
 
+import org.grails.plugin.vaadin.scaffolding.DefaultVaadinTemplateGenerator;
+
 import com.vaadin.data.Item;
+import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
+import com.vaadin.ui.OptionGroup;
+import com.vaadin.ui.Select;
 import com.vaadin.ui.TextField;
 
 /**
@@ -49,9 +56,16 @@ class MapDrivenFieldFactory extends DefaultFieldFactory {
      */
     @Override
     public Field createField(Item item, Object propertyId, Component uiContext) {
-        // Use the super class to create a suitable field based on the
+        def fieldProps = fields[propertyId] ?: [:]
+        
+        // Try to create the field using the 'type' attribute
+        Field f = createFieldFromType(fieldProps.remove('type'))
+        
+        // If not, use the super class to create a suitable field based on the
         // property type.
-        Field f = super.createField(item, propertyId, uiContext)
+        if (! f) {
+            f = super.createField(item, propertyId, uiContext)
+        }
         
         // Automatically set nullRepresentation for TextFields
         if (f instanceof TextField) {
@@ -59,7 +73,6 @@ class MapDrivenFieldFactory extends DefaultFieldFactory {
         }
         
         if (propertyId) {
-            def fieldProps = fields[propertyId]
             if (fieldProps) {
                 fieldProps.each { k,v ->
                     f."${k}" = (v == "false" ? false : (v == "true" ? true : v)) 
@@ -68,5 +81,41 @@ class MapDrivenFieldFactory extends DefaultFieldFactory {
         }
         
         return f
+    }
+    
+    protected Field createFieldFromType(type) {
+        Field result
+        if (type) {
+            try {
+                // If tyep is a class, create an instance
+                if (type.class == Class.class) {
+                    result = type.newInstance()
+                
+                } else {
+                    // Type may be a shortcut name
+                    switch (type.toString().toLowerCase()) {
+                        case 'date': // Fall through
+                        case 'datefield': // Fall through
+                        case 'datepicker': result = new DateField(); result.setResolution(DateField.RESOLUTION_DAY); break;
+                        case 'checkbox': result = new CheckBox(); break;
+                        case 'select': result = new Select(); break;
+                        case 'combobox': result = new ComboBox(); break;
+                        case 'option': // Fall through
+                        case 'optiongroup': result = new OptionGroup(); break;
+                    }
+                    
+                    
+                    // No result - assume type is class name
+                    if (!result) {
+                        def clazz = Class.forName(type)
+                        result = clazz.newInstance()
+                    }
+                }
+            } catch (err) {
+                throw new IllegalArgumentException("Field type not valid '${type}'")
+            }
+        }
+        
+        return result
     }
 }
