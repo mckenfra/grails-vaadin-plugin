@@ -213,7 +213,7 @@ class VaadinDispatcher {
     
             // Show view
             def oldView = application.mainWindow.componentIterator.find { ! (it instanceof UriFragmentUtility) }
-            def newView = new GspLayout(activeRequest.viewFullName, activeRequest.params, activeRequest.model, activeRequest.flash)
+            def newView = new GspLayout(activeRequest.viewFullName, activeRequest.params, activeRequest.model, activeRequest.flash, activeRequest.controller)
             if (oldView) {
                 application.mainWindow.replaceComponent(oldView, newView)
             } else {

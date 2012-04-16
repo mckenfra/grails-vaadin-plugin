@@ -31,6 +31,10 @@ class GspLayout extends CustomLayout {
     def log = LogFactory.getLog(this.class)
 
     /**
+     * True if this Gsp is the top-level Gsp, and not a Gsp rendered inside another.
+     */
+    protected boolean isRoot
+    /**
      * The uri of the GSP. Only used for logging purposes.
      */
     String gspUri
@@ -42,17 +46,18 @@ class GspLayout extends CustomLayout {
      * @param params The params map to use when rendering the GSP.
      * @param model The model map to use when rendering the GSP.
      * @param flash The flash scope object to use when rendering the GSP.
+     * @param controller The controller name to use when rendering the GSP.
      */
-    public GspLayout(String gsp, Map params = null, Map model = null, Map flash = null) {
+    public GspLayout(String gsp, Map params = null, Map model = null, Map flash = null, String controller = null) {
         super()
         this.gspUri = gsp
-        application.context.session.removeAttribute("org.grails.plugin.vaadin.component")
+        this.isRoot = true
         
         // Timing logging
         def stopwatch = Stopwatch.enabled ? new Stopwatch(gsp, this.class) : null
         
         // Create GSP
-        initTemplateContentsFromGsp(gsp, null, params, model, flash)
+        initTemplateContentsFromGsp(gsp, null, params, model, flash, controller)
         
         // Timing logging
         stopwatch?.stop()
@@ -79,11 +84,15 @@ class GspLayout extends CustomLayout {
      * 
      * @param layout The URI of the GSP layout to use as a template
      * @param body The tag's body closure
+     * @param params The params map to use when rendering the layout.
+     * @param model The model map to use when rendering the layout.
+     * @param flash The flash scope object to use when rendering the layout.
+     * @param controller The controller name to use when rendering the GSP.
      */
-    public GspLayout(String layout, Closure body) {
+    public GspLayout(String layout, Closure body, Map params = null, Map model = null, Map flash = null, String controller = null) {
         super()
         this.gspUri = layout
-        initTemplateContentsFromGsp(layout, body)
+        initTemplateContentsFromGsp(layout, body, params, model, flash, controller)
     }
     
     /**
@@ -104,8 +113,9 @@ class GspLayout extends CustomLayout {
      * @param params The params map to use when rendering the GSP.
      * @param model The model map to use when rendering the GSP.
      * @param flash The flash scope object to use when rendering the GSP.
+     * @param controller The controller name to use when rendering the GSP.
      */
-    protected void initTemplateContentsFromGsp(String gspUri, Closure body = null, Map params = null, Map model = null, Map flash = null) {
+    protected void initTemplateContentsFromGsp(String gspUri, Closure body = null, Map params = null, Map model = null, Map flash = null, String controller = null) {
         // Get required classes
         def vaadinGspLocator = getBean("vaadinGspLocator")
         def vaadinGspRenderer = getBean("vaadinGspRenderer")
@@ -121,7 +131,7 @@ class GspLayout extends CustomLayout {
         
         // Create input stream using gsp
         def textBuilder = {
-            def result = vaadinGspRenderer.render([ (gsp.type) : gsp.uri, params: params, model: model, flash: flash, session: application.context.httpSession ])
+            def result = vaadinGspRenderer.render([ (gsp.type) : gsp.uri, params: params, model: model, flash: flash, controller: controller, session: application.context.httpSession ])
             if (body) { body() }
             return result
         }
@@ -143,7 +153,7 @@ class GspLayout extends CustomLayout {
         // Execute body
         GspLayoutNode node = new GspLayoutNode(this, body)
         GspContext context = new GspContext(application.context.session)
-        String text = context.evaluate(node)
+        String text = context.evaluate(node, isRoot)
         
         // Initialise template from output
         InputStream inputStream = new ByteArrayInputStream(text.toString().getBytes("UTF-8"))

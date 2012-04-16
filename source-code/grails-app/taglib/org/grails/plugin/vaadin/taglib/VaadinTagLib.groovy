@@ -95,7 +95,7 @@ class VaadinTagLib implements ApplicationContextAware {
         def layoutName = "/layouts/${attrs.name}"
         
         // Create component - automatically evaluates body
-        def component = new GspLayout(layoutName, body)
+        def component = new GspLayout(layoutName, body, params, null, flash, controllerName)
         
         // Attach to parent (if any)
         attachComponent(component, attrs.location)

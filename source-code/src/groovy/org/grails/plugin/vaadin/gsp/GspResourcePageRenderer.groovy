@@ -158,6 +158,12 @@ class GspResourcePageRenderer implements ApplicationContextAware, ServletContext
             if (args.flash) {
                 webRequest.flashScope.putAll(args.flash)
             }
+            if (args.controller) {
+                webRequest.setControllerName(args.controller)
+            }
+            if (args.action) {
+                webRequest.setActionName(args.action)
+            }
             RequestContextHolder.setRequestAttributes(webRequest)
             def template = templateEngine.createTemplate(source)
             if (template != null) {
