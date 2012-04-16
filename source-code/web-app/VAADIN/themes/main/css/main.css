@@ -30,7 +30,7 @@ h1 {
 .v-window, .v-app input, .v-app textarea,
 input.v-textfield, input.v-textfield[type="text"], textarea.v-textarea {
 	font-size: 1em;
-	line-height: 1em;
+    line-height:1.125em;
 	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 h1, h2, h3, h4, h5, h6 {
