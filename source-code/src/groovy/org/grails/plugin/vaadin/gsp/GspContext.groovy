@@ -31,9 +31,10 @@ class GspContext {
      * those components to the node specified here.
      * 
      * @param node The node that will be the 'active' node, and whose body will be evaluated
+     * @param node True if the node is the top-level Gsp - if so, the context has no active node when done
      * @return The output of executing the node's body
      */
-    CharSequence evaluate(GspComponentNode node) {
+    CharSequence evaluate(GspComponentNode node, boolean isRoot = false) {
         // Override session node
         GspComponentNode parent = session.getAttribute("org.grails.plugin.vaadin.component")
         session.setAttribute("org.grails.plugin.vaadin.component", node)
@@ -41,8 +42,12 @@ class GspContext {
         // Evaluate body
         CharSequence bodyText = node.bodyText
 
-        // Restore session node
-        session.setAttribute("org.grails.plugin.vaadin.component", parent)
+        // Restore session node, or clear if root
+        if (isRoot) {
+            session.removeAttribute("org.grails.plugin.vaadin.component")
+        } else {
+            session.setAttribute("org.grails.plugin.vaadin.component", parent)
+        }
         
         return bodyText
     }
