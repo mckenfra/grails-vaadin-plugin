@@ -120,30 +120,8 @@ target ('installVaadinViews': "Installs Vaadin fiew files") {
     event("StatusUpdate", ["Installed Vaadin base views"])
 }
 
-target ('updateUrlMappings': 'Adds Vaadin exclusions to UrlMappings.groovy') {
-    // No dependencies
-    
-    // Update UrlMappings
-    def mappingsFile = new File("${basedir}/grails-app/conf/UrlMappings.groovy")
-    if (mappingsFile.exists()) {
-        boolean succeeded
-        if (containsExcludes(mappingsFile)) {
-            succeeded = addExcludes(mappingsFile)
-        } else {
-            succeeded = createExcludes(mappingsFile)
-        }
-        if (succeeded) {
-            event("StatusUpdate", ["Updated UrlMappings.groovy"])
-        } else {
-            grailsConsole.updateStatus "No changes made to UrlMappings.groovy"
-        }
-    } else {
-        // Safely ignore - no UrlMappings, so no problem!
-    }
-}
-
 target ('default': "Creates a new Vaadin Application") {
-    depends(createVaadinApp, updateVaadinConfig, installVaadinTheme, installVaadinViews, updateUrlMappings)
+    depends(createVaadinApp, updateVaadinConfig, installVaadinTheme, installVaadinViews)
     
     event("StatusFinal", ["Finished Vaadin application generation"])
 }
@@ -175,53 +153,4 @@ def createRootPackage() {
 def fatalError(msg) {
     event("StatusUpdate", ["ERROR: ${msg}"])
     Ant.fail(message: msg)
-}
-
-/**
- * URL MAPPINGS METHODS
- */
-withinUrlMappings = /(?ims)\A(.*(?<=^|\s)class\s+UrlMappings\s*\{)()(.*)\z/
-withinExcludes = /(?ims)\A(.*(?<=^|\s)class\s+UrlMappings\s*\{.*(?<=^|\s|\{)static\s+excludes\s*=\s*\[)([^\]]*)(\].*)\z/
-
-boolean containsExcludes(File file) {
-    return file.text =~ withinExcludes
-}
-    
-boolean createExcludes(File file) {
-    def pattern = /^/
-    def replacement = """\
-
-    static excludes = [
-        // Vaadin static files
-        "/VAADIN/*",
-        // Vaadin controllers
-        "**/*Vaadin/*"
-    ]
-"""
-    return replaceTextInFile(file:file, pattern:pattern, replacement:replacement, within:withinUrlMappings)
-}
-
-boolean addExcludes(File file) {
-    return replaceTextInFile(file:file, within:withinExcludes, replacers:[
-        excludesReplacer.curry("/VAADIN/*", "Vaadin static files"),
-        excludesReplacer.curry("**/*Vaadin/*", "Vaadin controllers")
-    ])
-}
-
-// This should be curried, e.g.: excludeReplacer.curry('/my/path/**/*', 'Some comment about it')
-excludesReplacer = { exclude, comment, text ->
-    // Check actually have some excludes already, and not just comments or whitespace
-    def alreadyHasExcludesRegex = /(?m)^\s*[\"\']/
-    boolean alreadyHasExcludes = text =~ alreadyHasExcludesRegex
-    
-    // Add excludes
-    if (text.contains("'${exclude}'") || text.contains("\"${exclude}\"")) {
-        throw new Exception("Already contains!")
-    }
-    
-    return """\
-
-        // ${comment}
-        "${exclude}"${alreadyHasExcludes ? ',' : ''}
-${text}"""
 }

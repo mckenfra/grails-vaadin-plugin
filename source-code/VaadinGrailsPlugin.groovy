@@ -30,6 +30,7 @@ import org.grails.plugin.vaadin.VaadinApi
 import org.springframework.aop.scope.ScopedProxyFactoryBean
 import org.grails.plugin.vaadin.gsp.GspResourcePageRenderer
 import org.grails.plugin.vaadin.gsp.GspResourceLocator
+import org.grails.plugin.vaadin.VaadinTransactionManager
 
 class VaadinGrailsPlugin {
 
@@ -40,7 +41,7 @@ class VaadinGrailsPlugin {
     private static final transient Logger log = LoggerFactory.getLogger("org.codehaus.groovy.grails.plugins.VaadinGrailsPlugin");
 
     // the plugin version
-    def version = "1.6.1-SNAPSHOT"
+    def version = "1.6.2-SNAPSHOT"
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "1.1 > *"
     // the other plugins this plugin depends on
@@ -51,7 +52,6 @@ class VaadinGrailsPlugin {
     // resources that are excluded from plugin packaging
     def pluginExcludes = [
         "docs/**/*",
-        "grails-app/conf/**/*",
         "web-app/css/**/*",
         "web-app/images/**/*",
         "web-app/js/**/*",
@@ -86,12 +86,7 @@ class VaadinGrailsPlugin {
     // URL to the plugin's documentation
     def documentation = "http://grails.org/plugin/vaadin"
 
-    def configuration = null;
-
     def configureVaadinApplication = { clazz, config = null ->
-        if (!config) {
-            config = getConfigLazy();
-        }
         //create the vaadin Application definition:
         "${GrailsAwareApplicationServlet.VAADIN_APPLICATION_BEAN_NAME}"(clazz) { bean ->
             bean.singleton = false; //prototype scope
@@ -152,7 +147,7 @@ class VaadinGrailsPlugin {
     }
 
     def doWithSpring = {
-        def config = getConfigLazy()
+        def config = application.config.vaadin
         if (!config || !(config.applicationClass)) {
             return
         }
@@ -177,9 +172,8 @@ class VaadinGrailsPlugin {
             targetBeanName = 'vaadinApplicationService'
             proxyTargetClass = true
         }
-        vaadinTransactionManager(ScopedProxyFactoryBean) {
-            targetBeanName = 'vaadinTransactionService'
-            proxyTargetClass = true
+        vaadinTransactionManager(VaadinTransactionManager) {
+            persistenceInterceptor = ref("persistenceInterceptor")
         }
         vaadinApi(VaadinApi) {
             vaadinApplicationHolder = vaadinApplicationHolder
@@ -205,11 +199,10 @@ class VaadinGrailsPlugin {
     }
 
     def doWithWebDescriptor = { webXml ->
-        def config = getConfigLazy()
-        if (!config || !(config.applicationClass)) {
-            return
-        }
-
+        // Load config into application
+        // Note this closure gets called BEFORE doWithSpring, so we do the loading here
+        def config = loadVaadinConfig(application)
+        if (!config) return
         def vaadinApplicationClass = config.applicationClass
         def vaadinProductionMode = config.productionMode
         def vaadinGAEMode = config.googleAppEngineMode
@@ -276,16 +269,8 @@ class VaadinGrailsPlugin {
             }
         }
     }
-
-    def getConfigLazy = {
-        if (configuration == null) {
-            configuration = loadConfig()
-        }
-        return configuration
-    }
-
-
-    def loadConfig = {
+    
+    def loadVaadinConfig(application) {
         ClassLoader parent = getClass().getClassLoader();
         GroovyClassLoader loader = new GroovyClassLoader(parent);
 
@@ -301,6 +286,9 @@ class VaadinGrailsPlugin {
             log.info "    Context Relative Path: ${config?.vaadin?.contextRelativePath}"
             log.info "    Production mode: ${config?.vaadin?.productionMode}"
             log.info "    Google AppEngine compatibility mode: ${config?.vaadin?.googleAppEngineMode}"
+            
+            // Now merge the config into the applicaton config
+            application.config.merge(config)
 
         } catch (ClassNotFoundException e) {
             log.warn "Unable to find Vaadin plugin config file: ${VAADIN_CONFIG_FILE}.groovy"
@@ -309,7 +297,7 @@ class VaadinGrailsPlugin {
         //noinspection GroovyVariableNotAssigned
         return config?.vaadin;
     }
-
+    
     def doWithDynamicMethods = { ctx ->
         // TODO add 'i18n' methods here
     }
@@ -325,6 +313,7 @@ class VaadinGrailsPlugin {
         }
 
         def application = event.application
+        def config = application.config.vaadin
 
         Class changedClass = event.source
 
@@ -343,7 +332,7 @@ class VaadinGrailsPlugin {
             application.vaadinClasses.each { vaadinGrailsClass ->
                 // def reloadedClass = application.classLoader.getClassLoader().reloadClass(vaadinGrailsClass.clazz.name)
                 def reloadedClass = application.classLoader.loadClass(vaadinGrailsClass.clazz.name)
-                if (reloadedClass.name.equals(getConfigLazy().applicationClass)) {
+                if (reloadedClass.name.equals(config.applicationClass)) {
                     vaadinApplicationClass = reloadedClass
                 }
                 configureComponentClass(reloadedClass)
@@ -352,7 +341,7 @@ class VaadinGrailsPlugin {
 
             //Now re-register the vaadin application Spring bean:
             if (vaadinApplicationClass) {
-                def beans = beans(configureVaadinApplication.curry(vaadinApplicationClass))
+                def beans = beans(configureVaadinApplication.curry(vaadinApplicationClass, config))
                 beans.registerBeans(event.ctx)
             }
 
