@@ -91,14 +91,21 @@ class GrailsButton extends Button {
         
         // But we need to catch a cancel
         final cancellableClick = {
-            if (onclick && onclick(dispatch) == false) {
-                // Cancelled
-            } else {
-                // Not cancelled
-                dispatch()
+            try {
+                if (onclick && onclick(dispatch) == false) {
+                    // Cancelled
+                } else {
+                    // Not cancelled
+                    dispatch()
+                }
+            } finally {
+                this.enabled = true
             }
         }
         
+        // Always disable on click
+        this.disableOnClick = true
+
         // Put it all together by adding the full listener
         this.addListener(new Button.ClickListener() {
             public void buttonClick(Button.ClickEvent event) {
@@ -116,35 +123,43 @@ class GrailsButton extends Button {
      */
     void setController(Object controller) { args.controller = controller } 
     /**
-    * Get the action of the link.
-    */
+     * Get the action of the link.
+     */
     String getAction() { args.action }
     /**
-    * Set the action of the link.
-    */
+     * Set the action of the link.
+     */
     void setAction(Object action) { args.action = action?.toString() } 
     /**
-    * Get the domain class id of the link.
-    */
+     * Get the domain class id of the link.
+     */
     String getId() { args.id }
     /**
-    * Set the domain class id of the link.
-    */
+     * Set the domain class id of the link.
+     */
     void setId(Object id) { args.id = id?.toString() }
     /**
-    * Get the domain class instance of the link.
-    */
+     * Get the domain class instance of the link.
+     */
     Object getInstance() { args.instance }
     /**
-    * Set the domain class instance of the link.
-    */
+     * Set the domain class instance of the link.
+     */
     void setInstance(Object instance) { args.instance = instance } 
     /**
-    * Get the onclick closure of the link.
-    */
+     * Get the params of the link.
+     */
+    Map getParams() { args.params ?: [:] }
+    /**
+     * Set the params of the link.
+     */
+    void setParams(Map params) { args.params = params } 
+    /**
+     * Get the onclick closure of the link.
+     */
     Closure getOnclick() { args.onclick }
     /**
-    * Set the onclick closure of the link.
-    */
+     * Set the onclick closure of the link.
+     */
     void setOnclick(Closure onclick) { args.onclick = onclick } 
 }
