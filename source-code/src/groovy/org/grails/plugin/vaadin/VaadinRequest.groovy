@@ -266,14 +266,14 @@ class VaadinRequest {
      * Returns null if the view is a Gsp content string, or a Vaadin Component.
      * <p>
      * Note that if the view name starts with "/" then it is resolved
-     * using the root views directory. Otherwise "/vaadin-{controllerName}/"
+     * using the root views directory. Otherwise "/{controllerName}-vaadin/"
      * is prepended to the name.
      * 
      * @return Uri of view, or null if the view is a Gsp content string, or a Vaadin Component.
      */
     public String getViewFullName() {
         if (this.viewIsName) {
-            return this.view?.startsWith('/') ? this.view : "/vaadin-${controller}/${view}"
+            return this.view?.startsWith('/') ? this.view : "/${controller}-vaadin/${view}"
         } else {
             return null
         }
