@@ -51,10 +51,14 @@ grails.project.dependency.resolution = {
         //mavenRepo "http://repository.jboss.com/maven2/"
 
         grailsRepo "http://grails.org/plugins"
+        
+        mavenRepo "http://maven.vaadin.com/vaadin-addons"
     }
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
-        compile 'com.vaadin:vaadin:6.7.5'
+        compile 'com.vaadin:vaadin:6.7.7'
+        compile 'org.vaadin.addons:customfield:1.0.0'
+        compile 'org.vaadin.addons:easyuploads:0.5.1'
         build('org.grails.plugins:release:2.0.0.BUILD-SNAPSHOT') {  export = false }
     }
 
