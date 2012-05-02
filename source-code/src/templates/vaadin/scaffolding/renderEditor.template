@@ -1,0 +1,255 @@
+<%  fullPropertyName = "${parentProperty ? parentProperty.name+'.' : ''}${property.name}"
+    fullDomainInstanceName = "${domainInstance}${parentProperty ? '?.'+parentProperty.name : ''}"
+
+    if (property.type == Boolean || property.type == boolean)
+        renderBooleanEditor()
+    else if (property.type && Number.isAssignableFrom(property.type) || (property.type?.isPrimitive() && property.type != boolean))
+        renderNumberEditor()
+    else if (property.type == String)
+        renderStringEditor()
+    else if (property.type == Date || property.type == java.sql.Date || property.type == java.sql.Time || Calendar.isAssignableFrom(property.type))
+        renderDateEditor()
+    else if (property.type == URL)
+        renderStringEditor()
+    else if (property.type && property.isEnum())
+        renderEnumEditor()
+    else if (property.type == TimeZone)
+        renderSelectTypeEditor("timeZone")
+    else if (property.type == Locale)
+        renderSelectTypeEditor("locale")
+    else if (property.type == Currency)
+        renderSelectTypeEditor("currency")
+    else if (property.type==([] as Byte[]).class) //TODO: Bug in groovy means i have to do this :(
+        renderByteArrayEditor()
+    else if (property.type==([] as byte[]).class) //TODO: Bug in groovy means i have to do this :(
+        renderByteArrayEditor()
+    else if (property.manyToOne || property.oneToOne)
+        renderManyToOne()
+    else if ((property.oneToMany && !property.bidirectional) || property.manyToMany) {
+        renderManyToMany()
+    }
+    else if (property.oneToMany)
+        renderOneToMany()
+
+    def renderEditor(String tagType = null, Map attrs = [:]) {
+        tagType = tagType ?: "field"
+        String attrsText = attrs ? " " + attrs.findAll {k,v->k&&v!=null}.collect { "${it.key}=\"${it.value}\"" }.join(" ") : ""
+        if (!readOnly) {
+            out << """\
+					<v:${tagType} name="${fullPropertyName}"${attrsText}
+						readOnly="${readOnly}" required="${isRequired()}" requiredError="Please enter a ${property.naturalName}" invalidCommitted="true"
+						componentError="\${${fullDomainInstanceName}?.errors?.hasFieldErrors('${property.name}') ? message(error:${fullDomainInstanceName}?.errors?.getFieldError('${property.name}'), args:[${fullDomainInstanceName}]) : null}">
+						<g:message code="${domainClass.propertyName}.${fullPropertyName}.label" default="${property.naturalName}"/>
+					</v:${tagType}>"""
+        } else {
+            out << """\
+					<g:if test="\${${fullDomainInstanceName}?.${property.name}}">
+					<v:${tagType} name="${fullPropertyName}" readOnly="${readOnly}"${attrsText}>
+						<g:message code="${domainClass.propertyName}.${fullPropertyName}.label" default="${property.naturalName}"/>
+					</v:${tagType}>
+					</g:if>"""
+        }
+    }
+        
+    def renderEnumEditor() {
+        def attrs = [:]
+        attrs.from = "\${${property.type.name}?.values()}"
+        addNoSelection(attrs)
+        renderEditor("select", attrs)
+    }
+
+    def renderStringEditor() {
+        def tagType
+        def attrs = [:]
+        if (cp) {
+            if ("textarea" == cp.widget || (cp.maxSize > 250 && !cp.password && !cp.inList)) {
+                attrs.columns = 40
+                attrs.rows = 5
+                if (cp.maxSize) attrs.maxLength = cp.maxSize
+                tagType = "textArea"
+            } else if (cp.inList) {
+                attrs.from = "\${${fullDomainInstanceName}?.constraints?.${property.name}.inList}"
+                attrs.valueMessagePrefix = "${domainClass.propertyName}.${fullPropertyName}"
+                addNoSelection(attrs)
+                tagType = "select"
+            } else {
+                if (cp.password) {
+                    tagType = "password"
+                }
+
+                // VAADIN DOES NOT YET SUPPORT ALL HTML5 INPUT TYPES
+//                } else if (cp.url) {
+//                    tagType = "url"
+//                } else if (cp.email) {
+//                    tagType = "email"
+//                }
+                    
+                if (property.type == String) {
+                    if (cp.matches) attrs.pattern = "\${${fullDomainInstanceName}?.constraints?.${property.name}?.matches}"
+                }
+                if (cp.maxSize) attrs.maxLength = cp.maxSize
+            }
+        }
+        renderEditor(tagType, attrs)
+    }
+
+    def renderByteArrayEditor() {
+        renderEditor("file")
+    }
+
+    def renderManyToOne() {
+        if (property.association) {
+            def attrs = [:]
+            attrs.from = "\${${property.type.name}.list()}"
+            attrs."class" = "many-to-one"
+            addNoSelection(attrs)
+            renderEditor("select", attrs)
+        }
+    }
+
+    def renderManyToMany() {
+        def cls = property.referencedDomainClass?.clazz
+        if (!cls) {
+            if (property.type instanceof Collection) {
+                cls = org.springframework.core.GenericCollectionTypeResolver.getCollectionType(property.type)
+            }
+        }
+
+        if (cls) {
+            if (!readOnly && property.isOwningSide()) {
+                def attrs = [:]
+                attrs.from = "\${${cls.name}.list()}"
+                attrs.multiSelect = true
+                attrs.rows = 5
+                attrs."class" = "many-to-many"
+                renderEditor("listSelect", attrs)
+            } else {
+                if (readOnly) out << """\
+					<g:if test="\${${fullDomainInstanceName}?.${property.name}}">"""
+                out << """\
+					<v:customField name="${fullPropertyName}" caption="\${message(code:'${domainClass.propertyName}.${fullPropertyName}.label', default:'${property.naturalName}')}">
+						<v:verticalLayout>
+							<g:each in="\${${fullDomainInstanceName}?.${property.name}}" var="${property.name[0]}">
+							<v:link class="link" controller="${property.referencedDomainClass.propertyName}" action="show" id="\${${property.name[0]}.id}">\${${property.name[0]}?.encodeAsHTML()}</v:link>
+							</g:each>
+						</v:verticalLayout>
+					</v:customField>"""
+                if (readOnly) out << """\
+					</g:if>"""
+            }
+        }
+    }
+
+    def renderOneToMany() {
+        if (!readOnly) {
+            out << """\
+					<v:customField name="${fullPropertyName}" caption="\${message(code:'${domainClass.propertyName}.${fullPropertyName}.label', default:'${property.naturalName}')}">
+						<ul class="one-to-many">
+							<g:each in="\${${fullDomainInstanceName}?.${property.name}}" var="${property.name[0]}">
+							<li><v:link class="link" controller="${property.referencedDomainClass.propertyName}" action="show" id="\${${property.name[0]}.id}">\${${property.name[0]}?.encodeAsHTML()}</v:link></li>
+							</g:each>
+							<li class="add">
+								<v:link class="link" controller="${property.referencedDomainClass.propertyName}" action="create" params="['${domainClass.propertyName}.id': ${domainInstance}?.id]">\${message(code: 'default.add.label', args: [message(code: '${property.referencedDomainClass.propertyName}.label', default: '${property.referencedDomainClass.shortName}')])}</v:link>
+							</li>
+						</ul>
+					</v:customField>"""
+        } else {
+            out << """\
+					<g:if test="\${${fullDomainInstanceName}?.${property.name}}">
+					<v:customField name="${fullPropertyName}" caption="\${message(code:'${domainClass.propertyName}.${fullPropertyName}.label', default:'${property.naturalName}')}">
+						<v:verticalLayout>
+							<g:each in="\${${fullDomainInstanceName}?.${property.name}}" var="${property.name[0]}">
+							<v:link class="link" controller="${property.referencedDomainClass.propertyName}" action="show" id="\${${property.name[0]}.id}">\${${property.name[0]}?.encodeAsHTML()}</v:link>
+							</g:each>
+						</v:verticalLayout>
+					</v:customField>
+					</g:if>"""
+        }        
+    }
+
+    def renderNumberEditor() {
+        if (!cp) {
+            if (property.type == Byte) {
+                renderEditor("select", [from:"\${-128..127}", "class":"range"])
+            } else {
+                // VAADIN DOES NOT YET SUPPORT HTML5 'number' TYPE
+                //return "<g:field type=\"number\" name=\"${property.name}\" value=\"\${fieldValue(bean: ${domainInstance}, field: '${property.name}')}\" />"
+                renderEditor()
+            }
+        } else {
+            if (cp.range) {
+                def attrs = [:]
+                attrs.from = "\${${cp.range.from}..${cp.range.to}}"
+                attrs."class" = "range"
+                addNoSelection(attrs)
+                renderEditor("select", attrs)
+            } else if (cp.inList) {
+                def attrs = [:]
+                attrs.from = "\${${fullDomainInstanceName}?.constraints?.${property.name}.inList}"
+                attrs.valueMessagePrefix = "${domainClass.propertyName}.${fullPropertyName}"
+                addNoSelection(attrs)
+                renderEditor("select", attrs)
+            } else {
+                // VAADIN DOES NOT YET SUPPORT HTML5 'number' TYPE AND ATTRIBUTES
+//                if (cp.scale != null) attrs.step = BigDecimal.valueOf(1).movePointLeft(cp.scale)                
+//                if (cp.min != null) attrs.min = cp.min
+//                if (cp.max != null) attrs.max = cp.max
+                renderEditor()
+            }
+        }
+     }
+
+    def renderBooleanEditor() {
+        renderEditor("checkBox", cp ? cp.attributes : null)
+    }
+
+    def renderDateEditor() {
+        def defaultResolution = (property.type == Date || property.type == java.sql.Date || Calendar.isAssignableFrom(property.type)) ? "day" : "minute";
+        if (!cp) {
+            renderEditor("date", [resolution:defaultResolution])
+        } else {
+            def attrs = [:]
+            attrs.dateFormat = cp.format
+            cp.attributes.each { k,v->
+                if (k == 'precision') {
+                    attrs.resolution = v
+                } else {
+                    attrs[k] = v
+                }
+            }
+            if (!attrs.resolution) attrs.resolution = defaultResolution
+            renderEditor("date", attrs)
+        }
+    }
+
+    def renderSelectTypeEditor(String type) {
+        def tagType = "${type}Select"
+        if (!cp) {
+            renderEditor(tagType)
+        } else {
+            def attrs = [:]
+            attrs.putAll(cp.attributes)
+            addNoSelection(attrs)
+            renderEditor(tagType, attrs)
+        }
+    }
+
+    def addNoSelection(Map attrs) {
+        if (isOptional()) {
+            attrs.noSelection = ""
+        }
+    }
+
+    private boolean isRequired() {
+        !isOptional()
+    }
+
+    private boolean isOptional() {
+        if(!cp) {
+            return false
+        }
+        else {
+            cp.nullable || (cp.propertyType == String && cp.blank) || cp.propertyType in [boolean, Boolean]
+        }
+    }
+%>

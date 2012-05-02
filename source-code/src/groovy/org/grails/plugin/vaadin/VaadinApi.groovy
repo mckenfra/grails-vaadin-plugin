@@ -4,7 +4,6 @@ import com.vaadin.Application
 import grails.persistence.Entity
 import org.apache.commons.logging.LogFactory
 import org.grails.plugin.vaadin.services.VaadinApplicationService
-import org.grails.plugin.vaadin.services.VaadinTransactionService
 import org.springframework.context.i18n.LocaleContextHolder
 
 /**
@@ -177,8 +176,7 @@ class VaadinApi {
      */
     protected List<Class> getExcludedClasses() {
         return [
-            VaadinApplicationService.class,
-            VaadinTransactionService.class
+            VaadinApplicationService.class
         ]
     }
 }

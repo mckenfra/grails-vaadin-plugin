@@ -81,11 +81,16 @@ abstract class VaadinApplication extends Application implements HttpServletReque
      * In this case, we manually dispatch the existing 'request' again.
      */
     public void onRequestStart(HttpServletRequest request, HttpServletResponse response) {
+        // Log
+        if (log.isDebugEnabled()) {
+            log.debug request.requestURL
+        }
+        
         // Ignore /appName/UIDL requests - these are the AJAX calls
         // Otherwise, assume it's the main request
         // Then, if the app is already running we have a problem - no repaint
         // will be called. So manually trigger the refresh.
-        if (! request.requestURL.toString().endsWith("UIDL") && isRunning()) {
+        if (isBrowserRefresh(request)) {
             // Log
             if (log.isDebugEnabled()) {
                 log.debug "Browser refresh detected!"
@@ -100,4 +105,19 @@ abstract class VaadinApplication extends Application implements HttpServletReque
      * Not used
      */
     public void onRequestEnd(HttpServletRequest request, HttpServletResponse response) {}
+    
+    /**
+     * Detects if specified request is a browser refresh
+     */
+    protected boolean isBrowserRefresh(HttpServletRequest request) {
+        String url = request.requestURL.toString()
+        // Must already be running for it to be a refresh
+        return isRunning() &&
+            // AJAX
+            !url.endsWith("UIDL") &&
+            // File uploads
+            !url.contains("/UPLOAD/") &&
+            // Links to StreamResources - e.g. /APP/1/someimage.png
+            ! (url =~ /\/\d+\//)
+    }
 }

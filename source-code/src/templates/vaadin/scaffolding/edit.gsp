@@ -12,16 +12,14 @@
     props = domainClass.properties.findAll { persistentPropNames.contains(it.name) && !excludedProps.contains(it.name) }
     Collections.sort(props, comparator.constructors[0].newInstance([domainClass] as Object[]))
     
-    def extractDisplayedPropertyDetails(p, owningClass, prefix = "") {
+    boolean isHidden(p, owningClass) {
+        boolean hidden = false
         boolean hasHibernate = pluginManager?.hasGrailsPlugin('hibernate')
-        boolean display = true
-        boolean required = false
         if (hasHibernate) {
-            cp = owningClass.constrainedProperties[p.name]
-            display = (cp ? cp.display : true)
-            required = (cp ? !(cp.propertyType in [boolean, Boolean]) && !cp.nullable && (cp.propertyType != String || !cp.blank) : false)
+            def constrainedProp = owningClass.constrainedProperties[p.name]
+            hidden = constrainedProp && !constrainedProp.display
         }
-        return display ? [property:p, fullName:"${prefix}${p.name}", required:required] : null
+        return hidden
     }
     
     displayedProps = []
@@ -31,15 +29,13 @@
             def embeddedProps = p.component.properties.findAll { embeddedPropNames.contains(it.name) && !excludedProps.contains(it.name) }
             Collections.sort(embeddedProps, comparator.constructors[0].newInstance([p.component] as Object[]))
             for (ep in embeddedProps) {
-                def details = extractDisplayedPropertyDetails(ep, p.component, "${p.name}.")
-                if (details) {
-                    displayedProps << details
+                if (!isHidden(ep, p.component)) {
+                    displayedProps << [property:ep, parentProperty:p, readOnly:false]
                 }
             }
         } else {
-            def details = extractDisplayedPropertyDetails(p, domainClass)
-            if (details) {
-                displayedProps << details
+            if (!isHidden(p, domainClass)) {
+                displayedProps << [property:p, readOnly:false]
             }
         }
     }
@@ -76,11 +72,7 @@
 				<v:form var="editForm" writeThrough="false" invalidCommitted="true"
 					itemDataSource="\${new BeanItem<${className}>(${propertyName})}">
 					<%  displayedProps.each { p-> %>
-					<v:field name="${p.fullName}" readOnly="false" required="${true && p.required}" requiredError="Please enter a ${p.property.naturalName}" invalidCommitted="true"
-						componentError="\${${propertyName}.errors?.hasFieldErrors('${p.fullName}') ? message(error:${propertyName}.errors.getFieldError('${p.fullName}'), args:[${propertyName}]) : null}">
-						<g:message code="${domainClass.propertyName}.${p.fullName}.label" default="${p.property.naturalName}"/>
-					</v:field>
-					<%  } %>
+${renderEditor(p)}<%  } %>
 				</v:form>
 			</v:verticalLayout>
 		</div>

@@ -1,8 +1,11 @@
 package org.grails.plugin.vaadin
 
+import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory
 import org.codehaus.groovy.grails.web.util.TypeConvertingMap;
 import org.grails.plugin.vaadin.utils.Utils;
+
+import com.vaadin.ui.Component;
 
 /**
  * An internal construct for mimicking a user's request to display
@@ -42,39 +45,65 @@ import org.grails.plugin.vaadin.utils.Utils;
  */
 class VaadinRequest {
     def log = LogFactory.getLog(this.class)
-
-    protected String controller
+    
+    /**
+     * The request can be a top-level browser page, or a frame within the page.
+     * <p>
+     * A page-type will change the browser fragment. A frame-type will not. 
+     */
+    public static enum Type { PAGE, INCLUDE }
+    
+    /**
+     * For debugging, a unique id for this instance
+     */
+    protected cid
+    
+    protected Object controller
     protected String action
-    protected String view
+    protected Object view
+    protected boolean viewIsName = true
     protected Map params
     protected Map model
     protected Map flash
+    protected Type type = Type.PAGE
     
     /**
      * Indicates if this request has been dispatched 
      */
     protected boolean dispatched
     /**
-     * Create an empty request
+     * Indicates if this request has been dispatched 
      */
-    public VaadinRequest() {}
+    public boolean isDispatched() { dispatched }
     /**
-     * Create a request with the specified properties
+     * Indicates if this request has been redirected 
      */
-    public VaadinRequest(Map props) { this.properties = props }
-    
+    protected boolean redirected
+    /**
+     * Indicates if this request has been redirected 
+     */
+    public boolean isRedirected() { redirected }
     /**
      * The requested controller - for example 'book'
      */
-    public String getController() { this.controller }
+    public String getController() { this.controller?.toString() }
     /**
      * The requested action - for example 'show'
      */
     public String getAction() { this.action }
     /**
-     * The requested view - for example 'show'
+     * The requested view - could be Gsp name, Gsp text or any Vaadin Component.
      */
-    public String getView() { this.view }
+    public Object getView() { this.view }
+    /**
+     * If true, view is a Gsp name. Otherwise, could be Gsp text or any Vaadin Component.
+     */
+    public boolean isViewIsName() { this.viewIsName }
+    /**
+     * If true, this is a browser page request. Otherwise, is a request to render a
+     * frame within a page.
+     */
+    public Type getType() { this.type }
     /**
      * The request params - for example [id:15]
      */
@@ -109,6 +138,24 @@ class VaadinRequest {
     protected void setParams(Map params) { this.params = (params ? new TypeConvertingMap(params) : new TypeConvertingMap()) }
 
     /**
+     * Create an empty request
+     */
+    public VaadinRequest() { this(null) }
+    /**
+     * Create a request with the specified properties
+     */
+    public VaadinRequest(Map props, Type type = Type.PAGE) {
+        this.properties = props
+        this.type = type
+        
+        def timestamp = new Date().time
+        cid = { timestamp }
+        if (log.isDebugEnabled()) {
+            log.debug "INIT: ${cid()}"
+        }
+    }
+
+    /**
      * Used by VaadinControllers to redirect the current 'request'
      * to another controller or action. Mimics the method of the same
      * name provided to standard Grails controllers.
@@ -119,22 +166,65 @@ class VaadinRequest {
      * @param args E.g. 'controller' or 'action' to redirect to
      */
     public void redirect(Map args) {
-        if (!args) {
+        if (!args || this.controller == args.controller && this.action == args.action) {
             throw new IllegalArgumentException("Invalid redirect args ${args}")
-        } else {
-            if (log.isDebugEnabled()) {
-                log.debug "REDIRECT: ${args} >> ${this.properties}"
-            }
-            this.controller = args.controller ?: this.controller
-            this.action = args.action ?: this.action
-            this.view = args.view ?: this.action
-            this.params = args.params ?: [:]
-            this.model = [:]
-            this.id = args.id
-            this.instance = args.instance
         }
+        if (log.isDebugEnabled()) {
+            log.debug "REDIRECT-${cid()}: ${args} >> ${this.properties}"
+        }
+        this.controller = args.controller ?: this.controller
+        this.action = args.action ?: this.action
+        this.view = this.action
+        this.params = args.params ?: [:]
+        this.model = [:]
+        this.id = args.id
+        this.instance = args.instance
+        this.redirected = true
     }
     
+    /**
+     * Used by VaadinControllers to render a particular view. Mimics the method of the same
+     * name provided to standard Grails controllers.
+     * <p>
+     * See <a href="http://grails.org/doc/latest/ref/Controllers/render.html">Grails render</a>
+     * for controllers
+     *
+     * @param view Either an args map containing view name as 'view', or Gsp content text, or a Vaadin Component.
+     */
+    public void render(Object view) {
+        if (view instanceof Map && view) render((Map) view)
+        else if (view instanceof Component) render((Component) view)
+        else render("${view}")
+    }
+    
+    /**
+     * Used by VaadinControllers to render a particular view. Mimics the method of the same
+     * name provided to standard Grails controllers.
+     * <p>
+     * See <a href="http://grails.org/doc/latest/ref/Controllers/render.html">Grails render</a>
+     * for controllers
+     * 
+     * @param view The view content text to render
+     */
+    public void render(String view) {
+        this.view = view
+        this.viewIsName = false
+    }
+
+    /**
+     * Used by VaadinControllers to render a particular view. Mimics the method of the same
+     * name provided to standard Grails controllers.
+     * <p>
+     * See <a href="http://grails.org/doc/latest/ref/Controllers/render.html">Grails render</a>
+     * for controllers
+     *
+     * @param view The Vaadin Component to render
+     */
+    public void render(Component view) {
+        this.view = view
+        this.viewIsName = false
+    }
+
     /**
      * Used by VaadinControllers to render a particular view. Mimics the method of the same
      * name provided to standard Grails controllers.
@@ -147,6 +237,7 @@ class VaadinRequest {
     public void render(Map args) {
         if (args) {
             this.view = args.view ?: this.action
+            this.viewIsName = true
             this.params = args.params ?: this.params
             this.model = args.model ?: this.model
             this.id = args.id
@@ -170,21 +261,28 @@ class VaadinRequest {
     }
     
     /**
-     * Gets view uri of this request, minus params, e.g. book/show.
+     * Gets view uri of this request (minus params), for example book/show.
+     * <p>
+     * Returns null if the view is a Gsp content string, or a Vaadin Component.
      * <p>
      * Note that if the view name starts with "/" then it is resolved
-     * using the root views directory. Otherwise the request's controller
-     * name is prepended to the view.
+     * using the root views directory. Otherwise "/vaadin-{controllerName}/"
+     * is prepended to the name.
      * 
-     * @return Uri of view
+     * @return Uri of view, or null if the view is a Gsp content string, or a Vaadin Component.
      */
     public String getViewFullName() {
-        return this.view?.startsWith('/') ? this.view : "/${controller}/${view}"
+        if (this.viewIsName) {
+            return this.view?.startsWith('/') ? this.view : "/vaadin-${controller}/${view}"
+        } else {
+            return null
+        }
     }
     
     /**
      * Initialises this 'request' based on the 'request' that is currently active, and using
-     * the specified set of defaults args.
+     * the specified set of defaults (in case neither this request or the active
+     * request have a particular property).
      * <p>
      * This is called by the {@link VaadinDispatcher} at the beginning of the dispatch cycle.
      * E.g. one of the things it does is to set the 'controller' for the new request to be
@@ -192,33 +290,36 @@ class VaadinRequest {
      * explicitly overridden in the request parameters.
      * 
      * @param activeRequest The current active request
-     * @param newRequest The parameters for the new request (e.g. [action:show, id:15])
      * @param defaults The default parameters, if any required params are missing
      */
-    protected void newRequest(VaadinRequest activeRequest, Map newRequest, Map defaults) {
-        this.properties = newRequest
-        if (! newRequest.controller) {
-            this.controller = activeRequest.controller ?: defaults?.controller
-        } else if (newRequest.controller.metaClass.getMetaMethod("getVaadinClass")) {
-            this.controller = newRequest.controller.metaClass.getMetaMethod("getVaadinClass").invoke(this.controller).logicalPropertyName
-        } else {
-            this.controller = newRequest.controller.toString()
+    protected void startRequest(VaadinRequest activeRequest, Map defaults) {
+        // Ensure we have a controller
+        if (! this.controller) { this.controller = activeRequest.controller ?: defaults?.controller }
+        if (! this.controller) {
+            throw new IllegalArgumentException("No controller specified for request ${this}")
         }
+        
+        // Convert controller to its logical name if necessary
+        if (this.controller.metaClass.getMetaMethod("getVaadinClass")) {
+            this.controller = this.controller.metaClass.getMetaMethod("getVaadinClass").invoke(this.controller).logicalPropertyName
+        } else {
+            this.controller = this.controller.toString()
+        }
+        
+        // Ensure we have an action (note we do not inherit action from active request)
         this.action = this.action ?: defaults?.action
+        if (! this.action) {
+            throw new IllegalArgumentException("No action specified for request ${this}")
+        } 
+        
+        // Set all other props
         this.view = this.action
+        this.viewIsName = true
         this.params = this.params ?: [:]
         this.model = [:]
-        this.flash = [:]
+        this.flash = this.flash ?: [:] // Maintain flash between redirects
         this.dispatched = false
-    }
-    
-    /**
-     * Empties the model before dispatching a request. Called by {@link VaadinDispatcher}
-     * during the dispatch cycle.
-     */
-    protected void startRequest() {
-        this.model = [:]
-        this.dispatched = false
+        this.redirected = false
     }
     
     /**
@@ -244,7 +345,7 @@ class VaadinRequest {
      * 
      * @return This request as property map
      */
-    protected Map getProperties() {
+    public Map getProperties() {
         return [
             controller:controller,
             action:action,
@@ -260,24 +361,17 @@ class VaadinRequest {
      * 
      * @param props New request properties
      */
-    protected void setProperties(Map props) {
-        this.controller = props?.controller
-        this.action = props?.action
-        this.view = props?.view
-        this.params = props?.params ?: [:]
-        this.model = props?.model ?: [:]
-        this.flash = props?.flash ?: [:]
-        this.id = props?.id
-        this.instance = props?.instance
-    }
-        
-    /**
-     * Set properties of this request to match specified request
-     * 
-     * @param request Other request to copy
-     */
-    protected void setRequest(VaadinRequest request) {
-        this.properties = request.properties
+    public void setProperties(Map props) {
+        if (props) {
+            this.controller = props.controller
+            this.action = props.action
+            this.view = props.view
+            this.params = props.params ?: [:]
+            this.model = props.model ?: [:]
+            this.flash = props.flash ?: [:]
+            this.id = props.id
+            this.instance = props.instance
+        }
     }
     
     /**
@@ -295,7 +389,7 @@ class VaadinRequest {
         if (props.flash) {
             props.flash = Utils.toString(props.flash)
         }
-        return props.toString()
+        return "${cid()} ${props}"
     }
 }
 

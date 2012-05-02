@@ -107,7 +107,14 @@
 			<h2>Available Controllers:</h2>
 			<ul>
 				<g:each var="c" in="${grailsApplication.controllerClasses.sort { it.fullName } }">
-					<li class="controller"><v:link controller="${c}" class="link">${c.fullName}</v:link></li>
+					<li class="controller">
+					<g:if test="${c.fullName.endsWith('VaadinController')}">
+						<v:link controller="${c}" class="link">${c.fullName}</v:link>
+					</g:if>
+					<g:else>
+						<g:link controller="${c.logicalPropertyName}" class="link">${c.fullName}</g:link>
+					</g:else>
+					</li>
 				</g:each>
 			</ul>
 		</div>

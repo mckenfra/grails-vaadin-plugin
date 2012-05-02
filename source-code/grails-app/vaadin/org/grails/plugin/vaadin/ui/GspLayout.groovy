@@ -31,36 +31,66 @@ class GspLayout extends CustomLayout {
     def log = LogFactory.getLog(this.class)
 
     /**
-     * True if this Gsp is the top-level Gsp, and not a Gsp rendered inside another.
+     * The URI of the Gsp used as layout
      */
-    protected boolean isRoot
+    String templateGsp
     /**
-     * The uri of the GSP. Only used for logging purposes.
+     * The tag body to evaluate, and attach contained components to this layout
      */
-    String gspUri
+    Closure body
+    /**
+     * The params for the Gsp
+     */
+    Map params
+    /**
+     * The model for the Gsp
+     */
+    Map model
+    /**
+     * The flash for the Gsp
+     */
+    Map flash
+    /**
+     * The controller name for the Gsp
+     */
+    String controllerName
+    /**
+     * If true, indicates this Gsp is the top-level Gsp, and not a Gsp rendered
+     * inside another.
+     */
+    boolean root
+    /**
+     * All components resulting from rendering the Gsp template and/or tag body
+     */
+    protected Map<String,Component> components = [:]
+    /**
+     * Components resulting from rendering the body only
+     */
+    protected Map<String,Component> bodyComponents = [:]
+    /**
+     * Removes the body components from this layout, because they're needed
+     * for another layout
+     */
+    protected Map<String,Component> removeBodyComponents() {
+        def removed = bodyComponents
+        removed.values().each { removeComponent(it) }
+        bodyComponents = [:]
+        return removed
+    }
     
     /**
-     * Creates a new GspLayout with the specified GSP.
+     * Creates a new GspLayout with the specified GSP as the root view.
      * 
      * @param gsp The uri of the GSP view, template or resource.
      * @param params The params map to use when rendering the GSP.
      * @param model The model map to use when rendering the GSP.
      * @param flash The flash scope object to use when rendering the GSP.
-     * @param controller The controller name to use when rendering the GSP.
+     * @param controllerName The controller name to use when rendering the GSP.
+     * @param root True if this is the root Gsp of the page (defaults to false)
      */
-    public GspLayout(String gsp, Map params = null, Map model = null, Map flash = null, String controller = null) {
-        super()
-        this.gspUri = gsp
-        this.isRoot = true
-        
-        // Timing logging
-        def stopwatch = Stopwatch.enabled ? new Stopwatch(gsp, this.class) : null
-        
-        // Create GSP
-        initTemplateContentsFromGsp(gsp, null, params, model, flash, controller)
-        
-        // Timing logging
-        stopwatch?.stop()
+    public GspLayout(String gsp, Map params = null, Map model = null, Map flash = null,
+        String controllerName = null, boolean root = false) {
+        this(gsp, null, params, model, flash, controllerName, root, "", null)
     }
     
     /**
@@ -69,30 +99,84 @@ class GspLayout extends CustomLayout {
      * Note this is primarily used by tag libraries.
      * 
      * @param body The tag's body closure
+     * @param root True if this is the root Gsp of the page (defaults to false)
      */
-    public GspLayout(Closure body) {
-        super()
-        this.gspUri = '[CLOSURE]'
-        initTemplateContentsFromClosure(body)
+    public GspLayout(Closure body, boolean root = false) {
+        this(null, body, null, null, null, null, root, "", null)
     }
     
     /**
-     * Creates a new GspLayout using the specified layout template, and then applies
+     * Creates a new GspLayout using the specified gsp layout template, and then applies
      * the specified tag body to this template.
      * <p>
      * Note this is primarily used by tag libraries.
      * 
-     * @param layout The URI of the GSP layout to use as a template
+     * @param gsp The URI of the GSP layout to use as a template
      * @param body The tag's body closure
      * @param params The params map to use when rendering the layout.
      * @param model The model map to use when rendering the layout.
      * @param flash The flash scope object to use when rendering the layout.
-     * @param controller The controller name to use when rendering the GSP.
+     * @param controllerName The controller name to use when rendering the GSP.
      */
-    public GspLayout(String layout, Closure body, Map params = null, Map model = null, Map flash = null, String controller = null) {
+    public GspLayout(String gsp, Closure body, Map params = null, Map model = null,
+        Map flash = null, String controllerName = null) {
+        this(gsp, body, params, model, flash, controllerName, false, "", null)
+    }
+    
+    /**
+     * Creates a new GspLayout from the existing one, but using the specified
+     * Gsp template in place of the existing one's template.
+     *
+     * @param other The existing GspLayout to use.
+     * @param gsp The uri of the GSP view, template or resource to use
+     */
+    public GspLayout(GspLayout other, String gsp) {
+        this(gsp, null, other.params, other.model, other.flash,
+            other.controllerName, false, "", other.removeBodyComponents())
+    }
+    
+    /**
+     * Common constructor called by other constructors.
+     * 
+     * @param gsp The URI of the GSP layout to use as a template
+     * @param body The tag's body closure
+     * @param params The params map to use when rendering the layout.
+     * @param model The model map to use when rendering the layout.
+     * @param flash The flash scope object to use when rendering the layout.
+     * @param controllerName The controller name to use when rendering the GSP.
+     * @param root True if this is the root Gsp of the page
+     * @param text The initial text to use for template contents
+     * @param components The initial set of components to use for template
+     */
+    protected GspLayout(String gsp, Closure body, Map params, Map model, Map flash,
+        String controllerName, boolean root, String text, Map<String,Component> components) {
         super()
-        this.gspUri = layout
-        initTemplateContentsFromGsp(layout, body, params, model, flash, controller)
+        this.templateGsp = gsp
+        this.body = body
+        this.params = params
+        this.model = model
+        this.flash = flash
+        this.controllerName = controllerName
+        this.root = root
+        this.templateContents = text ?: ""
+        this.components = components ?: [:]
+        this.components.each { loc,c -> addComponent(c,loc) }
+        render(gsp,body,params,model,flash,controllerName)
+    }
+    
+    /**
+     * Renders the layout using the Gsp and/or tag body.
+     */
+    protected void render(String gsp, Closure body, Map params, Map model, Map flash, String controllerName) {
+        // Timing logging
+        def stopwatch = Stopwatch.enabled ? new Stopwatch(this.toString(), this.class) : null
+        
+        // Render
+        renderGsp(gsp, params, model, flash, controllerName)
+        renderBody(body)
+
+        // Timing logging
+        stopwatch?.stop()
     }
     
     /**
@@ -102,20 +186,17 @@ class GspLayout extends CustomLayout {
      * The GSP is retrieved using a {@link org.grails.plugin.vaadin.gsp.GspResourceLocator},
      * and rendered using a {@link org.grails.plugin.vaadin.gsp.GspResourcePageRenderer}.
      * <p>
-     * Note that a tag body closure can be specified, if the GSP is being used as a template for another
-     * GSP (whose contents is contained in the body closure).
-     * <p>
-     * Any Vaadin Components in the GSP or tag body are automatically added to this CustomLayout, in the
+     * Any Vaadin Components in the GSP are automatically added to this CustomLayout, in the
      * order in which they appear. 
-     * 
-     * @param gspUri The URI of the GSP view, template or resource
-     * @param body The tag's body closure, to be evaluated after the GSP is rendered
-     * @param params The params map to use when rendering the GSP.
-     * @param model The model map to use when rendering the GSP.
-     * @param flash The flash scope object to use when rendering the GSP.
-     * @param controller The controller name to use when rendering the GSP.
      */
-    protected void initTemplateContentsFromGsp(String gspUri, Closure body = null, Map params = null, Map model = null, Map flash = null, String controller = null) {
+    protected void renderGsp(String gsp, Map params, Map model, Map flash, String controllerName) {
+        // Give up if we don't have a Gsp uri
+        if (!gsp) return
+        
+        if (log.isDebugEnabled()) {
+            log.debug "GSP: ${this}"
+        }
+        
         // Get required classes
         def vaadinGspLocator = getBean("vaadinGspLocator")
         def vaadinGspRenderer = getBean("vaadinGspRenderer")
@@ -124,47 +205,68 @@ class GspLayout extends CustomLayout {
         }
         
         // Find GSP
-        def gsp = vaadinGspLocator.findGsp(gspUri)
-        if (! gsp) {
-            throw new Exception("GSP not found '${gspUri}'")
+        def gspDef = vaadinGspLocator.findGsp(gsp)
+        if (! gspDef) {
+            throw new Exception("GSP not found '${gsp}'")
         }
         
-        // Create input stream using gsp
-        def textBuilder = {
-            def result = vaadinGspRenderer.render([ (gsp.type) : gsp.uri, params: params, model: model, flash: flash, controller: controller, session: application.context.httpSession ])
-            if (body) { body() }
-            return result
+        // Execute GSP - we use its body text as this layout's template
+        def templateBody = {
+            return vaadinGspRenderer.render([
+                (gspDef.type) : gspDef.uri, params: params, model: model,
+                flash: flash, controller: controllerName,
+                session: application.context.httpSession ])
         }
-        initTemplateContentsFromClosure(textBuilder)
+        templateContents = evaluateGspContent(templateBody, components)
     }
     
     /**
      * Initialises the superclass <a href="http://vaadin.com/api/com/vaadin/ui/CustomLayout.html">CustomLayout</a>
      * using the specified tag body as the template.
      * <p>
-     * Note this is primarily an internal method used by tag libraries.
-     * <p>
-     * Any Vaadin Components in the tag body are automatically added to this CustomLayout, in the
-     * order in which they appear. 
+     * Any Vaadin Components in the tag body are automatically added to this
+     * CustomLayout, in the order in which they appear. 
      * 
-     * @param body The tag body closure containing the GSP text.
+     * @param body The closure to execute to obtain the GSP text (could be a tag body)
      */
-    protected void initTemplateContentsFromClosure(Closure body) {
-        // Execute body
-        GspLayoutNode node = new GspLayoutNode(this, body)
-        GspContext context = new GspContext(application.context.session)
-        String text = context.evaluate(node, isRoot)
-        
-        // Initialise template from output
-        InputStream inputStream = new ByteArrayInputStream(text.toString().getBytes("UTF-8"))
-        initTemplateContentsFromInputStream(inputStream)
-        
-        // Set locations from cache
-        node.components.each { k, v ->
-            this.addComponent(v, k)
+    protected void renderBody(Closure body) {
+        // Execute body - we use its body text as this layout's template
+        if (body) {
+            if (log.isDebugEnabled()) {
+                log.debug "BODY: ${this}"
+            }
+            
+            def bodyText = evaluateGspContent(body, bodyComponents)
+            if (!templateContents) templateContents = bodyText
+            components.putAll(bodyComponents)
         }
     }
-    
+
+    /**
+     * Executes the body closure (could be a tag body) and returns the resulting text.
+     * <p>
+     * Importantly, any Vaadin Components generated from executing the body closure are
+     * added to the specified Components map, stored by location name.
+     *
+     * @param body The closure to execute to obtain the GSP text and components
+     * @param components The map to use to collect any components resulting from evaluating the body
+     */
+    protected CharSequence evaluateGspContent(Closure body, Map<String,Component> components) {
+        // Execute body
+        GspLayoutNode node = new GspLayoutNode(this, body, components)
+        GspContext context = new GspContext(application.context.session)
+        
+        // Evaluate body - discard text
+        def text = context.evaluate(node, root)?.toString()
+        
+        // Set locations from cache
+        components.each { location, component ->
+            this.addComponent(component, location)
+        }
+        
+        return text
+    }
+
     /**
      * A special {@link org.grails.plugin.vaadin.gsp.GspComponentNode} that
      * keeps a collection of any Vaadin Components that are added to it,
@@ -180,10 +282,11 @@ class GspLayout extends CustomLayout {
      * @author Francis McKenzie
      */
     protected class GspLayoutNode extends GspComponentNode {
-        Map components = [:]
+        Map<String,Component> components
         
-        public GspLayoutNode(Component component, Closure body) {
+        public GspLayoutNode(Component component, Closure body, Map<String,Component> components) {
             super(component, body)
+            this.components = components != null ? components : [:]
         }
         
         @Override
@@ -208,6 +311,6 @@ class GspLayout extends CustomLayout {
      * This component as a String - mainly useful for logging purposes.
      */
     String toString() {
-        return "[gsp: '${gspUri}']"
+        return "${templateGsp?:'{GSP BODY}'}"
     }
 }

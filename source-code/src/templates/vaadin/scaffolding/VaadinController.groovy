@@ -56,7 +56,10 @@ class ${className}VaadinController {
             redirect(action:"show", params:params)
             return
         }
-
+        
+        // Merge ${className} instance into new persistence context
+        params.instance = params.instance.merge()
+        
         def ${propertyName} = ${className}.get(params.instance.id)
         if (!${propertyName}) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: '${domainClass.propertyName}.label', default: '${className}'), params.instance.id])

@@ -28,7 +28,8 @@ h1 {
 }
 .v-generated-body, .v-app, .v-app .v-view,
 .v-window, .v-app input, .v-app textarea,
-input.v-textfield, input.v-textfield[type="text"], textarea.v-textarea {
+input.v-textfield, input.v-textfield[type="text"], textarea.v-textarea,
+.v-app .v-filterselect .v-filterselect-input, .v-window .v-filterselect .v-filterselect-input, .v-popupview-popup .v-filterselect .v-filterselect-input {
 	font-size: 1em;
     line-height:1.125em;
 	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
@@ -36,8 +37,12 @@ input.v-textfield, input.v-textfield[type="text"], textarea.v-textarea {
 h1, h2, h3, h4, h5, h6 {
 	line-height: 1.1;
 }
+ul {
+	padding: 0;
+	margin: 0;
+}
 .v-button, .v-button .v-button-wrap, .v-button-caption, .v-button-wrap,
-.v-disabled.v-button-link .v-button-wrap,
+.v-disabled.v-button .v-button-wrap, .v-disabled.v-button-link .v-button-wrap,
 .v-button-link:active .v-button-wrap,
 .v-disabled.v-button-pressedv-button-link .v-button-wrap {
 	font-size: 1em;
@@ -251,6 +256,7 @@ li > div {
 .v-formlayout-captioncell {
 	color: #666666;
 	width: 25%;
+	padding-right: 0.5em;
 }
 .v-formlayout-spacing .v-formlayout-row .v-formlayout-captioncell, 
 .v-formlayout-spacing .v-formlayout-row .v-formlayout-contentcell,
@@ -290,7 +296,10 @@ input.v-textfield, input.v-textfield[type="text"], textarea.v-textarea {
 	        box-shadow: 0 0 0.5em #ffffff;
 }
 .v-app .v-textfield.v-readonly, .v-app .v-textarea.v-readonly {
-	border: none;	
+	border: none;
+}
+.v-app .v-textfield.v-readonly, .v-app .v-filterselect.v-readonly, .v-app .v-filterselect.v-readonly .v-filterselect-input {
+	padding-left: 0;
 }
 .v-required-field-indicator {
 	color: #48802C;
@@ -309,6 +318,20 @@ input.v-textfield, input.v-textfield[type="text"], textarea.v-textarea {
 	   -moz-box-shadow: 0 0 0.5em #ffaaaa;
 	-webkit-box-shadow: 0 0 0.5em #ffaaaa;
 	        box-shadow: 0 0 0.5em #ffaaaa;
+}
+ul.one-to-many {
+	display: inline-block;
+	list-style-position: inside;
+	vertical-align: top;
+}
+
+.ie6 ul.one-to-many, .ie7 ul.one-to-many {
+	display: inline;
+	zoom: 1;
+}
+
+ul.one-to-many li.add {
+	list-style-type: none;
 }
 
 /* MISC */

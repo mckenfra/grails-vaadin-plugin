@@ -24,9 +24,6 @@ import org.springframework.util.Assert
  * @author Francis McKenzie
  */
 class DefaultVaadinTemplateGenerator extends DefaultGrailsTemplateGenerator {
-
-    static final Log VLOG = LogFactory.getLog(DefaultVaadinTemplateGenerator)
-
     String pluginDir
     
     /**
@@ -44,10 +41,74 @@ class DefaultVaadinTemplateGenerator extends DefaultGrailsTemplateGenerator {
     DefaultVaadinTemplateGenerator() { super() }
 
     /**
-     * Copied from superclass - calls overridden getTemplateText()
+     * Almost identical to renderEditor in superclass, but uses
+     * additional 'parentProperty' param to handle embedded domain class properties,
+     * and 'readOnly' param to allow rendering of both edit/create fields and show fields
+     * 
+     * @param args The map of args, containing the following listed params.
+     * @param property The property to render
+     * @param readOnly Whether or not property is read-only
+     * @param parentProperty For embedded properties, this is the embedded property's parent property
+     */
+    def renderEditorWithArgs = { Map args ->
+        if (DefaultGrailsTemplateGenerator.LOG.isDebugEnabled()) {
+            DefaultGrailsTemplateGenerator.LOG.debug("RENDER EDITOR: ${args}")
+        }
+        DefaultGrailsTemplateGenerator.LOG.info("RENDER EDITOR: ${args}")
+        def property = args?.property
+        if (!property) {
+            throw new IllegalArgumentException("No property to render!")
+        }
+        
+        def parentProperty = args.parentProperty
+        def readOnly = true && args.readOnly
+        def domainClass = parentProperty ? parentProperty.domainClass : property.domainClass
+        
+        def cp
+        if (pluginManager?.hasGrailsPlugin('hibernate')) {
+            cp = property.domainClass.constrainedProperties[property.name]
+        }
+
+        if (!renderEditorTemplate) {
+            // create template once for performance
+            def templateText = getTemplateText("renderEditor.template")
+            renderEditorTemplate = engine.createTemplate(templateText)
+        }
+
+        def binding = [pluginManager: pluginManager,
+                       property: property,
+                       parentProperty: parentProperty,
+                       readOnly: readOnly,
+                       domainClass: domainClass,
+                       cp: cp,
+                       domainInstance:getPropertyName(domainClass)]
+        return renderEditorTemplate.make(binding).toString()
+    }
+
+    /**
+     * Copied from superclass, as we need to add 'vaadin-' to the output view directory
+     */
+    @Override
+    void generateViews(GrailsDomainClass domainClass, String destdir) {
+        Assert.hasText destdir, "Argument [destdir] not specified"
+
+        def viewsDir = new File("${destdir}/grails-app/views/vaadin-${domainClass.propertyName}")
+        if (!viewsDir.exists()) {
+            viewsDir.mkdirs()
+        }
+
+        for (t in getTemplateNames()) {
+            LOG.info "Generating $t Vaadin view for domain class [${domainClass.fullName}]"
+            generateView domainClass, t, viewsDir.absolutePath
+        }
+    }
+    
+    /**
+     * Copied from superclass - calls overridden getTemplateText() and renderEditorWithArgs
      * (This was private in superclass in grails 2.0.1, therefore invisible
      * to this class)
      */
+    @Override
     void generateView(GrailsDomainClass domainClass, String viewName, Writer out) {
         def templateText = getTemplateText("${viewName}.gsp")
 
@@ -63,7 +124,7 @@ class DefaultVaadinTemplateGenerator extends DefaultGrailsTemplateGenerator {
                     multiPart: multiPart,
                     className: domainClass.shortName,
                     propertyName:  getPropertyName(domainClass),
-                    renderEditor: renderEditor,
+                    renderEditor: renderEditorWithArgs,
                     comparator: hasHibernate ? DomainClassPropertyComparator : SimpleDomainClassPropertyComparator]
 
             t.make(binding).writeTo(out)
@@ -96,7 +157,7 @@ class DefaultVaadinTemplateGenerator extends DefaultGrailsTemplateGenerator {
                     generateController(domainClass, w)
                 }
 
-                LOG.info("Controller generated at ${destFile}")
+                LOG.info("VaadinController generated at ${destFile}")
             }
         }
     }
@@ -189,7 +250,7 @@ class DefaultVaadinTemplateGenerator extends DefaultGrailsTemplateGenerator {
                 resources = resolver.getResources("file:$templatesDirPath/*.gsp").filename.collect(filter)
             }
             catch (e) {
-                LOG.info("Error while loading views from grails-app vaadin/scaffolding folder", e)
+                LOG.info("Error while loading Vaadin views from grails-app vaadin/scaffolding folder", e)
             }
         }
 
@@ -201,7 +262,7 @@ class DefaultVaadinTemplateGenerator extends DefaultGrailsTemplateGenerator {
                 resources.addAll(resolver.getResources("file:$templatesDirPath/*.gsp").filename.collect(filter))
             }
             catch (e) {
-                LOG.info("Error while loading views from plugin vaadin/scaffolding folder", e)
+                LOG.info("Error while loading Vaadin views from plugin vaadin/scaffolding folder", e)
             }
         }
 
