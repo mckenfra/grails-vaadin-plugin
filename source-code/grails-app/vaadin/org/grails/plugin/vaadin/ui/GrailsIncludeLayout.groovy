@@ -55,7 +55,7 @@ class GrailsIncludeLayout extends CustomLayout {
      */
     public void attach() {
         if (!this.templateContents) {
-            addView(new Label("NIKE AIR")) // Initialise empty
+            addView(new Label()) // Initialise empty
         }
         super.attach()
     }
@@ -64,7 +64,6 @@ class GrailsIncludeLayout extends CustomLayout {
      * Adds the specified view to this container.
      */
     protected void addView(Component view) {
-        System.out.println("ADDING: ${view}")
         this.view = view
         if (!this.templateContents) {
             this.templateContents = "<div location='view'/>"

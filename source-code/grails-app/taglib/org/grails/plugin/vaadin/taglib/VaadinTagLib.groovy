@@ -144,6 +144,7 @@ class VaadinTagLib {
         'confirm',
         'commit',
         'createAccordion',
+        'createField',
         'createForm',
         'createHorizontalLayout',
         'createInclude',
@@ -380,10 +381,31 @@ class VaadinTagLib {
      * Configuration tag for describing a field in a Vaadin
      * <a href="http://vaadin.com/api/com/vaadin/ui/Form.html">Form</a>
      * <p>
-     * The field label should be specified as the body of the tag.
+     * The field caption should be specified as the body of the tag.
      */
     Closure field = { attrs, body ->
-        attachConfig(attrs, body, Form.class, "field", "caption")
+        fieldTag(attrs, body)
+    }
+
+    /**
+     * Handles processing of all field-type tags.
+     */
+    protected void fieldTag(attrs, body) {
+        if (lookupParentComponent() instanceof Form) {
+            attachConfig(attrs, body, Form.class, "field", "caption")
+        } else {
+            def attachAttrs = removeAttachAttrs(attrs)
+            attachComponent(createField(attrs, body), attachAttrs)
+        }
+    }
+        
+    /**
+     * Returns a new Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Field.html">Field</a>
+     * of the type specified in the attrs.
+     */
+    Closure createField = { attrs, body ->
+        def fieldDef = toFieldDef(attrs)
+        return applyAttrsAndBodyToComponent(attrs, body, fieldDef.type?.newInstance(), fieldDef.configurer, "caption")
     }
     
     /**
@@ -391,7 +413,7 @@ class VaadinTagLib {
      */
     Closure checkBox = { attrs, body ->
         attrs.type = 'checkBox'
-        field(attrs, body)
+        fieldTag(attrs, body)
     }
     
     /**
@@ -404,7 +426,7 @@ class VaadinTagLib {
      */
     Closure comboBox = { attrs, body ->
         attrs.type = 'comboBox'
-        field(attrs, body)
+        fieldTag(attrs, body)
     }
     
     /**
@@ -417,7 +439,7 @@ class VaadinTagLib {
      */
     Closure date = { attrs, body ->
         attrs.type = 'dateField'
-        field(attrs, body)
+        fieldTag(attrs, body)
     }
     
     /**
@@ -425,7 +447,7 @@ class VaadinTagLib {
      */
     Closure listSelect = { attrs, body ->
         attrs.type = 'listSelect'
-        field(attrs, body)
+        fieldTag(attrs, body)
     }
     
     /**
@@ -438,7 +460,7 @@ class VaadinTagLib {
      */
     Closure optionGroup = { attrs, body ->
         attrs.type = 'optionGroup'
-        field(attrs, body)
+        fieldTag(attrs, body)
     }
     
     /**
@@ -451,7 +473,7 @@ class VaadinTagLib {
      */
     Closure password = { attrs, body ->
         attrs.type = 'password'
-        field(attrs, body)
+        fieldTag(attrs, body)
     }
     
     /**
@@ -459,7 +481,7 @@ class VaadinTagLib {
      */
     Closure select = { attrs, body ->
         attrs.type = 'select'
-        field(attrs, body)
+        fieldTag(attrs, body)
     }
     
     /**
@@ -467,7 +489,7 @@ class VaadinTagLib {
      */
     Closure text = { attrs, body ->
         attrs.type = 'text'
-        field(attrs, body)
+        fieldTag(attrs, body)
     }
 
     /**
@@ -475,7 +497,7 @@ class VaadinTagLib {
      */
     Closure textArea = { attrs, body ->
         attrs.type = 'textArea'
-        field(attrs, body)
+        fieldTag(attrs, body)
     }
 
     /**
@@ -490,7 +512,7 @@ class VaadinTagLib {
     Closure timeZoneSelect = { attrs, body ->
         attrs.type = Utils.removeCaseInsensitive(attrs, 'type') ?: 'comboBox'
         attrs.configurer = timeZoneSelectConfigurer
-        field(attrs, body)
+        fieldTag(attrs, body)
     }
     
     /**
@@ -506,7 +528,7 @@ class VaadinTagLib {
     Closure localeSelect = { attrs, body ->
         attrs.type = Utils.removeCaseInsensitive(attrs, 'type') ?: 'comboBox'
         attrs.configurer = localeSelectConfigurer
-        field(attrs, body)
+        fieldTag(attrs, body)
     }
     
     /**
@@ -516,7 +538,7 @@ class VaadinTagLib {
     Closure currencySelect = { attrs, body ->
         attrs.type = Utils.removeCaseInsensitive(attrs, 'type') ?: 'comboBox'
         attrs.configurer = currencySelectConfigurer
-        field(attrs, body)
+        fieldTag(attrs, body)
     }
     
     /**
@@ -576,7 +598,7 @@ class VaadinTagLib {
      */
     Closure file = { attrs, body ->
         attrs.type = 'file'
-        field(attrs, body)
+        fieldTag(attrs, body)
     }
     
     /**
@@ -662,6 +684,14 @@ class VaadinTagLib {
         GspAttacher attacher = new GspAttacher(context, out)
         attacher.attachConfig(config)
     }
+    
+    /**
+     * Finds the current Vaadin parent component.
+     */
+    protected Component lookupParentComponent() {
+        GspContext context = new GspContext(session)
+        return context.node?.component
+    }
 
     /**
      * Removes entries from attrs map that are relevant to the attaching of the component
@@ -693,8 +723,8 @@ class VaadinTagLib {
         def fragment = Utils.removeCaseInsensitive(props, 'fragment')
  
         // Process specific properties
-        if (args) { include.update(args) }
-        else if (fragment) { include.update(fragment) }
+        if (args) { include.include(args) }
+        else if (fragment) { include.include(fragment) }
  
         // Remaining props
         defaultConfigurer(props, include)
@@ -707,6 +737,7 @@ class VaadinTagLib {
     protected Closure tabsConfigurer = { Map props, TabSheet tabSheet ->
         // Remove specific properties
         def tabs = Utils.removeCaseInsensitive(props, 'tabs')
+        def ontab = Utils.removeCaseInsensitive(props, 'ontab')
         
         // Process specific properties
         if (tabs) {
@@ -715,6 +746,7 @@ class VaadinTagLib {
                 def icon = Utils.removeCaseInsensitive(tabProps, 'icon')
                 def position = Utils.removeCaseInsensitive(tabProps, 'position')
                 def var = Utils.removeCaseInsensitive(tabProps, 'var')
+                def selected = Utils.removeCaseInsensitive(tabProps, 'selected')
                 def tab
                 if (body && position != null) {
                     tab = tabSheet.addTab(body, Utils.toInt(position))
@@ -724,6 +756,7 @@ class VaadinTagLib {
                 if (tab) {
                     if (icon != null) tab.icon = toResource(icon)
                     if (var) set(var:var, value:tab)
+                    if (selected) tabSheet.selectedTab = tab.component 
                     // All remaining props
                     tabProps.each { k,v ->
                         tab."${k}" = (v == "false" ? false : (v == "true" ? true : v))
@@ -731,6 +764,7 @@ class VaadinTagLib {
                 }
             }
         }
+        if (ontab) { tabSheet.addListener(toSelectedTabChangeListener(ontab)) }
         
         // Remaining props
         defaultConfigurer(props, tabSheet)
@@ -783,7 +817,7 @@ class VaadinTagLib {
             fields.each {
                 if (it.type == "field") {
                     def field = toFieldDef(it.props)
-                    if (field) fieldDefs << field
+                    if (field && field.name) fieldDefs << field
                 }
             }
      
@@ -1370,6 +1404,20 @@ class VaadinTagLib {
             return new Upload.SucceededListener() { void uploadSucceeded(Upload.SucceededEvent event) { value(event) } }
         } else {
             throw new IllegalArgumentException("Cannot convert '${value}' to Upload.SucceededListener")
+        }
+    }
+    
+    /**
+     * Converts the value to a <a href="http://vaadin.com/api/com/vaadin/ui/TabSheet.SelectedTabChangeListener.html">TabSheet.SelectedTabChangeListener</a>
+     * if not already.
+     */
+    protected TabSheet.SelectedTabChangeListener toSelectedTabChangeListener(value) {
+        if (value instanceof TabSheet.SelectedTabChangeListener) {
+            return value
+        } else if (value instanceof Closure) {
+            return new TabSheet.SelectedTabChangeListener() { void selectedTabChange(TabSheet.SelectedTabChangeEvent event) { value(event) } }
+        } else {
+            throw new IllegalArgumentException("Cannot convert '${value}' to TabSheet.SelectedTabChangeListener")
         }
     }
 
