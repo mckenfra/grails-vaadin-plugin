@@ -1,6 +1,8 @@
 package org.grails.plugin.vaadin
 
 import com.vaadin.Application
+import com.vaadin.ui.Component;
+
 import grails.persistence.Entity
 import org.apache.commons.logging.LogFactory
 import org.grails.plugin.vaadin.services.VaadinApplicationService
@@ -162,6 +164,12 @@ class VaadinApi {
             }
             clazz.metaClass.render = {Map args ->
                 vaadinApplicationHolder.application.dispatcher.activeRequest.render(args)
+            }
+            clazz.metaClass.render = {String view ->
+                vaadinApplicationHolder.application.dispatcher.activeRequest.render(view)
+            }
+            clazz.metaClass.render = {Component component ->
+                vaadinApplicationHolder.application.dispatcher.activeRequest.render(component)
             }
         }
     }

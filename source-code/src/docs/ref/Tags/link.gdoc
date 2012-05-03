@@ -9,7 +9,7 @@ h2. Examples
 Example controller for an application called "shop":
 
 {code:java}
-class BookController {
+class BookVaadinController {
     static defaultAction = "list"
 
     def list() {
@@ -71,6 +71,8 @@ h5. Specific
 
 * @controller@ (optional) The Vaadin controller to link to. If omitted, defaults to the controller of the current 'request'.
 
+* @params@ (optional) The params to use when executing the Vaadin controller.
+
 * @id@ (optional) The id parameter to use in the link.
 
 * @instance@ (optional) The domain class instance parameter to use in the link. 
@@ -124,7 +126,7 @@ through to the domain class instance, before that instance is then written to th
   <v:field name="author">Author</v:field>
 </v:form>
 
-<v:link action="delete" id="1" onclick="${v.commit(form:'myForm')}">
+<v:link action="save" id="1" onclick="${v.commit(form:'myForm')}">
   Save
 </v:link>
 {code}

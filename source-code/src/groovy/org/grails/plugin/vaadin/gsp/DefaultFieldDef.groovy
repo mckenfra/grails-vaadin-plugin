@@ -11,9 +11,6 @@ class DefaultFieldDef implements FieldDef {
     Map props
 
     public DefaultFieldDef(String name, Class type = null, Closure configurer = null, Map props = null) {
-        if (!name) {
-            throw new IllegalArgumentException("Field must have a name!")
-        }
         this.name = name
         this.type = type
         this.configurer = configurer

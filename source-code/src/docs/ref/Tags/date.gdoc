@@ -23,9 +23,25 @@ h4. Body
 
 h4. Attributes
 
+h5. Specific
+
 * @name@ (required) The property name of the field
 
 * @caption@ (optional) The caption of the field. Overrides the body content.
+
+* @resolution@ (optional) The resolution for the date field. Allowed values: @day@, @hour@, @minute@, @month@, @millisecond@, @second@, @year@
+
+* @onValueChange@ (optional) Either a [ValueChangeListener|http://vaadin.com/api/com/vaadin/data/Property.ValueChangeListener.html] or a Closure that expects a [ValueChangeEvent|http://vaadin.com/api/com/vaadin/data/Property.ValueChangeEvent.html] parameter
+
+h5. General
+
+* @var@ (optional) Uses Grails's [set|http://grails.org/doc/latest/ref/Tags/set.html] tag to set the value of the specified variable to be this component.
+
+* @class@ (optional) The CSS class name to add to the component using the addStyleName() method
+
+* @sizeUndefined@ (optional) Calls setSizeUndefined() on the component. (Attribute value is ignored)
+
+* @sizeFull@ (optional) Calls setSizeFull() on the component. (Attribute value is ignored)
 
 {note}
 See Vaadin [DateField|http://vaadin.com/api/com/vaadin/ui/DateField.html] API docs for full list of allowed attributes.

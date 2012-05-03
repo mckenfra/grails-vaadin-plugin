@@ -5,12 +5,12 @@ rather than a conventional Request-Response framework, we do not map
 
 As an example, say we want to create a screen for displaying a list of books.
 In Grails, we would create a @BookController.groovy@ file containing a @list()@ method,
-and a @list.gsp@ file. This would then be accessible from a browser via
+and a @book/list.gsp@ file. This would then be accessible from a browser via
 @http://localhost:8080/myapp/book/list@
 
 With the Vaadin plugin, we do exactly the same thing. We create a @BookVaadinController.groovy@
-file containing a @list()@ method, and a @list.gsp@ file. This is then accessible from a browser
-via @http://localhost:8080/myapp#book/list@. Note the @'#'@ in the URL to denote
+file containing a @list()@ method, and a @book-vaadin/list.gsp@ file. This is then accessible
+from a browser via @http://localhost:8080/myapp#book/list@. Note the @'#'@ in the URL to denote
 the fragment! 
 
 {note}

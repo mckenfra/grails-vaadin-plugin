@@ -2,7 +2,7 @@ h1. layout
 
 h2. Purpose
 
-Adds a 'template-and-content' [GspLayout|api:org.grails.plugin.vaadin.ui.GspLayout] to the parent container.
+Adds a 'template-and-content' [GspTemplateLayout|api:org.grails.plugin.vaadin.ui.GspTemplateLayout] to the parent container.
 
 h2. Examples
 
@@ -42,8 +42,6 @@ to the [Sitemesh layout|http://grails.org/doc/latest/guide/theWebLayer.html#layo
 
 The GSP used as the layout template should contain HTML tags with a 'location' attribute. The name
 specified by this 'location' attribute is then referenced by the <v:location> tag in the current GSP.
-
-See Vaadin [CustomLayout|http://vaadin.com/api/com/vaadin/ui/CustomLayout.html] API docs for full list of allowed attributes.
 
 h4. Body
 
