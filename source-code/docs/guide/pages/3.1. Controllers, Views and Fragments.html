@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>3.1 Controllers, Views and Fragments 1.6.1-SNAPSHOT</title>
+    <title>3.1 Controllers, Views and Fragments 1.6.2-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -81,7 +81,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Ondrej Kvasnovsky, Francis McKenzie</p>
 
-                    <p><strong>Version:</strong> 1.6.1-SNAPSHOT</p>
+                    <p><strong>Version:</strong> 1.6.2-SNAPSHOT</p>
 
                     
                 </div>
@@ -96,10 +96,10 @@ Controllers and Views. However, since Vaadin is an AJAX-based framework
 rather than a conventional Request-Response framework, we do not map
 <strong class="bold">URLs</strong> to controllers but instead map <strong class="bold">Fragments</strong> to controllers.<p class="paragraph"/>As an example, say we want to create a screen for displaying a list of books.
 In Grails, we would create a <code>BookController.groovy</code> file containing a <code>list()</code> method,
-and a <code>list.gsp</code> file. This would then be accessible from a browser via
+and a <code>book/list.gsp</code> file. This would then be accessible from a browser via
 <code>http://localhost:8080/myapp/book/list</code><p class="paragraph"/>With the Vaadin plugin, we do exactly the same thing. We create a <code>BookVaadinController.groovy</code>
-file containing a <code>list()</code> method, and a <code>list.gsp</code> file. This is then accessible from a browser
-via <code>http://localhost:8080/myapp#book/list</code>. Note the <code>'#'</code> in the URL to denote
+file containing a <code>list()</code> method, and a <code>book-vaadin/list.gsp</code> file. This is then accessible
+from a browser via <code>http://localhost:8080/myapp#book/list</code>. Note the <code>'#'</code> in the URL to denote
 the fragment!<p class="paragraph"/><blockquote class="note">
 The naming convention for Vaadin controllers is important - the class name
 must end with <code>VaadinController</code>.<p class="paragraph"/>Note that this method of identifying artefacts through the use of standard naming
@@ -151,6 +151,9 @@ conventions is very common in Grails!
                     <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Tags</h1><div class="menu-sub">
                         
                             
+                            <div class="menu-item"><a href="../../ref/Tags/accordion.html">accordion</a>
+                            </div>
+                            
                             <div class="menu-item"><a href="../../ref/Tags/checkBox.html">checkBox</a>
                             </div>
                             
@@ -158,6 +161,12 @@ conventions is very common in Grails!
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/comboBox.html">comboBox</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/currencySelect.html">currencySelect</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/customField.html">customField</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/date.html">date</a>
@@ -169,10 +178,16 @@ conventions is very common in Grails!
                             <div class="menu-item"><a href="../../ref/Tags/field.html">field</a>
                             </div>
                             
+                            <div class="menu-item"><a href="../../ref/Tags/file.html">file</a>
+                            </div>
+                            
                             <div class="menu-item"><a href="../../ref/Tags/form.html">form</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/horizontalLayout.html">horizontalLayout</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/include.html">include</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/label.html">label</a>
@@ -184,10 +199,19 @@ conventions is very common in Grails!
                             <div class="menu-item"><a href="../../ref/Tags/link.html">link</a>
                             </div>
                             
+                            <div class="menu-item"><a href="../../ref/Tags/listSelect.html">listSelect</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/localeSelect.html">localeSelect</a>
+                            </div>
+                            
                             <div class="menu-item"><a href="../../ref/Tags/location.html">location</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/optionGroup.html">optionGroup</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/password.html">password</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/select.html">select</a>
@@ -196,7 +220,22 @@ conventions is very common in Grails!
                             <div class="menu-item"><a href="../../ref/Tags/styling.html">styling</a>
                             </div>
                             
+                            <div class="menu-item"><a href="../../ref/Tags/tab.html">tab</a>
+                            </div>
+                            
                             <div class="menu-item"><a href="../../ref/Tags/table.html">table</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/tabs.html">tabs</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/text.html">text</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/textArea.html">textArea</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/timeZoneSelect.html">timeZoneSelect</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/verticalLayout.html">verticalLayout</a>

@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
     <head>
-        <title>Vaadin Grails Plugin 1.6.1-SNAPSHOT</title>
+        <title>Vaadin Grails Plugin 1.6.2-SNAPSHOT</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8" />
         <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8" />
@@ -63,7 +63,7 @@ function addJsClass(el) {
                         <div class="project">
                             <h1>Vaadin Grails Plugin - Reference Documentation</h1>
                             <p><strong>Authors:</strong> Ondrej Kvasnovsky, Francis McKenzie</p>
-                            <p><strong>Version:</strong> 1.6.1-SNAPSHOT</p>
+                            <p><strong>Version:</strong> 1.6.2-SNAPSHOT</p>
                             
                         </div>
 
@@ -113,10 +113,10 @@ Please visit <a href="http://vaadin.com" target="blank">http://vaadin.com</a> fo
 in <code>grails-app/conf/BuildConfig.groovy</code>, i.e.:<p class="paragraph"/><div class="code"><pre>plugins &#123;
     // Other plugin dependencies here
     // . . .
-    // . . .<p class="paragraph"/>    compile ':vaadin:1.6.1&#45;SNAPSHOT'
+    // . . .<p class="paragraph"/>    compile ':vaadin:1.6.2&#45;SNAPSHOT'
 &#125;</pre></div><p class="paragraph"/>This will trigger installation of the plugin when we compile or run our app. But since
 we need to use scripts in the plugin beforehand, we also have to install the plugin
-manually the first time. Run the following at the command line:<p class="paragraph"/><div class="code"><pre>grails install&#45;plugin vaadin 1.6.1&#45;SNAPSHOT</pre></div><p class="paragraph"/><h4>Create the Application</h4><p class="paragraph"/>After installing the plugin, you should run the following at the command line to
+manually the first time. Run the following at the command line:<p class="paragraph"/><div class="code"><pre>grails install&#45;plugin vaadin 1.6.2&#45;SNAPSHOT</pre></div><p class="paragraph"/><h4>Create the Application</h4><p class="paragraph"/>After installing the plugin, you should run the following at the command line to
 create your Vaadin application:<p class="paragraph"/><div class="code"><pre>grails generate&#45;vaadin&#45;app com.somewhere.MyApp</pre></div><p class="paragraph"/>This will install the necessary files and apply configuration changes to your application,
 to make it ready for Vaadin. See details in the <a href="../ref/Command Line/generate-vaadin-app.html" class="Command Line">generate-vaadin-app</a> section.<p class="paragraph"/><h4>Run the Application</h4><p class="paragraph"/>If you now execute the following at the command line, you should see the default Grails
 home page - however note this is implemented in Vaadin, even though it (should) look
@@ -134,10 +134,10 @@ Controllers and Views. However, since Vaadin is an AJAX-based framework
 rather than a conventional Request-Response framework, we do not map
 <strong class="bold">URLs</strong> to controllers but instead map <strong class="bold">Fragments</strong> to controllers.<p class="paragraph"/>As an example, say we want to create a screen for displaying a list of books.
 In Grails, we would create a <code>BookController.groovy</code> file containing a <code>list()</code> method,
-and a <code>list.gsp</code> file. This would then be accessible from a browser via
+and a <code>book/list.gsp</code> file. This would then be accessible from a browser via
 <code>http://localhost:8080/myapp/book/list</code><p class="paragraph"/>With the Vaadin plugin, we do exactly the same thing. We create a <code>BookVaadinController.groovy</code>
-file containing a <code>list()</code> method, and a <code>list.gsp</code> file. This is then accessible from a browser
-via <code>http://localhost:8080/myapp#book/list</code>. Note the <code>'#'</code> in the URL to denote
+file containing a <code>list()</code> method, and a <code>book-vaadin/list.gsp</code> file. This is then accessible
+from a browser via <code>http://localhost:8080/myapp#book/list</code>. Note the <code>'#'</code> in the URL to denote
 the fragment!<p class="paragraph"/><blockquote class="note">
 The naming convention for Vaadin controllers is important - the class name
 must end with <code>VaadinController</code>.<p class="paragraph"/>Note that this method of identifying artefacts through the use of standard naming
@@ -153,13 +153,13 @@ section of the <a href="http://grails.org/doc/latest/guide" target="blank">Grail
 <a href="../guide/single.html#2.%20Installation" class="guide">Installation</a> section. Now follow these steps:<p class="paragraph"/><h4>1. Create the Controller</h4><p class="paragraph"/>Create a VaadinController by entering the following at the command line:<p class="paragraph"/><div class="code"><pre>grails create&#45;vaadin&#45;controller myapp.Hello</pre></div><p class="paragraph"/>This simply creates an empty groovy class under the <code>grails-app/controllers</code> folder. Note that
 <code>VaadinController</code> is automatically appended to the class name.<p class="paragraph"/><h4>2. Add an Action</h4><p class="paragraph"/>In the HelloVaadinController class, add a <code>greetings</code> method as follows:<p class="paragraph"/><div class="code"><pre>class HelloVaadinController &#123;
 	def greetings() &#123;&#125;
-&#125;</pre></div><p class="paragraph"/><h4>3. Create the View</h4><p class="paragraph"/>Create file <code>grails-app/views/hello/greetings.gsp</code> with the following contents:<p class="paragraph"/><div class="code"><pre>&#60;div&#62;
+&#125;</pre></div><p class="paragraph"/><h4>3. Create the View</h4><p class="paragraph"/>Create file <code>grails-app/views/hello-vaadin/greetings.gsp</code> with the following contents:<p class="paragraph"/><div class="code"><pre>&#60;div&#62;
   &#60;v:label&#62;Hello world!&#60;/v:label&#62;
 &#60;/div&#62;</pre></div><p class="paragraph"/><h4>4. Run the App</h4><p class="paragraph"/>Finally, run the application using <code>grails run-app</code> and then browse to
 <code>http://localhost:8080/myapp#hello/greetings</code>. You should see the
 "Hello World!" message displayed.<p class="paragraph"/>(Note that you will need to replace <code>'myapp'</code> in the above URL with the name of your
 grails project.)<p class="paragraph"/><h4>5. Use the Grails Theme</h4><p class="paragraph"/>Let's improve the appearance of our new page. Change the text in file
-<code>grails-app/views/hello/greetings.gsp</code> to the following:<p class="paragraph"/><div class="code"><pre>&#60;v:layout name=<span class="java&#45;quote">"vaadin"</span>&#62;
+<code>grails-app/views/hello-vaadin/greetings.gsp</code> to the following:<p class="paragraph"/><div class="code"><pre>&#60;v:layout name=<span class="java&#45;quote">"vaadin"</span>&#62;
   &#60;v:label location=<span class="java&#45;quote">"body"</span>&#62;Hello world!&#60;/v:label&#62;
 &#60;/v:layout&#62;</pre></div><p class="paragraph"/>Now refresh your browser page - you should see your "Hello World!" message again,
 but this time within the familiar Grails theme.<p class="paragraph"/><blockquote class="note">
@@ -191,7 +191,7 @@ In the Vaadin view GSPs, you can use all of the
 <a href="http://grails.org/doc/latest/guide/theWebLayer.html#tags" target="blank">Grails tags</a> as you would in a
 normal Grails GSP.<p class="paragraph"/><blockquote class="note">
 Sitemesh layout tags are currently not supported. Please use the Vaadin <a href="../ref/Tags/layout.html" class="Tags">layout</a> tag instead.
-</blockquote><p class="paragraph"/>In addition, you can embed Vaadin components in GSPs using the tag library provided by this plugin:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Tag</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td><a href="../ref/Tags/horizontalLayout.html" class="Tags">horizontalLayout</a></td><td>Adds a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/HorizontalLayout.html" target="blank">HorizontalLayout</a> component to the parent container.</td></tr><tr class="table-even"><td><a href="../ref/Tags/verticalLayout.html" class="Tags">verticalLayout</a></td><td>Adds a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/VerticalLayout.html" target="blank">VerticalLayout</a> component to the parent container.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/label.html" class="Tags">label</a></td><td>Adds a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Label.html" target="blank">Label</a> component to the parent container.</td></tr><tr class="table-even"><td><a href="../ref/Tags/layout.html" class="Tags">layout</a></td><td>Adds a 'template-and-content' <a href="../gapi/org/grails/plugin/vaadin/ui/GspLayout.html" class="api">GspLayout</a> to the parent container.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/location.html" class="Tags">location</a></td><td>Adds a 'content-only' <a href="../gapi/org/grails/plugin/vaadin/ui/GspLayout.html" class="api">GspLayout</a> component to the location in the parent container.</td></tr><tr class="table-even"><td><a href="../ref/Tags/link.html" class="Tags">link</a></td><td>Adds a <a href="../gapi/org/grails/plugin/vaadin/ui/GrailsButton.html" class="api">GrailsButton</a> component to the parent container.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/table.html" class="Tags">table</a></td><td>Adds a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Table.html" target="blank">Table</a> component to the parent container.</td></tr><tr class="table-even"><td><a href="../ref/Tags/column.html" class="Tags">column</a></td><td>Configures a single column of the parent Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Table.html" target="blank">Table</a> component.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/form.html" class="Tags">form</a></td><td>Adds a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Form.html" target="blank">Form</a> component to the parent container.</td></tr><tr class="table-even"><td><a href="../ref/Tags/field.html" class="Tags">field</a></td><td>Configures a single <a href="http://vaadin.com/api/com/vaadin/ui/AbstractField.html" target="blank">Field</a> of the parent Vaadin Form component.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/checkBox.html" class="Tags">checkBox</a></td><td>Configures a <a href="http://vaadin.com/api/com/vaadin/ui/CheckBox.html" target="blank">CheckBox</a> field of the parent Vaadin Form component.</td></tr><tr class="table-even"><td><a href="../ref/Tags/comboBox.html" class="Tags">comboBox</a></td><td>Configures a <a href="http://vaadin.com/api/com/vaadin/ui/ComboBox.html" target="blank">ComboBox</a> field of the parent Vaadin Form component.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/date.html" class="Tags">date</a></td><td>Configures a <a href="http://vaadin.com/api/com/vaadin/ui/DateField.html" target="blank">DateField</a> of the parent Vaadin Form component.</td></tr><tr class="table-even"><td><a href="../ref/Tags/optionGroup.html" class="Tags">optionGroup</a></td><td>Configures an <a href="http://vaadin.com/api/com/vaadin/ui/OptionGroup.html" target="blank">OptionGroup</a> field of the parent Vaadin Form component.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/select.html" class="Tags">select</a></td><td>Configures a <a href="http://vaadin.com/api/com/vaadin/ui/Select.html" target="blank">Select</a> field of the parent Vaadin Form component.</td></tr><tr class="table-even"><td><a href="../ref/Tags/warning.html" class="Tags">warning</a></td><td>Shows a warning-type <a href="http://vaadin.com/api/com/vaadin/ui/Window.Notification.html" target="blank">Window.Notification</a> in the application's main window.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/error.html" class="Tags">error</a></td><td>Shows an error-type <a href="http://vaadin.com/api/com/vaadin/ui/Window.Notification.html" target="blank">Window.Notification</a> in the application's main window.</td></tr></table>
+</blockquote><p class="paragraph"/>In addition, you can embed Vaadin components in GSPs using the tag library provided by this plugin:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Tag</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td><strong class="bold">LAYOUTS</strong></td><td>&#160;</td></tr><tr class="table-even"><td><a href="../ref/Tags/accordion.html" class="Tags">accordion</a></td><td>Adds a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Accordion.html" target="blank">Accordion</a> component to the parent container.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/horizontalLayout.html" class="Tags">horizontalLayout</a></td><td>Adds a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/HorizontalLayout.html" target="blank">HorizontalLayout</a> component to the parent container.</td></tr><tr class="table-even"><td><a href="../ref/Tags/layout.html" class="Tags">layout</a></td><td>Adds a 'template-and-content' <a href="../gapi/org/grails/plugin/vaadin/ui/GspTemplateLayout.html" class="api">GspTemplateLayout</a> to the parent container.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/location.html" class="Tags">location</a></td><td>Adds a 'content-only' <a href="../gapi/org/grails/plugin/vaadin/ui/GspLayout.html" class="api">GspLayout</a> component to the location in the parent container.</td></tr><tr class="table-even"><td><a href="../ref/Tags/tab.html" class="Tags">tab</a></td><td>Configures a single tab of the parent Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/TabSheet.html" target="blank">TabSheet</a> component.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/tabs.html" class="Tags">tabs</a></td><td>Adds a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/TabSheet.html" target="blank">TabSheet</a> component to the parent container.</td></tr><tr class="table-even"><td><a href="../ref/Tags/verticalLayout.html" class="Tags">verticalLayout</a></td><td>Adds a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/VerticalLayout.html" target="blank">VerticalLayout</a> component to the parent container.</td></tr><tr class="table-odd"><td>&#160;</td><td>&#160;</td></tr><tr class="table-even"><td><strong class="bold">TABLES</strong></td><td>&#160;</td></tr><tr class="table-odd"><td><a href="../ref/Tags/table.html" class="Tags">table</a></td><td>Adds a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Table.html" target="blank">Table</a> component to the parent container.</td></tr><tr class="table-even"><td><a href="../ref/Tags/column.html" class="Tags">column</a></td><td>Configures a single column of the parent Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Table.html" target="blank">Table</a> component.</td></tr><tr class="table-odd"><td>&#160;</td><td>&#160;</td></tr><tr class="table-even"><td><strong class="bold">FORMS</strong></td><td>&#160;</td></tr><tr class="table-odd"><td><a href="../ref/Tags/form.html" class="Tags">form</a></td><td>Adds a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Form.html" target="blank">Form</a> component to the parent container.</td></tr><tr class="table-even"><td><a href="../ref/Tags/field.html" class="Tags">field</a></td><td>Configures a single <a href="http://vaadin.com/api/com/vaadin/ui/AbstractField.html" target="blank">Field</a> of the parent Vaadin Form component.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/checkBox.html" class="Tags">checkBox</a></td><td>Configures a <a href="http://vaadin.com/api/com/vaadin/ui/CheckBox.html" target="blank">CheckBox</a> field of the parent Vaadin Form component.</td></tr><tr class="table-even"><td><a href="../ref/Tags/comboBox.html" class="Tags">comboBox</a></td><td>Configures a <a href="http://vaadin.com/api/com/vaadin/ui/ComboBox.html" target="blank">ComboBox</a> field of the parent Vaadin Form component.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/currencySelect.html" class="Tags">currencySelect</a></td><td>Configures a Currency-populated <a href="http://vaadin.com/api/com/vaadin/ui/Select.html" target="blank">Select</a> field of the parent Vaadin Form component.</td></tr><tr class="table-even"><td><a href="../ref/Tags/customField.html" class="Tags">customField</a></td><td>Configures a <a href="../gapi/org/grails/plugin/vaadin/ui/DefaultCustomField.html" class="api">DefaultCustomField</a> of the parent Vaadin Form component.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/date.html" class="Tags">date</a></td><td>Configures a <a href="http://vaadin.com/api/com/vaadin/ui/DateField.html" target="blank">DateField</a> of the parent Vaadin Form component.</td></tr><tr class="table-even"><td><a href="../ref/Tags/file.html" class="Tags">file</a></td><td>Configures a <a href="../gapi/org/grails/plugin/vaadin/ui/DefaultUploadField.html" class="api">DefaultUploadField</a> of the parent Vaadin Form component.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/listSelect.html" class="Tags">listSelect</a></td><td>Configures a <a href="http://vaadin.com/api/com/vaadin/ui/ListSelect.html" target="blank">ListSelect</a> field of the parent Vaadin Form component.</td></tr><tr class="table-even"><td><a href="../ref/Tags/localeSelect.html" class="Tags">localeSelect</a></td><td>Configures a Locale-populated <a href="http://vaadin.com/api/com/vaadin/ui/Select.html" target="blank">Select</a> field of the parent Vaadin Form component.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/optionGroup.html" class="Tags">optionGroup</a></td><td>Configures an <a href="http://vaadin.com/api/com/vaadin/ui/OptionGroup.html" target="blank">OptionGroup</a> field of the parent Vaadin Form component.</td></tr><tr class="table-even"><td><a href="../ref/Tags/password.html" class="Tags">password</a></td><td>Configures a <a href="http://vaadin.com/api/com/vaadin/ui/PasswordField.html" target="blank">PasswordField</a> of the parent Vaadin Form component.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/select.html" class="Tags">select</a></td><td>Configures a <a href="http://vaadin.com/api/com/vaadin/ui/Select.html" target="blank">Select</a> field of the parent Vaadin Form component.</td></tr><tr class="table-even"><td><a href="../ref/Tags/text.html" class="Tags">text</a></td><td>Configures a <a href="http://vaadin.com/api/com/vaadin/ui/TextField.html" target="blank">TextField</a> field of the parent Vaadin Form component.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/textArea.html" class="Tags">textArea</a></td><td>Configures a <a href="http://vaadin.com/api/com/vaadin/ui/TextArea.html" target="blank">TextArea</a> field of the parent Vaadin Form component.</td></tr><tr class="table-even"><td><a href="../ref/Tags/timeZoneSelect.html" class="Tags">timeZoneSelect</a></td><td>Configures a TimeZone-populated <a href="http://vaadin.com/api/com/vaadin/ui/Select.html" target="blank">Select</a> field of the parent Vaadin Form component.</td></tr><tr class="table-odd"><td>&#160;</td><td>&#160;</td></tr><tr class="table-even"><td><strong class="bold">MISC</strong></td><td>&#160;</td></tr><tr class="table-odd"><td><a href="../ref/Tags/include.html" class="Tags">include</a></td><td>Adds a <a href="../gapi/org/grails/plugin/vaadin/ui/GrailsIncludeLayout.html" class="api">GrailsIncludeLayout</a> component to the parent container.</td></tr><tr class="table-even"><td><a href="../ref/Tags/label.html" class="Tags">label</a></td><td>Adds a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Label.html" target="blank">Label</a> component to the parent container.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/link.html" class="Tags">link</a></td><td>Adds a <a href="../gapi/org/grails/plugin/vaadin/ui/GrailsButton.html" class="api">GrailsButton</a> component to the parent container.</td></tr><tr class="table-even"><td><a href="../ref/Tags/warning.html" class="Tags">warning</a></td><td>Shows a warning-type <a href="http://vaadin.com/api/com/vaadin/ui/Window.Notification.html" target="blank">Window.Notification</a> in the application's main window.</td></tr><tr class="table-odd"><td><a href="../ref/Tags/error.html" class="Tags">error</a></td><td>Shows an error-type <a href="http://vaadin.com/api/com/vaadin/ui/Window.Notification.html" target="blank">Window.Notification</a> in the application's main window.</td></tr></table>
 
 
 
@@ -249,7 +249,7 @@ Only classes under the <code>grails-app</code> directory can be Vaadin Classes.
 
 
 <h1 id="6. Version History">6 Version History</h1>
-<table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Version</strong></th><th><strong class="bold">Date</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td>1.6.1</td><td>15-Apr 2012</td><td><strong class="bold">Improvements</strong>:<br/>- Create Vaadin GUIs using GSPs &#38; tags<br/>- Allow regular Grails controllers &#38; Vaadin to be mixed together in one app</td></tr><tr class="table-even"><td>1.6</td><td>5-Apr 2012</td><td><strong class="bold">Improvements</strong>:<br/>- Controllers &#38; Views framework, and Grails-style scaffolding<br/>- Instant setup of a new app with 'no-brainer' install script</td></tr><tr class="table-odd"><td>1.5.3</td><td>1-Mar 2012</td><td>Vaadin updated to 6.7.5</td></tr><tr class="table-even"><td>1.5</td><td>Earlier</td><td>Possible to run it together with Grails 2.0.0.<br/>Vaadin updated to 6.7.4.<br/>Config option for custom servlet class name added.<br/>Automatic redeploy fixed (so you can do changes in<br/>Vaadin classes without restarting the application).</td></tr><tr class="table-odd"><td>1.4</td><td>Earlier</td><td>Added the possibility to specify your own widgetset to be used by Vaadin servlet.<br/>This is very useful for using add-ons</td></tr><tr class="table-even"><td>1.3</td><td>Earlier</td><td>Simple Vaadin upgrade to version 6.5.1</td></tr><tr class="table-odd"><td>1.2</td><td>Earlier</td><td>Created new 'vaadin' artefact type - all Vaadin code should now<br/>reside in <code>grails-app/vaadin</code><br/>New features:<br/>- Seamless integration with Grails Internationalization (i18n)<br/>- Spring bean lookup from any Vaadin component.</td></tr><tr class="table-even"><td>1.1.2</td><td>Earlier</td><td>Upgraded to the latest stable Vaadin release (6.3.4), fixing these issues.</td></tr><tr class="table-odd"><td>1.1.1</td><td>Earlier</td><td>A minor point release that ensures compatibility with Grails 1.1 and higher.<br/>However, Groovy 1.7 language features (anonymous inner classes, etc)<br/>are only available in Grails 1.3+ environments<br/>(Groovy 1.7 is part of Grails 1.3+).</td></tr><tr class="table-even"><td>1.1</td><td>Earlier</td><td>Latest stable Vaadin release (6.3.3). Ability to specify a path to your Vaadin UI<br/>other than the root context path,<br/>e.g. <code>http://localhost:8080/myapp/vaadinUI</code><br/>Environment-specific configuration support (production, development, etc).<br/>Custom environments too 'beta', 'uat', etc).</td></tr></table>
+<table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Version</strong></th><th><strong class="bold">Date</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td>1.6.2</td><td>3-May 2012</td><td><strong class="bold">Improvements</strong>:<br/>- Scaffold all property types, e.g. bytearray, locale<br/>- Many new tags, e.g. include, tabs, accordion, file</td></tr><tr class="table-even"><td>1.6.1</td><td>15-Apr 2012</td><td><strong class="bold">Improvements</strong>:<br/>- Create Vaadin GUIs using GSPs &#38; tags<br/>- Allow regular Grails controllers &#38; Vaadin to be mixed together in one app</td></tr><tr class="table-odd"><td>1.6</td><td>5-Apr 2012</td><td><strong class="bold">Improvements</strong>:<br/>- Controllers &#38; Views framework, and Grails-style scaffolding<br/>- Instant setup of a new app with 'no-brainer' install script</td></tr><tr class="table-even"><td>1.5.3</td><td>1-Mar 2012</td><td>Vaadin updated to 6.7.5</td></tr><tr class="table-odd"><td>1.5</td><td>Earlier</td><td>Possible to run it together with Grails 2.0.0.<br/>Vaadin updated to 6.7.4.<br/>Config option for custom servlet class name added.<br/>Automatic redeploy fixed (so you can do changes in<br/>Vaadin classes without restarting the application).</td></tr><tr class="table-even"><td>1.4</td><td>Earlier</td><td>Added the possibility to specify your own widgetset to be used by Vaadin servlet.<br/>This is very useful for using add-ons</td></tr><tr class="table-odd"><td>1.3</td><td>Earlier</td><td>Simple Vaadin upgrade to version 6.5.1</td></tr><tr class="table-even"><td>1.2</td><td>Earlier</td><td>Created new 'vaadin' artefact type - all Vaadin code should now<br/>reside in <code>grails-app/vaadin</code><br/>New features:<br/>- Seamless integration with Grails Internationalization (i18n)<br/>- Spring bean lookup from any Vaadin component.</td></tr><tr class="table-odd"><td>1.1.2</td><td>Earlier</td><td>Upgraded to the latest stable Vaadin release (6.3.4), fixing these issues.</td></tr><tr class="table-even"><td>1.1.1</td><td>Earlier</td><td>A minor point release that ensures compatibility with Grails 1.1 and higher.<br/>However, Groovy 1.7 language features (anonymous inner classes, etc)<br/>are only available in Grails 1.3+ environments<br/>(Groovy 1.7 is part of Grails 1.3+).</td></tr><tr class="table-odd"><td>1.1</td><td>Earlier</td><td>Latest stable Vaadin release (6.3.3). Ability to specify a path to your Vaadin UI<br/>other than the root context path,<br/>e.g. <code>http://localhost:8080/myapp/vaadinUI</code><br/>Environment-specific configuration support (production, development, etc).<br/>Custom environments too 'beta', 'uat', etc).</td></tr></table>
 
                     </div>
                 </td>
@@ -288,6 +288,9 @@ Only classes under the <code>grails-app</code> directory can be Vaadin Classes.
                     <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Tags</h1><div class="menu-sub">
                         
                         
+                        <div class="menu-item"><a href="../ref/Tags/accordion.html">accordion</a>
+                        </div>
+                        
                         <div class="menu-item"><a href="../ref/Tags/checkBox.html">checkBox</a>
                         </div>
                         
@@ -295,6 +298,12 @@ Only classes under the <code>grails-app</code> directory can be Vaadin Classes.
                         </div>
                         
                         <div class="menu-item"><a href="../ref/Tags/comboBox.html">comboBox</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Tags/currencySelect.html">currencySelect</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Tags/customField.html">customField</a>
                         </div>
                         
                         <div class="menu-item"><a href="../ref/Tags/date.html">date</a>
@@ -306,10 +315,16 @@ Only classes under the <code>grails-app</code> directory can be Vaadin Classes.
                         <div class="menu-item"><a href="../ref/Tags/field.html">field</a>
                         </div>
                         
+                        <div class="menu-item"><a href="../ref/Tags/file.html">file</a>
+                        </div>
+                        
                         <div class="menu-item"><a href="../ref/Tags/form.html">form</a>
                         </div>
                         
                         <div class="menu-item"><a href="../ref/Tags/horizontalLayout.html">horizontalLayout</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Tags/include.html">include</a>
                         </div>
                         
                         <div class="menu-item"><a href="../ref/Tags/label.html">label</a>
@@ -321,10 +336,19 @@ Only classes under the <code>grails-app</code> directory can be Vaadin Classes.
                         <div class="menu-item"><a href="../ref/Tags/link.html">link</a>
                         </div>
                         
+                        <div class="menu-item"><a href="../ref/Tags/listSelect.html">listSelect</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Tags/localeSelect.html">localeSelect</a>
+                        </div>
+                        
                         <div class="menu-item"><a href="../ref/Tags/location.html">location</a>
                         </div>
                         
                         <div class="menu-item"><a href="../ref/Tags/optionGroup.html">optionGroup</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Tags/password.html">password</a>
                         </div>
                         
                         <div class="menu-item"><a href="../ref/Tags/select.html">select</a>
@@ -333,7 +357,22 @@ Only classes under the <code>grails-app</code> directory can be Vaadin Classes.
                         <div class="menu-item"><a href="../ref/Tags/styling.html">styling</a>
                         </div>
                         
+                        <div class="menu-item"><a href="../ref/Tags/tab.html">tab</a>
+                        </div>
+                        
                         <div class="menu-item"><a href="../ref/Tags/table.html">table</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Tags/tabs.html">tabs</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Tags/text.html">text</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Tags/textArea.html">textArea</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Tags/timeZoneSelect.html">timeZoneSelect</a>
                         </div>
                         
                         <div class="menu-item"><a href="../ref/Tags/verticalLayout.html">verticalLayout</a>

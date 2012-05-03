@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>Vaadin Grails Plugin 1.6.1-SNAPSHOT</title>
+    <title>Vaadin Grails Plugin 1.6.2-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -68,7 +68,7 @@ function addJsClass(el) {
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
-                <h1>link</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Adds a <a href="../../gapi/org/grails/plugin/vaadin/ui/GrailsButton.html" class="api">GrailsButton</a> component to the parent container.<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/>Example controller for an application called "shop":<p class="paragraph"/><div class="code"><pre>class BookController &#123;
+                <h1>link</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Adds a <a href="../../gapi/org/grails/plugin/vaadin/ui/GrailsButton.html" class="api">GrailsButton</a> component to the parent container.<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/>Example controller for an application called "shop":<p class="paragraph"/><div class="code"><pre>class BookVaadinController &#123;
     <span class="java&#45;keyword">static</span> defaultAction = <span class="java&#45;quote">"list"</span><p class="paragraph"/>    def list() &#123;
         &#91;books: Book.list(params)&#93;
     &#125;<p class="paragraph"/>    def show() &#123;
@@ -88,6 +88,7 @@ function addJsClass(el) {
 <li><code>icon</code> (optional) The button icon. Can be specified as a Vaadin <a href="http://vaadin.com/api/com/vaadin/terminal/Resource.html" target="blank">Resource</a>, or as a String path to the resource within the Vaadin theme dir for the application.</li>
 <li><code>action</code> (optional) The action of the Vaadin controller to link to. If omitted, defaults to 'index'</li>
 <li><code>controller</code> (optional) The Vaadin controller to link to. If omitted, defaults to the controller of the current 'request'.</li>
+<li><code>params</code> (optional) The params to use when executing the Vaadin controller.</li>
 <li><code>id</code> (optional) The id parameter to use in the link.</li>
 <li><code>instance</code> (optional) The domain class instance parameter to use in the link.</li>
 <li><code>fragment</code> (optional) The fragment to link to, for example <code>#book/list</code></li>
@@ -112,7 +113,7 @@ Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Form.html" target="blank">Fo
 Typically it is used when clicking the Submit-type button on form, to write the form's changes
 through to the domain class instance, before that instance is then written to the database.<p class="paragraph"/><div class="code"><pre>&#60;v:form <span class="java&#45;keyword">var</span>=<span class="java&#45;quote">"myForm"</span>&#62;
   &#60;v:field name=<span class="java&#45;quote">"author"</span>&#62;Author&#60;/v:field&#62;
-&#60;/v:form&#62;<p class="paragraph"/>&#60;v:link action=<span class="java&#45;quote">"delete"</span> id=<span class="java&#45;quote">"1"</span> onclick=<span class="java&#45;quote">"$&#123;v.commit(form:'myForm')&#125;"</span>&#62;
+&#60;/v:form&#62;<p class="paragraph"/>&#60;v:link action=<span class="java&#45;quote">"save"</span> id=<span class="java&#45;quote">"1"</span> onclick=<span class="java&#45;quote">"$&#123;v.commit(form:'myForm')&#125;"</span>&#62;
   Save
 &#60;/v:link&#62;</pre></div>
 
@@ -157,6 +158,9 @@ through to the domain class instance, before that instance is then written to th
                         <div class="menu-sub selected">
                             
                             
+                            <div class="menu-item"><a href="../../ref/Tags/accordion.html">accordion</a>
+                            </div>
+                            
                             <div class="menu-item"><a href="../../ref/Tags/checkBox.html">checkBox</a>
                             </div>
                             
@@ -164,6 +168,12 @@ through to the domain class instance, before that instance is then written to th
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/comboBox.html">comboBox</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/currencySelect.html">currencySelect</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/customField.html">customField</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/date.html">date</a>
@@ -175,10 +185,16 @@ through to the domain class instance, before that instance is then written to th
                             <div class="menu-item"><a href="../../ref/Tags/field.html">field</a>
                             </div>
                             
+                            <div class="menu-item"><a href="../../ref/Tags/file.html">file</a>
+                            </div>
+                            
                             <div class="menu-item"><a href="../../ref/Tags/form.html">form</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/horizontalLayout.html">horizontalLayout</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/include.html">include</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/label.html">label</a>
@@ -190,10 +206,19 @@ through to the domain class instance, before that instance is then written to th
                             <div class="menu-item"><a href="../../ref/Tags/link.html">link</a>
                             </div>
                             
+                            <div class="menu-item"><a href="../../ref/Tags/listSelect.html">listSelect</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/localeSelect.html">localeSelect</a>
+                            </div>
+                            
                             <div class="menu-item"><a href="../../ref/Tags/location.html">location</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/optionGroup.html">optionGroup</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/password.html">password</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/select.html">select</a>
@@ -202,7 +227,22 @@ through to the domain class instance, before that instance is then written to th
                             <div class="menu-item"><a href="../../ref/Tags/styling.html">styling</a>
                             </div>
                             
+                            <div class="menu-item"><a href="../../ref/Tags/tab.html">tab</a>
+                            </div>
+                            
                             <div class="menu-item"><a href="../../ref/Tags/table.html">table</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/tabs.html">tabs</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/text.html">text</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/textArea.html">textArea</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/timeZoneSelect.html">timeZoneSelect</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/verticalLayout.html">verticalLayout</a>

@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>Vaadin Grails Plugin 1.6.1-SNAPSHOT</title>
+    <title>Vaadin Grails Plugin 1.6.2-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -74,12 +74,19 @@ function addJsClass(el) {
 is a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Select.html" target="blank">Select</a>.<p class="paragraph"/><h4>Body</h4>
 <ul class="star">
 <li>Contains the caption for the field</li>
-</ul><p class="paragraph"/><h4>Attributes</h4>
+</ul><p class="paragraph"/><h4>Attributes</h4><p class="paragraph"/><h5>Specific</h5>
 <ul class="star">
 <li><code>name</code> (required) The property name of the field</li>
 <li><code>caption</code> (optional) The caption of the field. Overrides the body content.</li>
 <li><code>from</code> (optional) Either a comma-separated String or a collection of items to set as the containerDataSource for the select.</li>
 <li><code>containerDataSource</code> (optional) A <a href="http://vaadin.com/api/com/vaadin/data/Container.html" target="blank">Container</a> to set as the containerDataSource for the select.</li>
+<li><code>onValueChange</code> (optional) Either a <a href="http://vaadin.com/api/com/vaadin/data/Property.ValueChangeListener.html" target="blank">ValueChangeListener</a> or a Closure that expects a <a href="http://vaadin.com/api/com/vaadin/data/Property.ValueChangeEvent.html" target="blank">ValueChangeEvent</a> parameter</li>
+</ul><p class="paragraph"/><h5>General</h5>
+<ul class="star">
+<li><code>var</code> (optional) Uses Grails's <a href="http://grails.org/doc/latest/ref/Tags/set.html" target="blank">set</a> tag to set the value of the specified variable to be this component.</li>
+<li><code>class</code> (optional) The CSS class name to add to the component using the addStyleName() method</li>
+<li><code>sizeUndefined</code> (optional) Calls setSizeUndefined() on the component. (Attribute value is ignored)</li>
+<li><code>sizeFull</code> (optional) Calls setSizeFull() on the component. (Attribute value is ignored)</li>
 </ul><p class="paragraph"/><blockquote class="note">
 See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Select.html" target="blank">Select</a> API docs for full list of allowed attributes.
 </blockquote>
@@ -125,6 +132,9 @@ See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Select.html" target="bla
                         <div class="menu-sub selected">
                             
                             
+                            <div class="menu-item"><a href="../../ref/Tags/accordion.html">accordion</a>
+                            </div>
+                            
                             <div class="menu-item"><a href="../../ref/Tags/checkBox.html">checkBox</a>
                             </div>
                             
@@ -132,6 +142,12 @@ See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Select.html" target="bla
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/comboBox.html">comboBox</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/currencySelect.html">currencySelect</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/customField.html">customField</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/date.html">date</a>
@@ -143,10 +159,16 @@ See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Select.html" target="bla
                             <div class="menu-item"><a href="../../ref/Tags/field.html">field</a>
                             </div>
                             
+                            <div class="menu-item"><a href="../../ref/Tags/file.html">file</a>
+                            </div>
+                            
                             <div class="menu-item"><a href="../../ref/Tags/form.html">form</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/horizontalLayout.html">horizontalLayout</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/include.html">include</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/label.html">label</a>
@@ -158,10 +180,19 @@ See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Select.html" target="bla
                             <div class="menu-item"><a href="../../ref/Tags/link.html">link</a>
                             </div>
                             
+                            <div class="menu-item"><a href="../../ref/Tags/listSelect.html">listSelect</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/localeSelect.html">localeSelect</a>
+                            </div>
+                            
                             <div class="menu-item"><a href="../../ref/Tags/location.html">location</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/optionGroup.html">optionGroup</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/password.html">password</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/select.html">select</a>
@@ -170,7 +201,22 @@ See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Select.html" target="bla
                             <div class="menu-item"><a href="../../ref/Tags/styling.html">styling</a>
                             </div>
                             
+                            <div class="menu-item"><a href="../../ref/Tags/tab.html">tab</a>
+                            </div>
+                            
                             <div class="menu-item"><a href="../../ref/Tags/table.html">table</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/tabs.html">tabs</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/text.html">text</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/textArea.html">textArea</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/timeZoneSelect.html">timeZoneSelect</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/verticalLayout.html">verticalLayout</a>

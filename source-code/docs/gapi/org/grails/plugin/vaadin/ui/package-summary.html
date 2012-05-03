@@ -93,8 +93,38 @@ Package org.grails.plugin.vaadin.ui
     </TR>
 
         <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="DefaultCustomField.html" title="class in org/grails/plugin/vaadin/ui">DefaultCustomField</A></B></TD>
+        <TD>An empty <a href="https://vaadin.com/directory#addon/customfield">CustomField</a>
+ that derives its type from the propertyDataSource</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="DefaultUploadField.html" title="class in org/grails/plugin/vaadin/ui">DefaultUploadField</A></B></TD>
+        <TD>Overrides Vaadin EasyUpload Addon UploadField to provide following improvements:
+ <ul>
+ <li>Show link to resource that was uploaded, and delete button</li>
+ <li>Show link to value in field (if exists) before any uploads are done</li>
+ <li>Show or hide buttons depending on read-only status of component</li>
+ <li>Ability to handle 'derived' propertyDataSources like PropertyFormatter</li>
+ <li>Fixes NPE bug in UploadField (v1.0.0)</li>
+ <li>Expose upload component to allow listeners to be added</li>
+ </ul></TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="DefaultUploadField.UploadedFileLink.html" title="class in org/grails/plugin/vaadin/ui">DefaultUploadField.UploadedFileLink</A></B></TD>
+        <TD>Displays link to uploaded file and delete button</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
         <TD WIDTH="15%"><B><A HREF="GrailsButton.html" title="class in org/grails/plugin/vaadin/ui">GrailsButton</A></B></TD>
         <TD>Mimics the <a href="http://grails.org/doc/latest/ref/Tags/link.html">g:link</a> tag.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="GrailsIncludeLayout.html" title="class in org/grails/plugin/vaadin/ui">GrailsIncludeLayout</A></B></TD>
+        <TD>A Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/CustomLayout.html">CustomLayout</a>
+ that contains a single view Component resulting from a grails request.</TD>
         </TR>
 
         <TR BGCOLOR="white" CLASS="TableRowColor">
@@ -111,6 +141,12 @@ Package org.grails.plugin.vaadin.ui
  &lt;div location='component_0' /&gt;
  to the child component, which should then add this snippet to the
  page's body text.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="GspTemplateLayout.html" title="class in org/grails/plugin/vaadin/ui">GspTemplateLayout</A></B></TD>
+        <TD>A Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/CustomLayout.html">CustomLayout</a>
+ that contains a single org.grails.plugin.vaadin.ui.GrailsLayout.</TD>
         </TR>
 
 </TABLE>

@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>Vaadin Grails Plugin 1.6.1-SNAPSHOT</title>
+    <title>Vaadin Grails Plugin 1.6.2-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -71,7 +71,7 @@ function addJsClass(el) {
                 <h1>generate-vaadin-all</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Generates a Vaadin controller, views, and a controller unit test for the given domain class<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/><div class="code"><pre>grails generate&#45;vaadin&#45;all
 grails generate&#45;vaadin&#45;all org.bookstore.Book
 grails generate&#45;vaadin&#45;all &#42;</pre></div><p class="paragraph"/><h2>Description</h2><p class="paragraph"/>Generates the Controller and Views for the specified domain class.<p class="paragraph"/>Note that this command is identical to Grails's <a href="http://grails.org/doc/latest/ref/Command%20Line/generate-all.html" target="blank">generate-all</a>
-except that it uses different templates - located at <code>src/templates/vaadin</code><p class="paragraph"/>The generate-vaadin-all command generates an implementation of CRUD including a controller and views for the given domain class. The argument is optional, but if you don't include it the command will ask you for the name of the domain class to scaffold. So for a domain class <code>org.bookstore.Book</code>, this command will generate the controller <code>grails-app/controllers/org/bookstore/BookVaadinController.groovy</code> and its associated views in <code>grails-app/views/book</code>.<p class="paragraph"/>Usage:
+except that it uses different templates - located at <code>src/templates/vaadin</code><p class="paragraph"/>The generate-vaadin-all command generates an implementation of CRUD including a controller and views for the given domain class. The argument is optional, but if you don't include it the command will ask you for the name of the domain class to scaffold. So for a domain class <code>org.bookstore.Book</code>, this command will generate the controller <code>grails-app/controllers/org/bookstore/BookVaadinController.groovy</code> and its associated views in <code>grails-app/views/book-vaadin</code>.<p class="paragraph"/>Usage:
 <div class="code"><pre>grails generate&#45;all &#91;name&#93;</pre></div><p class="paragraph"/>Arguments:
 <ul class="star">
 <li><code>name</code> - Either a domain class name (case-sensitive) or a wildcard (&#42;). If you specify the wildcard then controllers and views will be generated for  <em class="italic">all</em>  domain classes.</li>
@@ -117,6 +117,9 @@ except that it uses different templates - located at <code>src/templates/vaadin<
                         <div class="menu-sub">
                             
                             
+                            <div class="menu-item"><a href="../../ref/Tags/accordion.html">accordion</a>
+                            </div>
+                            
                             <div class="menu-item"><a href="../../ref/Tags/checkBox.html">checkBox</a>
                             </div>
                             
@@ -124,6 +127,12 @@ except that it uses different templates - located at <code>src/templates/vaadin<
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/comboBox.html">comboBox</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/currencySelect.html">currencySelect</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/customField.html">customField</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/date.html">date</a>
@@ -135,10 +144,16 @@ except that it uses different templates - located at <code>src/templates/vaadin<
                             <div class="menu-item"><a href="../../ref/Tags/field.html">field</a>
                             </div>
                             
+                            <div class="menu-item"><a href="../../ref/Tags/file.html">file</a>
+                            </div>
+                            
                             <div class="menu-item"><a href="../../ref/Tags/form.html">form</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/horizontalLayout.html">horizontalLayout</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/include.html">include</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/label.html">label</a>
@@ -150,10 +165,19 @@ except that it uses different templates - located at <code>src/templates/vaadin<
                             <div class="menu-item"><a href="../../ref/Tags/link.html">link</a>
                             </div>
                             
+                            <div class="menu-item"><a href="../../ref/Tags/listSelect.html">listSelect</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/localeSelect.html">localeSelect</a>
+                            </div>
+                            
                             <div class="menu-item"><a href="../../ref/Tags/location.html">location</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/optionGroup.html">optionGroup</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/password.html">password</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/select.html">select</a>
@@ -162,7 +186,22 @@ except that it uses different templates - located at <code>src/templates/vaadin<
                             <div class="menu-item"><a href="../../ref/Tags/styling.html">styling</a>
                             </div>
                             
+                            <div class="menu-item"><a href="../../ref/Tags/tab.html">tab</a>
+                            </div>
+                            
                             <div class="menu-item"><a href="../../ref/Tags/table.html">table</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/tabs.html">tabs</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/text.html">text</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/textArea.html">textArea</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/timeZoneSelect.html">timeZoneSelect</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Tags/verticalLayout.html">verticalLayout</a>
