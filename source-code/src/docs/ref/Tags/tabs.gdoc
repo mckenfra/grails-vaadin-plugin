@@ -1,0 +1,53 @@
+h1. tabs
+
+h2. Purpose
+
+Adds a Vaadin [TabSheet|http://vaadin.com/api/com/vaadin/ui/TabSheet.html] component to the parent container.
+
+h2. Examples
+
+{code:java}
+<v:tabs>
+  <v:tab caption="One">
+    <h1>My First Tab</h1>
+  </v:tab>
+  <v:tab caption="Two" selected="true">
+    <div><v:label>My second tab</v:label></div>
+  </v:tab>
+  <v:tab caption="Three">
+    <v:include controller="book" action="list"/>
+  </v:tab>
+</v:tabs>
+{code}
+
+h2. Description
+
+The TabSheet component is configured using nested [tab|Tags] tags.
+
+h4. Body
+
+* [tab|Tags] tags should be specified in the body. Any HTML is ignored.
+
+h4. Attributes
+
+h5. Specific 
+
+* @ontab@ (optional) Either a [SelectedTabChangeListener|http://vaadin.com/api/com/vaadin/ui/TabSheet.SelectedTabChangeListener.html] or a Closure that expects a [SelectedTabChangeEvent|http://vaadin.com/api/com/vaadin/ui/TabSheet.SelectedTabChangeEvent.html] parameter
+
+h5. General 
+
+* @var@ (optional) Uses Grails's [set|http://grails.org/doc/latest/ref/Tags/set.html] tag to set the value of the specified variable to be this component.
+
+* @class@ (optional) The CSS class name to add to the component using the addStyleName() method
+
+* @sizeUndefined@ (optional) Calls setSizeUndefined() on the component. (Attribute value is ignored)
+
+* @sizeFull@ (optional) Calls setSizeFull() on the component. (Attribute value is ignored)
+
+* @location@ (optional) The location slot in the parent container to which this component should be added.
+
+* @wrapperClass@, @wrapperStyle@ (optional) Special [styling|Tags] for wrapper @<div>@.
+
+{note}
+See Vaadin [TabSheet|http://vaadin.com/api/com/vaadin/ui/TabSheet.html] API docs for full list of allowed attributes. 
+{note}

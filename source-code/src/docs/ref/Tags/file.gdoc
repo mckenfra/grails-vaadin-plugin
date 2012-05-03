@@ -1,0 +1,69 @@
+h1. file
+
+h2. Purpose
+
+Configures a [DefaultUploadField|api:org.grails.plugin.vaadin.ui.DefaultUploadField] of the parent Vaadin [Form|http://vaadin.com/api/com/vaadin/ui/Form.html] component.
+
+h2. Examples
+
+{code:java}
+// No filename stored
+<v:form itemDataSource="${new BeanItem<Book>(bookInstance)}">
+  <v:file name="file">File</v:file>
+</v:form>
+
+// Filename stored in separate field
+<v:form itemDataSource="${new BeanItem<Book>(bookInstance)}">
+  <v:text name="filename" var="filenameField">File Name</v:text>
+  <v:file name="file" filename="${bookInstance.filename}"
+    onupload="${{evt->filenameField = evt.fileName}}">File</v:file>
+</v:form>
+{code}
+
+h2. Description
+
+The file tag is a special type of [field|Tags] tag, where the field component
+is a [DefaultUploadField|api:org.grails.plugin.vaadin.ui.DefaultUploadField] 
+
+This is a subclass of the [UploadField|https://vaadin.com/directory#addon/easyuploads] class
+in the @easyuploads@ Vaadin Addon.
+
+The underlying property type should be @byte\[\]@ or @Byte\[\]@.
+
+The field provides a download link in readOnly mode, and a download link, upload
+button (with progress bar) and delete button in edit mode.
+
+Note that this field stores the file bytes directly in the data source. It is therefore
+not possible to store the filename in the same field. You can use the @onupload@
+and @filename@ attributes to read and write the filename using a separate field,
+as in the above example.
+
+h4. Body
+
+* Contains the caption for the field
+
+h4. Attributes
+
+h5. Specific
+
+* @name@ (required) The property name of the field
+
+* @caption@ (optional) The caption of the field. Overrides the body content.
+
+* @filename@ (optional) The default filename to use for the download link. Note that when a file has just been uploaded, its original filename is displayed. This is lost, however, after the file is saved to the dataSource.
+
+* @onupload@ (optional) Either a [SucceededListener|http://vaadin.com/api/com/vaadin/ui/Upload.SucceededListener.html] or a Closure that expects a [SucceededEvent|http://vaadin.com/api/com/vaadin/ui/Upload.SucceededEvent.html] parameter
+
+h5. General
+
+* @var@ (optional) Uses Grails's [set|http://grails.org/doc/latest/ref/Tags/set.html] tag to set the value of the specified variable to be this component.
+
+* @class@ (optional) The CSS class name to add to the component using the addStyleName() method
+
+* @sizeUndefined@ (optional) Calls setSizeUndefined() on the component. (Attribute value is ignored)
+
+* @sizeFull@ (optional) Calls setSizeFull() on the component. (Attribute value is ignored)
+
+{note}
+See Vaadin [DefaultUploadField|api:org.grails.plugin.vaadin.ui.DefaultUploadField] API docs for full list of allowed attributes.
+{note}

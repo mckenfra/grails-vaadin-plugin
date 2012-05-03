@@ -1,0 +1,109 @@
+h1. include
+
+h2. Purpose
+
+Adds a [GrailsIncludeLayout|api:org.grails.plugin.vaadin.ui.GrailsIncludeLayout] component to the parent container.
+
+h2. Examples
+
+Example controller for an application called "shop":
+
+{code:java}
+class BookVaadinController {
+    static defaultAction = "list"
+
+    def list() {
+        [books: Book.list(params)]
+    }
+
+    def show() {
+        [book: Book.get(params.id)]
+    }
+    
+    def edit() {
+        [book: params.instance]
+    }
+}
+{code}
+
+Example usages for above controller:
+
+{code:java}
+<v:include action="show" id="1"/>
+
+<v:include action="show" id="${currentBook.id}"/>
+
+<v:include action="edit" instance="${currentBook}"/>
+
+<v:include controller="book"/>
+
+<v:include controller="book" action="list"/>
+
+<v:include action="list" params="[sort: 'title', order: 'asc',
+                               author: currentBook.author]"/>
+
+<v:include fragment="#book/list"/>
+{code}
+
+When calling this tag as a GSP method, use the @createInclude@ method as follows:
+
+{code:java}
+${v.createInclude(action:'list',controller:'book')}
+{code}
+
+h2. Description
+
+h4. Body
+
+* Ignored
+
+h4. Attributes
+
+h5. Specific 
+
+* @action@ (optional) The action of the Vaadin controller to link to. If omitted, defaults to 'index'
+
+* @controller@ (optional) The Vaadin controller to link to. If omitted, defaults to the controller of the current 'request'.
+
+* @params@ (optional) The params to use when executing the Vaadin controller.
+
+* @id@ (optional) The id parameter to use in the link.
+
+* @instance@ (optional) The domain class instance parameter to use in the link. 
+
+* @fragment@ (optional) The fragment to link to, for example @#book/list@
+
+h5. General 
+
+* @var@ (optional) Uses Grails's [set|http://grails.org/doc/latest/ref/Tags/set.html] tag to set the value of the specified variable to be this component.
+
+* @class@ (optional) The CSS class name to add to the component using the addStyleName() method
+
+* @sizeUndefined@ (optional) Calls setSizeUndefined() on the component. (Attribute value is ignored)
+
+* @sizeFull@ (optional) Calls setSizeFull() on the component. (Attribute value is ignored)
+
+* @location@ (optional) The location slot in the parent container to which this component should be added.
+
+* @wrapperClass@, @wrapperStyle@ (optional) Special [styling|Tags] for wrapper @<div>@.
+
+{note}
+See Vaadin [CustomLayout|http://vaadin.com/api/com/vaadin/ui/CustomLayout.html] API docs for full list of allowed attributes.
+{note}
+
+h2. Special Use Cases
+
+h4. Programmatically Changing Included Page
+
+The include tag exposes an @include()@ method for changing the included page programmatically.
+This accepts the same args as the tag itself (e.g. @controller@, @action@, @fragment@).
+
+Consider the following example, which allows changing the included page based on the
+values in a @listSelect@:
+
+{code:java}
+<v:listSelect from="${['#book/list','#book/show/1','#book/edit/1']}"
+  onValueChange="${{evt->myinclude.include(fragment:evt.property.value)}}"/>
+
+<v:include var="myinclude"/>
+{code}

@@ -1,0 +1,55 @@
+h1. customField
+
+h2. Purpose
+
+Configures a [DefaultCustomField|api:org.grails.plugin.vaadin.ui.DefaultCustomField] of the parent Vaadin [Form|http://vaadin.com/api/com/vaadin/ui/Form.html] component.
+
+h2. Examples
+
+{code:java}
+<v:form itemDataSource="${new BeanItem<Book>(bookInstance)}">
+  <v:customField name="customField" caption="My Field">
+	<ul>
+		<li>Author: ${bookInstance.author}<li>
+		<li>Title: ${bookInstance.title}</li>
+	<ul>
+  </v:customField>
+</v:form>
+{code}
+
+h2. Description
+
+The customField tag is a special type of [field|Tags] tag, where the field component
+is a [DefaultCustomField|api:org.grails.plugin.vaadin.ui.DefaultCustomField]. 
+
+
+This is a subclass of the [CustomField|https://vaadin.com/directory#addon/customfield] class
+in the @customfield@ Vaadin Addon.
+
+The @customfield@ Addon allows creating fields with arbitrary layouts inside a form.
+
+h4. Body
+
+* Contains the field interface - any combination of HTML and tags.
+
+h4. Attributes
+
+h5. Specific
+
+* @name@ (required) The property name of the field
+
+* @caption@ (optional) The caption of the field. Unlike other fields, this cannot be obtained from the body, so should be set explicitly as an attribute.
+
+h5. General
+
+* @var@ (optional) Uses Grails's [set|http://grails.org/doc/latest/ref/Tags/set.html] tag to set the value of the specified variable to be this component.
+
+* @class@ (optional) The CSS class name to add to the component using the addStyleName() method
+
+* @sizeUndefined@ (optional) Calls setSizeUndefined() on the component. (Attribute value is ignored)
+
+* @sizeFull@ (optional) Calls setSizeFull() on the component. (Attribute value is ignored)
+
+{note}
+See Vaadin [DefaultCustomField|api:org.grails.plugin.vaadin.ui.DefaultCustomField] API docs for full list of allowed attributes.
+{note}

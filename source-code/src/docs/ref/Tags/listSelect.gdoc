@@ -1,0 +1,50 @@
+h1. listSelect
+
+h2. Purpose
+
+Configures a [ListSelect|http://vaadin.com/api/com/vaadin/ui/ListSelect.html] field of the parent Vaadin [Form|http://vaadin.com/api/com/vaadin/ui/Form.html] component.
+
+h2. Examples
+
+{code:java}
+<v:form itemDataSource="${new BeanItem<Zoo>(zooInstance)}">
+  <v:listSelect name="animal" from="${['Lion', 'Tiger', 'Snake']}">Animal</v:listSelect>
+</v:form>
+{code}
+
+h2. Description
+
+The listSelect tag is a special type of [field|Tags] tag, where the field component
+is a Vaadin [ListSelect|http://vaadin.com/api/com/vaadin/ui/ListSelect.html].
+
+h4. Body
+
+* Contains the caption for the field
+
+h4. Attributes
+
+h5. Specific
+
+* @name@ (required) The property name of the field
+
+* @caption@ (optional) The caption of the field. Overrides the body content.
+
+* @from@ (optional) Either a comma-separated String or a collection of items to set as the containerDataSource for the listSelect.
+
+* @containerDataSource@ (optional) A [Container|http://vaadin.com/api/com/vaadin/data/Container.html] to set as the containerDataSource for the listSelect.
+
+* @onValueChange@ (optional) Either a [ValueChangeListener|http://vaadin.com/api/com/vaadin/data/Property.ValueChangeListener.html] or a Closure that expects a [ValueChangeEvent|http://vaadin.com/api/com/vaadin/data/Property.ValueChangeEvent.html] parameter
+
+h5. General
+
+* @var@ (optional) Uses Grails's [set|http://grails.org/doc/latest/ref/Tags/set.html] tag to set the value of the specified variable to be this component.
+
+* @class@ (optional) The CSS class name to add to the component using the addStyleName() method
+
+* @sizeUndefined@ (optional) Calls setSizeUndefined() on the component. (Attribute value is ignored)
+
+* @sizeFull@ (optional) Calls setSizeFull() on the component. (Attribute value is ignored)
+
+{note}
+See Vaadin [ListSelect|http://vaadin.com/api/com/vaadin/ui/ListSelect.html] API docs for full list of allowed attributes.
+{note}

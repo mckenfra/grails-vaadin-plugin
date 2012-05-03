@@ -1,0 +1,46 @@
+h1. tab
+
+h2. Purpose
+
+Configures a single tab of the parent Vaadin [TabSheet|http://vaadin.com/api/com/vaadin/ui/TabSheet.html] component.
+
+h2. Examples
+
+{code:java}
+<v:tabs>
+  <v:tab caption="One">
+    <h1>My First Tab</h1>
+  </v:tab>
+  <v:tab caption="Two" selected="true">
+    <div><v:label>My second tab</v:label></div>
+  </v:tab>
+  <v:tab caption="Three">
+    <v:include controller="book" action="list"/>
+  </v:tab>
+</v:tabs>
+{code}
+
+h2. Description
+
+The TabSheet component is configured using nested [tab|Tags] tags.
+
+Note that the [tab|Tags] tags do not create any Vaadin components,
+but instead cause [Tab|http://vaadin.com/api/com/vaadin/ui/TabSheet.Tab.html] instances
+to be added to the parent TabSheet.
+
+h4. Body
+
+* Contains the body of the tab, which can be any mixture of tags and HTML.
+
+h4. Attributes
+
+* @caption@ (optional) The tab caption
+
+* @icon@ (optional) The tab icon. Can be specified as a Vaadin [Resource|http://vaadin.com/api/com/vaadin/terminal/Resource.html], or as a String path to the resource within the Vaadin theme dir for the application.
+
+* @selected@ (optional) If value is not empty or false, this tab will be selected. If multiple
+tabs have the @selected@ attribute, the last one of them is selected.
+
+{note}
+See Vaadin [TabSheet.Tab|http://vaadin.com/api/com/vaadin/ui/TabSheet.Tab.html] API docs for full list of allowed attributes. 
+{note}
