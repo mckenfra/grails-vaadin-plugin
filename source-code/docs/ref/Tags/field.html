@@ -37,7 +37,7 @@ function addJsClass(el) {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Technical%20Details.html"><strong>5</strong><span>Technical Details</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Roadmap.html"><strong>5</strong><span>Roadmap</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/6.%20Version%20History.html"><strong>6</strong><span>Version History</span></a>
@@ -68,7 +68,8 @@ function addJsClass(el) {
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
-                <h1>field</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Configures a single <a href="http://vaadin.com/api/com/vaadin/ui/AbstractField.html" target="blank">Field</a> component of the parent Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Form.html" target="blank">Form</a> component.<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/><div class="code"><pre>&#60;v:form itemDataSource=<span class="java&#45;quote">"$&#123;<span class="java&#45;keyword">new</span> BeanItem&#60;Book&#62;(bookInstance)&#125;"</span> writeThrough=<span class="java&#45;quote">"<span class="java&#45;keyword">false</span>"</span>&#62;
+                <h1>field</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Adds a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/AbstractField.html" target="blank">Field</a> to the parent container.<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/><div class="code"><pre>// Within a form
+&#60;v:form itemDataSource=<span class="java&#45;quote">"$&#123;<span class="java&#45;keyword">new</span> BeanItem&#60;Book&#62;(bookInstance)&#125;"</span> writeThrough=<span class="java&#45;quote">"<span class="java&#45;keyword">false</span>"</span>&#62;
   &#60;v:field name=<span class="java&#45;quote">"title"</span> readOnly=<span class="java&#45;quote">"<span class="java&#45;keyword">false</span>"</span> required=<span class="java&#45;quote">"<span class="java&#45;keyword">true</span>"</span> requiredError=<span class="java&#45;quote">"Please enter a Title"</span>&#62;
     Title
   &#60;/v:field&#62;
@@ -78,12 +79,10 @@ function addJsClass(el) {
   &#60;v:field name=<span class="java&#45;quote">"description"</span> readOnly=<span class="java&#45;quote">"<span class="java&#45;keyword">false</span>"</span> required=<span class="java&#45;quote">"<span class="java&#45;keyword">false</span>"</span>/&#62;
     Description
   &#60;/v:field&#62;
-&#60;/v:form&#62;</pre></div><p class="paragraph"/><h2>Description</h2><p class="paragraph"/>The Form component is configured using nested <a href="../../ref/Tags/field.html" class="Tags">field</a> tags. These are used to configure the
-<code>formFieldFactory</code> and set the <code>visibleItemProperties</code> properties of the form component.<p class="paragraph"/>The attributes of the field tag are applied to the
-<a href="http://vaadin.com/api/com/vaadin/ui/AbstractField.html" target="blank">Field</a> component that is created
-in a <a href="http://vaadin.com/api/com/vaadin/ui/DefaultFieldFactory.html" target="blank">DefaultFieldFactory</a>.<p class="paragraph"/>The type of component that is created for the field is automatically selected based on the type
-of the underlying property in the form data source. Alternatively, you can use the <code>type</code> attribute to
-specify a different Component class to use for the field.<p class="paragraph"/><h4>Body</h4>
+&#60;/v:form&#62;<p class="paragraph"/>// Standalone
+&#60;v:field&#62;My Field&#60;/v:field&#62;</pre></div><p class="paragraph"/><h2>Description</h2><p class="paragraph"/>A field can be created within a <code>Form</code>, or standalone.<p class="paragraph"/>Unless the <code>type</code> attribute is explicitly specified, the type of component that is created
+for the field is automatically selected based on the type of the underlying property in the
+form data source.<p class="paragraph"/><h4>Body</h4>
 <ul class="star">
 <li>Contains the caption for the field</li>
 </ul><p class="paragraph"/><h4>Attributes</h4><p class="paragraph"/><h5>Specific</h5>

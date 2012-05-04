@@ -37,7 +37,7 @@ function addJsClass(el) {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Technical%20Details.html"><strong>5</strong><span>Technical Details</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Roadmap.html"><strong>5</strong><span>Roadmap</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/6.%20Version%20History.html"><strong>6</strong><span>Version History</span></a>
@@ -68,9 +68,11 @@ function addJsClass(el) {
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
-                <h1>checkBox</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Configures a <a href="http://vaadin.com/api/com/vaadin/ui/CheckBox.html" target="blank">CheckBox</a> field of the parent Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Form.html" target="blank">Form</a> component.<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/><div class="code"><pre>&#60;v:form itemDataSource=<span class="java&#45;quote">"$&#123;<span class="java&#45;keyword">new</span> BeanItem&#60;Book&#62;(bookInstance)&#125;"</span>&#62;
+                <h1>checkBox</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Adds a <a href="http://vaadin.com/api/com/vaadin/ui/CheckBox.html" target="blank">CheckBox</a> field of the parent container.<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/><div class="code"><pre>// Within a form
+&#60;v:form itemDataSource=<span class="java&#45;quote">"$&#123;<span class="java&#45;keyword">new</span> BeanItem&#60;Book&#62;(bookInstance)&#125;"</span>&#62;
   &#60;v:checkBox name=<span class="java&#45;quote">"bestseller"</span>&#62;Bestseller&#60;/v:checkBox&#62;
-&#60;/v:form&#62;</pre></div><p class="paragraph"/><h2>Description</h2><p class="paragraph"/>The checkBox tag is a special type of <a href="../../ref/Tags/field.html" class="Tags">field</a> tag, where the field component
+&#60;/v:form&#62;<p class="paragraph"/>// Standalone
+&#60;v:checkBox&#62;My CheckBox&#60;/v:checkBox&#62;</pre></div><p class="paragraph"/><h2>Description</h2><p class="paragraph"/>The checkBox tag is a special type of <a href="../../ref/Tags/field.html" class="Tags">field</a> tag, where the field component
 is a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/CheckBox.html" target="blank">CheckBox</a>.<p class="paragraph"/><h4>Body</h4>
 <ul class="star">
 <li>Contains the caption for the field</li>
@@ -79,7 +81,9 @@ is a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/CheckBox.html" target="
 <li><code>name</code> (required) The property name of the field</li>
 <li><code>caption</code> (optional) The caption of the field. Overrides the body content.</li>
 <li><code>onValueChange</code> (optional) Either a <a href="http://vaadin.com/api/com/vaadin/data/Property.ValueChangeListener.html" target="blank">ValueChangeListener</a> or a Closure that expects a <a href="http://vaadin.com/api/com/vaadin/data/Property.ValueChangeEvent.html" target="blank">ValueChangeEvent</a> parameter</li>
-</ul><p class="paragraph"/><h5>General</h5>
+</ul><p class="paragraph"/><blockquote class="note">
+Remember to set <code>immediate="true"</code> if you want the <code>ValueChangeEvent</code> to fire immediately when the user selects a new value.
+</blockquote><p class="paragraph"/><h5>General</h5>
 <ul class="star">
 <li><code>var</code> (optional) Uses Grails's <a href="http://grails.org/doc/latest/ref/Tags/set.html" target="blank">set</a> tag to set the value of the specified variable to be this component.</li>
 <li><code>class</code> (optional) The CSS class name to add to the component using the addStyleName() method</li>

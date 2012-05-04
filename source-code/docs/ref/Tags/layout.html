@@ -37,7 +37,7 @@ function addJsClass(el) {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Technical%20Details.html"><strong>5</strong><span>Technical Details</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Roadmap.html"><strong>5</strong><span>Roadmap</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/6.%20Version%20History.html"><strong>6</strong><span>Version History</span></a>
@@ -68,7 +68,7 @@ function addJsClass(el) {
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
-                <h1>layout</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Adds a 'template-and-content' <a href="../../gapi/org/grails/plugin/vaadin/ui/GspTemplateLayout.html" class="api">GspTemplateLayout</a> to the parent container.<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/>Take a GSP layout template called <code>/grails-app/views/layouts/greetinglayout.gsp</code> with the following content:<p class="paragraph"/><div class="code"><pre>&#60;h1&#62;Greeting&#60;h1&#62;
+                <h1>layout</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Renders the tag's body using another Gsp as a template.<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/>Take a GSP layout template called <code>/grails-app/views/layouts/greetinglayout.gsp</code> with the following content:<p class="paragraph"/><div class="code"><pre>&#60;h1&#62;Greeting&#60;h1&#62;
 &#60;div location=<span class="java&#45;quote">"mygreeting"</span>&#62;&#60;/div&#62;</pre></div><p class="paragraph"/>This could then be applied as a layout template for another GSP, like so:<p class="paragraph"/><div class="code"><pre>&#60;v:layout name=<span class="java&#45;quote">"greetinglayout"</span>&#62;
   &#60;v:location name=<span class="java&#45;quote">"mygreeting"</span>&#62;
     &#60;div&#62;Hello World!&#60;/div&#62;

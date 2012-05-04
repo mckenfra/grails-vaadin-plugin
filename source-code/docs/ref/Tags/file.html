@@ -37,7 +37,7 @@ function addJsClass(el) {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Technical%20Details.html"><strong>5</strong><span>Technical Details</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Roadmap.html"><strong>5</strong><span>Roadmap</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/6.%20Version%20History.html"><strong>6</strong><span>Version History</span></a>
@@ -68,7 +68,7 @@ function addJsClass(el) {
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
-                <h1>file</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Configures a <a href="../../gapi/org/grails/plugin/vaadin/ui/DefaultUploadField.html" class="api">DefaultUploadField</a> of the parent Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Form.html" target="blank">Form</a> component.<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/><div class="code"><pre>// No filename stored
+                <h1>file</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Adds a <a href="../../gapi/org/grails/plugin/vaadin/ui/DefaultUploadField.html" class="api">DefaultUploadField</a> to the parent container.<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/><div class="code"><pre>// No filename stored
 &#60;v:form itemDataSource=<span class="java&#45;quote">"$&#123;<span class="java&#45;keyword">new</span> BeanItem&#60;Book&#62;(bookInstance)&#125;"</span>&#62;
   &#60;v:file name=<span class="java&#45;quote">"file"</span>&#62;File&#60;/v:file&#62;
 &#60;/v:form&#62;<p class="paragraph"/>// Filename stored in separate field
@@ -76,10 +76,11 @@ function addJsClass(el) {
   &#60;v:text name=<span class="java&#45;quote">"filename"</span> <span class="java&#45;keyword">var</span>=<span class="java&#45;quote">"filenameField"</span>&#62;File Name&#60;/v:text&#62;
   &#60;v:file name=<span class="java&#45;quote">"file"</span> filename=<span class="java&#45;quote">"$&#123;bookInstance.filename&#125;"</span>
     onupload=<span class="java&#45;quote">"$&#123;&#123;evt&#45;&#62;filenameField = evt.fileName&#125;&#125;"</span>&#62;File&#60;/v:file&#62;
-&#60;/v:form&#62;</pre></div><p class="paragraph"/><h2>Description</h2><p class="paragraph"/>The file tag is a special type of <a href="../../ref/Tags/field.html" class="Tags">field</a> tag, where the field component
+&#60;/v:form&#62;<p class="paragraph"/>// Standalone
+&#60;v:file&#62;My File Field&#60;/v:file&#62;</pre></div><p class="paragraph"/><h2>Description</h2><p class="paragraph"/>The file tag is a special type of <a href="../../ref/Tags/field.html" class="Tags">field</a> tag, where the field component
 is a <a href="../../gapi/org/grails/plugin/vaadin/ui/DefaultUploadField.html" class="api">DefaultUploadField</a><p class="paragraph"/>This is a subclass of the <a href="https://vaadin.com/directory#addon/easyuploads" target="blank">UploadField</a> class
-in the <code>easyuploads</code> Vaadin Addon.<p class="paragraph"/>The underlying property type should be <code>byte&#91;&#93;</code> or <code>Byte&#91;&#93;</code>.<p class="paragraph"/>The field provides a download link in readOnly mode, and a download link, upload
-button (with progress bar) and delete button in edit mode.<p class="paragraph"/>Note that this field stores the file bytes directly in the data source. It is therefore
+in the <code>easyuploads</code> Vaadin Addon.<p class="paragraph"/>The underlying property type should be <code>byte&#91;&#93;</code> or <code>Byte&#91;&#93;</code>.<p class="paragraph"/>The field provides a download link in <code>readOnly</code> mode, and a download link, upload
+button (with progress bar) and delete button in <code>edit</code> mode.<p class="paragraph"/>Note that this field stores the file bytes directly in the data source. It is therefore
 not possible to store the filename in the same field. You can use the <code>onupload</code>
 and <code>filename</code> attributes to read and write the filename using a separate field,
 as in the above example.<p class="paragraph"/><h4>Body</h4>

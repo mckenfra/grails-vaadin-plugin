@@ -37,7 +37,7 @@ function addJsClass(el) {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Technical%20Details.html"><strong>5</strong><span>Technical Details</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Roadmap.html"><strong>5</strong><span>Roadmap</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/6.%20Version%20History.html"><strong>6</strong><span>Version History</span></a>
@@ -68,7 +68,7 @@ function addJsClass(el) {
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
-                <h1>include</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Adds a <a href="../../gapi/org/grails/plugin/vaadin/ui/GrailsIncludeLayout.html" class="api">GrailsIncludeLayout</a> component to the parent container.<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/>Example controller for an application called "shop":<p class="paragraph"/><div class="code"><pre>class BookVaadinController &#123;
+                <h1>include</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Includes the output of another controller/action in the current Gsp.<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/>Example controller for an application called "shop":<p class="paragraph"/><div class="code"><pre>class BookVaadinController &#123;
     <span class="java&#45;keyword">static</span> defaultAction = <span class="java&#45;quote">"list"</span><p class="paragraph"/>    def list() &#123;
         &#91;books: Book.list(params)&#93;
     &#125;<p class="paragraph"/>    def show() &#123;
@@ -77,7 +77,7 @@ function addJsClass(el) {
         &#91;book: params.instance&#93;
     &#125;
 &#125;</pre></div><p class="paragraph"/>Example usages for above controller:<p class="paragraph"/><div class="code"><pre>&#60;v:include action=<span class="java&#45;quote">"show"</span> id=<span class="java&#45;quote">"1"</span>/&#62;<p class="paragraph"/>&#60;v:include action=<span class="java&#45;quote">"show"</span> id=<span class="java&#45;quote">"$&#123;currentBook.id&#125;"</span>/&#62;<p class="paragraph"/>&#60;v:include action=<span class="java&#45;quote">"edit"</span> instance=<span class="java&#45;quote">"$&#123;currentBook&#125;"</span>/&#62;<p class="paragraph"/>&#60;v:include controller=<span class="java&#45;quote">"book"</span>/&#62;<p class="paragraph"/>&#60;v:include controller=<span class="java&#45;quote">"book"</span> action=<span class="java&#45;quote">"list"</span>/&#62;<p class="paragraph"/>&#60;v:include action=<span class="java&#45;quote">"list"</span> params=<span class="java&#45;quote">"&#91;sort: 'title', order: 'asc',
-                               author: currentBook.author&#93;"</span>/&#62;<p class="paragraph"/>&#60;v:include fragment=<span class="java&#45;quote">"&#35;book/list"</span>/&#62;</pre></div><p class="paragraph"/>When calling this tag as a GSP method, use the <code>createInclude</code> method as follows:<p class="paragraph"/><div class="code"><pre>$&#123;v.createInclude(action:'list',controller:'book')&#125;</pre></div><p class="paragraph"/><h2>Description</h2><p class="paragraph"/><h4>Body</h4>
+                               author: currentBook.author&#93;"</span>/&#62;<p class="paragraph"/>&#60;v:include fragment=<span class="java&#45;quote">"&#35;book/list"</span>/&#62;</pre></div><p class="paragraph"/>When calling this tag as a GSP method, use the <code>createInclude</code> method as follows:<p class="paragraph"/><div class="code"><pre>$&#123;v.createInclude(action:'list',controller:'book')&#125;</pre></div><p class="paragraph"/><h2>Description</h2><p class="paragraph"/>Mimic's Grails's <a href="http://grails.org/doc/latest/ref/Tags/include.html" target="blank">include</a> tag.<p class="paragraph"/><h4>Body</h4>
 <ul class="star">
 <li>Ignored</li>
 </ul><p class="paragraph"/><h4>Attributes</h4><p class="paragraph"/><h5>Specific </h5>
@@ -100,7 +100,7 @@ function addJsClass(el) {
 See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/CustomLayout.html" target="blank">CustomLayout</a> API docs for full list of allowed attributes.
 </blockquote><p class="paragraph"/><h2>Special Use Cases</h2><p class="paragraph"/><h4>Programmatically Changing Included Page</h4><p class="paragraph"/>The include tag exposes an <code>include()</code> method for changing the included page programmatically.
 This accepts the same args as the tag itself (e.g. <code>controller</code>, <code>action</code>, <code>fragment</code>).<p class="paragraph"/>Consider the following example, which allows changing the included page based on the
-values in a <code>listSelect</code>:<p class="paragraph"/><div class="code"><pre>&#60;v:listSelect from=<span class="java&#45;quote">"$&#123;&#91;'&#35;book/list','&#35;book/show/1','&#35;book/edit/1'&#93;&#125;"</span>
+values in a <code>listSelect</code>:<p class="paragraph"/><div class="code"><pre>&#60;v:listSelect immediate=<span class="java&#45;quote">"<span class="java&#45;keyword">true</span>"</span> from=<span class="java&#45;quote">"$&#123;&#91;'&#35;book/list','&#35;book/show/1','&#35;book/edit/1'&#93;&#125;"</span>
   onValueChange=<span class="java&#45;quote">"$&#123;&#123;evt&#45;&#62;myinclude.include(fragment:evt.property.value)&#125;&#125;"</span>/&#62;<p class="paragraph"/>&#60;v:include <span class="java&#45;keyword">var</span>=<span class="java&#45;quote">"myinclude"</span>/&#62;</pre></div>
 
             </div>

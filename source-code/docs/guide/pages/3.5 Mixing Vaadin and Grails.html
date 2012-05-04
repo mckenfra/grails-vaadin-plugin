@@ -36,7 +36,7 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Technical%20Details.html"><strong>5</strong><span>Technical Details</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Roadmap.html"><strong>5</strong><span>Roadmap</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/6.%20Version%20History.html"><strong>6</strong><span>Version History</span></a>
@@ -102,8 +102,12 @@ to be something other than <code>'/'</code>.<p class="paragraph"/><h3>Example</h
   def index() &#123;&#125;
 &#125;</pre></div><p class="paragraph"/>The Vaadin application is then accessible via <code>http://localhost:8080/myapp/myvaadinapp</code>,
 while the regular Grails controller is accessible via
-<code>http://localhost:8080/myapp/book</code>
-
+<code>http://localhost:8080/myapp/book</code><p class="paragraph"/><blockquote class="note">
+For any Domain class, you can easily create a regular-Grails CRUD interface and a Vaadin
+CRUD interface for it in the same app.<p class="paragraph"/>For example, for Domain class <code>mypackage.Book</code>, use <code>generate-all mypackage.Book</code> to scaffold
+the Grails controller and views, and <code>generate-vaadin-all mypackage.Book</code> to scaffold the
+Vaadin controller and views.<p class="paragraph"/>You could then access each as follows:<p class="paragraph"/><strong class="bold">Grails</strong>: <code>http://localhost:8080/myapp/book</code><p class="paragraph"/><strong class="bold">Vaadin</strong>: <code>http://localhost:8080/myapp/myvaadinapp#book</code> 
+</blockquote>
 
 
                 <div style="clear:both;margin-top:15px;"></div>
