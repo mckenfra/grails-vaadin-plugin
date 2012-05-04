@@ -331,7 +331,10 @@ class VaadinRequest {
      */
     protected void finishRequest(Object resultObj) {
         if (resultObj && !this.model) {
-            if (resultObj instanceof Map) {
+            if (resultObj instanceof Component) {
+                this.view = resultObj
+                this.viewIsName = false
+            } else if (resultObj instanceof Map) {
                 this.model.putAll(resultObj)
             } else {
                 this.model = [result:resultObj]
@@ -392,4 +395,5 @@ class VaadinRequest {
         return "${cid()} ${props}"
     }
 }
+
 
