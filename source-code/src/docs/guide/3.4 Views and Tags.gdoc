@@ -13,6 +13,7 @@ In addition, you can embed Vaadin components in GSPs using the tag library provi
  *LAYOUTS* |
  [accordion|Tags] | Adds a [Accordion|http://vaadin.com/api/com/vaadin/ui/Accordion.html] component to the parent container.
  [horizontalLayout|Tags] | Adds a [HorizontalLayout|http://vaadin.com/api/com/vaadin/ui/HorizontalLayout.html] component to the parent container.
+ [include|Tags] | Includes the output of another controller/action in the current Gsp.
  [layout|Tags] | Renders the tag's body using another Gsp as a template.
  [location|Tags] | Adds the tag's body to the specified location in the parent container.
  [tab|Tags] | Configures a single tab of the parent [TabSheet|http://vaadin.com/api/com/vaadin/ui/TabSheet.html] component.
@@ -42,7 +43,6 @@ In addition, you can embed Vaadin components in GSPs using the tag library provi
  [timeZoneSelect|Tags] | Adds a TimeZone-populated [Select|http://vaadin.com/api/com/vaadin/ui/Select.html] field to the parent container.
  |
  *MISC* |
- [include|Tags] | Includes the output of another controller/action in the current Gsp.
  [label|Tags] | Adds a [Label|http://vaadin.com/api/com/vaadin/ui/Label.html] component to the parent container.
  [link|Tags] | Adds a [GrailsButton|api:org.grails.plugin.vaadin.ui.GrailsButton] component to the parent container.
  [warning|Tags] | Shows a warning-type [Window.Notification|http://vaadin.com/api/com/vaadin/ui/Window.Notification.html] in the application's main window.
