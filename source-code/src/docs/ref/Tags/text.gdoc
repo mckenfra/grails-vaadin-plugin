@@ -2,14 +2,18 @@ h1. text
 
 h2. Purpose
 
-Configures a [TextField|http://vaadin.com/api/com/vaadin/ui/TextField.html] field of the parent Vaadin [Form|http://vaadin.com/api/com/vaadin/ui/Form.html] component.
+Adds a [TextField|http://vaadin.com/api/com/vaadin/ui/TextField.html] field to the parent container.
 
 h2. Examples
 
 {code:java}
+// Within a form
 <v:form itemDataSource="${new BeanItem<Book>(bookInstance)}">
   <v:text name="author">Arthur C Clarke</v:text>
 </v:form>
+
+// Standalone
+<v:text>My Text Field</v:text>
 {code}
 
 h2. Description

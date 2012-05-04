@@ -2,7 +2,7 @@ h1. include
 
 h2. Purpose
 
-Adds a [GrailsIncludeLayout|api:org.grails.plugin.vaadin.ui.GrailsIncludeLayout] component to the parent container.
+Includes the output of another controller/action in the current Gsp.
 
 h2. Examples
 
@@ -53,6 +53,8 @@ ${v.createInclude(action:'list',controller:'book')}
 
 h2. Description
 
+Mimic's Grails's [include|http://grails.org/doc/latest/ref/Tags/include.html] tag.
+
 h4. Body
 
 * Ignored
@@ -102,7 +104,7 @@ Consider the following example, which allows changing the included page based on
 values in a @listSelect@:
 
 {code:java}
-<v:listSelect from="${['#book/list','#book/show/1','#book/edit/1']}"
+<v:listSelect immediate="true" from="${['#book/list','#book/show/1','#book/edit/1']}"
   onValueChange="${{evt->myinclude.include(fragment:evt.property.value)}}"/>
 
 <v:include var="myinclude"/>

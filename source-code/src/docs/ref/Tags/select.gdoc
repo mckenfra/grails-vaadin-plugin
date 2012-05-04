@@ -2,14 +2,18 @@ h1. select
 
 h2. Purpose
 
-Configures a [Select|http://vaadin.com/api/com/vaadin/ui/Select.html] field of the parent Vaadin [Form|http://vaadin.com/api/com/vaadin/ui/Form.html] component.
+Adds a [Select|http://vaadin.com/api/com/vaadin/ui/Select.html] field to the parent container.
 
 h2. Examples
 
 {code:java}
+// Within a form
 <v:form itemDataSource="${new BeanItem<Zoo>(zooInstance)}">
   <v:select name="animal" from="${['Lion', 'Tiger', 'Snake']}">Animal</v:select>
 </v:form>
+
+// Standalone
+<v:select from="${['Lion', 'Tiger', 'Snake']}">My Select Field</v:select>
 {code}
 
 h2. Description
@@ -34,6 +38,10 @@ h5. Specific
 * @containerDataSource@ (optional) A [Container|http://vaadin.com/api/com/vaadin/data/Container.html] to set as the containerDataSource for the select.
 
 * @onValueChange@ (optional) Either a [ValueChangeListener|http://vaadin.com/api/com/vaadin/data/Property.ValueChangeListener.html] or a Closure that expects a [ValueChangeEvent|http://vaadin.com/api/com/vaadin/data/Property.ValueChangeEvent.html] parameter
+
+{note}
+Remember to set @immediate="true"@ if you want the @ValueChangeEvent@ to fire immediately when the user selects a new value.
+{note}
 
 h5. General
 

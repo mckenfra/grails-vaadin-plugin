@@ -12,6 +12,14 @@ h3. All Vaadin Classes
  *dispatcher* | Can be used to [dispatch|api:org.grails.plugin.vaadin.VaadinDispatcher] requests to display different Vaadin pages.
 {table}
 
+{note}
+A class is considered a Vaadin class if it meets the following requirements:
+
+* Exists under the @grails-app@ directory
+
+* Has a name ending @VaadinController@ or has the word @vaadin@ in its package name, or the package name of any of its superclasses.
+{note}
+
 h3. Vaadin Controllers
 
 {table}
@@ -28,9 +36,7 @@ h3. Preventing API Injection
 You can add the annotation @\@NoVaadinAPI@ to any class in your application,
 and this will prevent the above API from being injected.
 
-{note}
-The above API is only injected into your Vaadin classes if your main Application
-class subclasses @org.grails.plugin.vaadin.VaadinApplication@. The converse of this
-is, if you don't want any of the API injection features, just subclass
-@com.vaadin.Application@ directly in you main Application class.
-{note}
+To create a Vaadin Application without the API injection for any classes, and
+without the controller-view dispatching mechanism, just subclass
+@com.vaadin.Application@ in your Vaadin Application class, instead of
+@org.grails.plugin.vaadin.VaadinApplication@

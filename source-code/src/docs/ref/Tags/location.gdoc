@@ -2,7 +2,7 @@ h1. location
 
 h2. Purpose
 
-Adds a 'content-only' [GspLayout|api:org.grails.plugin.vaadin.ui.GspLayout] component to the location in the parent container.
+Adds the tag's body to the specified location in the parent container.
 
 h2. Examples
 

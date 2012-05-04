@@ -2,11 +2,12 @@ h1. field
 
 h2. Purpose
 
-Configures a single [Field|http://vaadin.com/api/com/vaadin/ui/AbstractField.html] component of the parent Vaadin [Form|http://vaadin.com/api/com/vaadin/ui/Form.html] component.
+Adds a Vaadin [Field|http://vaadin.com/api/com/vaadin/ui/AbstractField.html] to the parent container.
 
 h2. Examples
 
 {code:java}
+// Within a form
 <v:form itemDataSource="${new BeanItem<Book>(bookInstance)}" writeThrough="false">
   <v:field name="title" readOnly="false" required="true" requiredError="Please enter a Title">
     Title
@@ -18,20 +19,18 @@ h2. Examples
     Description
   </v:field>
 </v:form>
+
+// Standalone
+<v:field>My Field</v:field>
 {code}
 
 h2. Description
 
-The Form component is configured using nested [field|Tags] tags. These are used to configure the
-@formFieldFactory@ and set the @visibleItemProperties@ properties of the form component.
+A field can be created within a @Form@, or standalone.
 
-The attributes of the field tag are applied to the
-[Field|http://vaadin.com/api/com/vaadin/ui/AbstractField.html] component that is created
-in a [DefaultFieldFactory|http://vaadin.com/api/com/vaadin/ui/DefaultFieldFactory.html].
-
-The type of component that is created for the field is automatically selected based on the type
-of the underlying property in the form data source. Alternatively, you can use the @type@ attribute to
-specify a different Component class to use for the field.
+Unless the @type@ attribute is explicitly specified, the type of component that is created
+for the field is automatically selected based on the type of the underlying property in the
+form data source.
 
 h4. Body
 

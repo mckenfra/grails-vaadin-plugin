@@ -2,14 +2,18 @@ h1. checkBox
 
 h2. Purpose
 
-Configures a [CheckBox|http://vaadin.com/api/com/vaadin/ui/CheckBox.html] field of the parent Vaadin [Form|http://vaadin.com/api/com/vaadin/ui/Form.html] component.
+Adds a [CheckBox|http://vaadin.com/api/com/vaadin/ui/CheckBox.html] field of the parent container.
 
 h2. Examples
 
 {code:java}
+// Within a form
 <v:form itemDataSource="${new BeanItem<Book>(bookInstance)}">
   <v:checkBox name="bestseller">Bestseller</v:checkBox>
 </v:form>
+
+// Standalone
+<v:checkBox>My CheckBox</v:checkBox>
 {code}
 
 h2. Description
@@ -30,6 +34,10 @@ h5. Specific
 * @caption@ (optional) The caption of the field. Overrides the body content.
 
 * @onValueChange@ (optional) Either a [ValueChangeListener|http://vaadin.com/api/com/vaadin/data/Property.ValueChangeListener.html] or a Closure that expects a [ValueChangeEvent|http://vaadin.com/api/com/vaadin/data/Property.ValueChangeEvent.html] parameter
+
+{note}
+Remember to set @immediate="true"@ if you want the @ValueChangeEvent@ to fire immediately when the user selects a new value.
+{note}
 
 h5. General
 

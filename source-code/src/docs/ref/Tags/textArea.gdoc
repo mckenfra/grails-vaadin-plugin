@@ -2,14 +2,18 @@ h1. textArea
 
 h2. Purpose
 
-Configures a [TextArea|http://vaadin.com/api/com/vaadin/ui/TextArea.html] field of the parent Vaadin [Form|http://vaadin.com/api/com/vaadin/ui/Form.html] component.
+Adds a [TextArea|http://vaadin.com/api/com/vaadin/ui/TextArea.html] field to the parent container.
 
 h2. Examples
 
 {code:java}
+// Within a form
 <v:form itemDataSource="${new BeanItem<Book>(bookInstance)}">
   <v:textArea name="introduction" rows="10" columns="50">Introduction</v:textArea>
 </v:form>
+
+// Standalone
+<v:textArea>My Text Area</v:textArea>
 {code}
 
 h2. Description

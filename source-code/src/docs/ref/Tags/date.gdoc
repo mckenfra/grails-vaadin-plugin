@@ -2,7 +2,7 @@ h1. date
 
 h2. Purpose
 
-Configures a [DateField|http://vaadin.com/api/com/vaadin/ui/DateField.html] of the parent Vaadin [Form|http://vaadin.com/api/com/vaadin/ui/Form.html] component.
+Adds a [DateField|http://vaadin.com/api/com/vaadin/ui/DateField.html] to the parent container.
 
 h2. Examples
 
@@ -32,6 +32,10 @@ h5. Specific
 * @resolution@ (optional) The resolution for the date field. Allowed values: @day@, @hour@, @minute@, @month@, @millisecond@, @second@, @year@
 
 * @onValueChange@ (optional) Either a [ValueChangeListener|http://vaadin.com/api/com/vaadin/data/Property.ValueChangeListener.html] or a Closure that expects a [ValueChangeEvent|http://vaadin.com/api/com/vaadin/data/Property.ValueChangeEvent.html] parameter
+
+{note}
+Remember to set @immediate="true"@ if you want the @ValueChangeEvent@ to fire immediately when the user selects a new value.
+{note}
 
 h5. General
 

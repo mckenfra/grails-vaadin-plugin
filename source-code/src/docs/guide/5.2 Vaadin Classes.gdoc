@@ -1,8 +1,0 @@
-A class is considered a Vaadin Class if it:
-
-* Has @vaadin@ in the package name of itself, or any of its superclasses, OR
-* Is a Vaadin Controller - i.e. it has @VaadinController@ at the end of the class name.
-
-{note}
-Only classes under the @grails-app@ directory can be Vaadin Classes.
-{note}

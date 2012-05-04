@@ -1,0 +1,6 @@
+{table}
+ *Version* | *Date* | *Description*
+ 1.6.3 | May 2012 | Support embedded property types (e.g. an @Address@ type)\\Hook Vaadin validation into Grails's validation model
+ 1.6.4 | Jun 2012 | Add tags for the remaining UI components in [Vaadin Sampler|http://demo.vaadin.com/sampler]
+ 1.6.5 | Q3 2012 | Make it easier to create new Vaadin tags for any custom component.\\Add support for fully customizing the layout of a Vaadin [Form|http://vaadin.com/api/com/vaadin/ui/Form.html].\\Make the Grails theme compatible with Vaadin Reindeer and Chameleon themes
+{table}

@@ -2,11 +2,12 @@ h1. customField
 
 h2. Purpose
 
-Configures a [DefaultCustomField|api:org.grails.plugin.vaadin.ui.DefaultCustomField] of the parent Vaadin [Form|http://vaadin.com/api/com/vaadin/ui/Form.html] component.
+Adds a [DefaultCustomField|api:org.grails.plugin.vaadin.ui.DefaultCustomField] to the parent container.
 
 h2. Examples
 
 {code:java}
+// Within a form
 <v:form itemDataSource="${new BeanItem<Book>(bookInstance)}">
   <v:customField name="customField" caption="My Field">
 	<ul>
@@ -15,13 +16,15 @@ h2. Examples
 	<ul>
   </v:customField>
 </v:form>
+
+// Standalone
+<v:customField>My Custom Field</v:customField>
 {code}
 
 h2. Description
 
 The customField tag is a special type of [field|Tags] tag, where the field component
 is a [DefaultCustomField|api:org.grails.plugin.vaadin.ui.DefaultCustomField]. 
-
 
 This is a subclass of the [CustomField|https://vaadin.com/directory#addon/customfield] class
 in the @customfield@ Vaadin Addon.

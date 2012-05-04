@@ -2,14 +2,18 @@ h1. optionGroup
 
 h2. Purpose
 
-Configures an [OptionGroup|http://vaadin.com/api/com/vaadin/ui/OptionGroup.html] field of the parent Vaadin [Form|http://vaadin.com/api/com/vaadin/ui/Form.html] component.
+Adds an [OptionGroup|http://vaadin.com/api/com/vaadin/ui/OptionGroup.html] field to the parent container.
 
 h2. Examples
 
 {code:java}
+// Within a form
 <v:form itemDataSource="${new BeanItem<Zoo>(zooInstance)}">
   <v:optionGroup name="animal" from="${['Lion', 'Tiger', 'Snake']}">Animal</v:optionGroup>
 </v:form>
+
+// Standalone
+<v:optionGroup from="${['Lion', 'Tiger', 'Snake']}">My Option Group</v:optionGroup>
 {code}
 
 h2. Description
@@ -34,6 +38,10 @@ h5. Specific
 * @containerDataSource@ (optional) A [Container|http://vaadin.com/api/com/vaadin/data/Container.html] to set as the containerDataSource for the optionGroup.
 
 * @onValueChange@ (optional) Either a [ValueChangeListener|http://vaadin.com/api/com/vaadin/data/Property.ValueChangeListener.html] or a Closure that expects a [ValueChangeEvent|http://vaadin.com/api/com/vaadin/data/Property.ValueChangeEvent.html] parameter
+
+{note}
+Remember to set @immediate="true"@ if you want the @ValueChangeEvent@ to fire immediately when the user selects a new value.
+{note}
 
 h5. General
 

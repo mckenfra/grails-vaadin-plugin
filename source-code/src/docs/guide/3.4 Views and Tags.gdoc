@@ -11,39 +11,39 @@ In addition, you can embed Vaadin components in GSPs using the tag library provi
 {table}
  *Tag* | *Description*
  *LAYOUTS* |
- [accordion|Tags] | Adds a Vaadin [Accordion|http://vaadin.com/api/com/vaadin/ui/Accordion.html] component to the parent container.
- [horizontalLayout|Tags] | Adds a Vaadin [HorizontalLayout|http://vaadin.com/api/com/vaadin/ui/HorizontalLayout.html] component to the parent container.
- [layout|Tags] | Adds a 'template-and-content' [GspTemplateLayout|api:org.grails.plugin.vaadin.ui.GspTemplateLayout] to the parent container.
- [location|Tags] | Adds a 'content-only' [GspLayout|api:org.grails.plugin.vaadin.ui.GspLayout] component to the location in the parent container.
- [tab|Tags] | Configures a single tab of the parent Vaadin [TabSheet|http://vaadin.com/api/com/vaadin/ui/TabSheet.html] component.
- [tabs|Tags] | Adds a Vaadin [TabSheet|http://vaadin.com/api/com/vaadin/ui/TabSheet.html] component to the parent container.
- [verticalLayout|Tags] | Adds a Vaadin [VerticalLayout|http://vaadin.com/api/com/vaadin/ui/VerticalLayout.html] component to the parent container.
+ [accordion|Tags] | Adds a [Accordion|http://vaadin.com/api/com/vaadin/ui/Accordion.html] component to the parent container.
+ [horizontalLayout|Tags] | Adds a [HorizontalLayout|http://vaadin.com/api/com/vaadin/ui/HorizontalLayout.html] component to the parent container.
+ [layout|Tags] | Renders the tag's body using another Gsp as a template.
+ [location|Tags] | Adds the tag's body to the specified location in the parent container.
+ [tab|Tags] | Configures a single tab of the parent [TabSheet|http://vaadin.com/api/com/vaadin/ui/TabSheet.html] component.
+ [tabs|Tags] | Adds a [TabSheet|http://vaadin.com/api/com/vaadin/ui/TabSheet.html] component to the parent container.
+ [verticalLayout|Tags] | Adds a [VerticalLayout|http://vaadin.com/api/com/vaadin/ui/VerticalLayout.html] component to the parent container.
  |
  *TABLES* |
- [table|Tags] | Adds a Vaadin [Table|http://vaadin.com/api/com/vaadin/ui/Table.html] component to the parent container.
- [column|Tags] | Configures a single column of the parent Vaadin [Table|http://vaadin.com/api/com/vaadin/ui/Table.html] component.
+ [table|Tags] | Adds a [Table|http://vaadin.com/api/com/vaadin/ui/Table.html] component to the parent container.
+ [column|Tags] | Configures a single column of the parent [Table|http://vaadin.com/api/com/vaadin/ui/Table.html] component.
  |
  *FORMS* |
- [form|Tags] | Adds a Vaadin [Form|http://vaadin.com/api/com/vaadin/ui/Form.html] component to the parent container.
- [field|Tags] | Configures a single [Field|http://vaadin.com/api/com/vaadin/ui/AbstractField.html] of the parent Vaadin Form component.
- [checkBox|Tags] | Configures a [CheckBox|http://vaadin.com/api/com/vaadin/ui/CheckBox.html] field of the parent Vaadin Form component.
- [comboBox|Tags] | Configures a [ComboBox|http://vaadin.com/api/com/vaadin/ui/ComboBox.html] field of the parent Vaadin Form component.
- [currencySelect|Tags] | Configures a Currency-populated [Select|http://vaadin.com/api/com/vaadin/ui/Select.html] field of the parent Vaadin Form component.
- [customField|Tags] | Configures a [DefaultCustomField|api:org.grails.plugin.vaadin.ui.DefaultCustomField] of the parent Vaadin Form component.
- [date|Tags] | Configures a [DateField|http://vaadin.com/api/com/vaadin/ui/DateField.html] of the parent Vaadin Form component.
- [file|Tags] | Configures a [DefaultUploadField|api:org.grails.plugin.vaadin.ui.DefaultUploadField] of the parent Vaadin Form component.
- [listSelect|Tags] | Configures a [ListSelect|http://vaadin.com/api/com/vaadin/ui/ListSelect.html] field of the parent Vaadin Form component.
- [localeSelect|Tags] | Configures a Locale-populated [Select|http://vaadin.com/api/com/vaadin/ui/Select.html] field of the parent Vaadin Form component.
- [optionGroup|Tags] | Configures an [OptionGroup|http://vaadin.com/api/com/vaadin/ui/OptionGroup.html] field of the parent Vaadin Form component.
- [password|Tags] | Configures a [PasswordField|http://vaadin.com/api/com/vaadin/ui/PasswordField.html] of the parent Vaadin Form component.
- [select|Tags] | Configures a [Select|http://vaadin.com/api/com/vaadin/ui/Select.html] field of the parent Vaadin Form component.
- [text|Tags] | Configures a [TextField|http://vaadin.com/api/com/vaadin/ui/TextField.html] field of the parent Vaadin Form component.
- [textArea|Tags] | Configures a [TextArea|http://vaadin.com/api/com/vaadin/ui/TextArea.html] field of the parent Vaadin Form component.
- [timeZoneSelect|Tags] | Configures a TimeZone-populated [Select|http://vaadin.com/api/com/vaadin/ui/Select.html] field of the parent Vaadin Form component.
+ [form|Tags] | Adds a [Form|http://vaadin.com/api/com/vaadin/ui/Form.html] component to the parent container.
+ [field|Tags] | Adds a [Field|http://vaadin.com/api/com/vaadin/ui/AbstractField.html] to the parent container.
+ [checkBox|Tags] | Adds a [CheckBox|http://vaadin.com/api/com/vaadin/ui/CheckBox.html] field to the parent container.
+ [comboBox|Tags] | Adds a [ComboBox|http://vaadin.com/api/com/vaadin/ui/ComboBox.html] field to the parent container.
+ [currencySelect|Tags] | Adds a Currency-populated [Select|http://vaadin.com/api/com/vaadin/ui/Select.html] field to the parent container.
+ [customField|Tags] | Adds a [DefaultCustomField|api:org.grails.plugin.vaadin.ui.DefaultCustomField] to the parent container.
+ [date|Tags] | Adds a [DateField|http://vaadin.com/api/com/vaadin/ui/DateField.html] to the parent container.
+ [file|Tags] | Adds a [DefaultUploadField|api:org.grails.plugin.vaadin.ui.DefaultUploadField] to the parent container.
+ [listSelect|Tags] | Adds a [ListSelect|http://vaadin.com/api/com/vaadin/ui/ListSelect.html] field to the parent container.
+ [localeSelect|Tags] | Adds a Locale-populated [Select|http://vaadin.com/api/com/vaadin/ui/Select.html] field to the parent container.
+ [optionGroup|Tags] | Adds a [OptionGroup|http://vaadin.com/api/com/vaadin/ui/OptionGroup.html] field to the parent container.
+ [password|Tags] | Adds a [PasswordField|http://vaadin.com/api/com/vaadin/ui/PasswordField.html] to the parent container.
+ [select|Tags] | Adds a [Select|http://vaadin.com/api/com/vaadin/ui/Select.html] field to the parent container.
+ [text|Tags] | Adds a [TextField|http://vaadin.com/api/com/vaadin/ui/TextField.html] field to the parent container.
+ [textArea|Tags] | Adds a [TextArea|http://vaadin.com/api/com/vaadin/ui/TextArea.html] field to the parent container.
+ [timeZoneSelect|Tags] | Adds a TimeZone-populated [Select|http://vaadin.com/api/com/vaadin/ui/Select.html] field to the parent container.
  |
  *MISC* |
- [include|Tags] | Adds a [GrailsIncludeLayout|api:org.grails.plugin.vaadin.ui.GrailsIncludeLayout] component to the parent container.
- [label|Tags] | Adds a Vaadin [Label|http://vaadin.com/api/com/vaadin/ui/Label.html] component to the parent container.
+ [include|Tags] | Includes the output of another controller/action in the current Gsp.
+ [label|Tags] | Adds a [Label|http://vaadin.com/api/com/vaadin/ui/Label.html] component to the parent container.
  [link|Tags] | Adds a [GrailsButton|api:org.grails.plugin.vaadin.ui.GrailsButton] component to the parent container.
  [warning|Tags] | Shows a warning-type [Window.Notification|http://vaadin.com/api/com/vaadin/ui/Window.Notification.html] in the application's main window.
  [error|Tags] | Shows an error-type [Window.Notification|http://vaadin.com/api/com/vaadin/ui/Window.Notification.html] in the application's main window.

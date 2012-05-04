@@ -2,7 +2,7 @@ h1. layout
 
 h2. Purpose
 
-Adds a 'template-and-content' [GspTemplateLayout|api:org.grails.plugin.vaadin.ui.GspTemplateLayout] to the parent container.
+Renders the tag's body using another Gsp as a template.
 
 h2. Examples
 

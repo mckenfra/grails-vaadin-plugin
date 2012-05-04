@@ -30,3 +30,18 @@ class BookController {
 The Vaadin application is then accessible via @http://localhost:8080/myapp/myvaadinapp@,
 while the regular Grails controller is accessible via
 @http://localhost:8080/myapp/book@
+
+{note}
+For any Domain class, you can easily create a regular-Grails CRUD interface and a Vaadin
+CRUD interface for it in the same app.
+
+For example, for Domain class @mypackage.Book@, use @generate-all mypackage.Book@ to scaffold
+the Grails controller and views, and @generate-vaadin-all mypackage.Book@ to scaffold the
+Vaadin controller and views.
+
+You could then access each as follows:
+
+*Grails*: @http://localhost:8080/myapp/book@
+
+*Vaadin*: @http://localhost:8080/myapp/myvaadinapp#book@ 
+{note}
