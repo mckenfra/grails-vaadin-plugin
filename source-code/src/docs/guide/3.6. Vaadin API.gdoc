@@ -6,10 +6,8 @@ h3. All Vaadin Classes
 {table}
  *Field* | *Description*
  *application* | Gets the Vaadin [Application|http://vaadin.com/api/com/vaadin/Application.html] object for this session.
- *flash* | Gets a Grails-like [flash|http://grails.org/doc/latest/ref/Tag%20Libraries/flash.html] object for the current 'request'.
- *message()* | Provides same functionality as the Grails [g:message|http://grails.org/doc/latest/ref/Tags/message.html] tag.
- *getBean()* | Specify a Spring bean to retrieve by name.
  *dispatcher* | Can be used to [dispatch|api:org.grails.plugin.vaadin.VaadinDispatcher] requests to display different Vaadin pages.
+ *getBean()* | Specify a Spring bean to retrieve by name.
 {table}
 
 {note}
@@ -24,6 +22,8 @@ h3. Vaadin Controllers
 
 {table}
  *Field* | *Description*
+ *flash* | Gets a Grails-like [flash|http://grails.org/doc/latest/ref/Tag%20Libraries/flash.html] object for the current 'request'.
+ *message()* | Provides same functionality as the Grails [g:message|http://grails.org/doc/latest/ref/Tags/message.html] tag.
  *params* | Gets a Grails-like [params|http://grails.org/doc/latest/ref/Tag%20Libraries/params.html] map for the current 'request'.
  *redirect* | Mimics Grails's [redirect|http://grails.org/doc/latest/ref/Controllers/redirect.html] function for controllers
  *render* | Mimics Grails's [render|http://grails.org/doc/latest/ref/Controllers/render.html] function for controllers
