@@ -57,8 +57,13 @@ class ${className}VaadinController {
             return
         }
         
-        // Merge ${className} instance into new persistence context
-        params.instance = params.instance.merge()
+        // Attempt to merge ${className} instance into new persistence context
+        def mergedAndValidated = params.instance.merge()
+        if (!mergedAndValidated) {
+            render(view: "edit", model: [${propertyName}: params.instance])
+            return
+        }
+        params.instance = mergedAndValidated
         
         def ${propertyName} = ${className}.get(params.instance.id)
         if (!${propertyName}) {
