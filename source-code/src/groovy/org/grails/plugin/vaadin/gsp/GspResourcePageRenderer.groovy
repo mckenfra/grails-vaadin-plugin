@@ -157,6 +157,8 @@ class GspResourcePageRenderer implements ApplicationContextAware, ServletContext
             def webRequest = new GrailsWebRequest(request, response, servletContext, applicationContext)
             if (args.flash) {
                 webRequest.flashScope.putAll(args.flash)
+            } else {
+                webRequest.flashScope.clear()
             }
             if (args.controller) {
                 webRequest.setControllerName(args.controller)
