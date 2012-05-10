@@ -99,47 +99,33 @@ class VaadinApi {
         final dispatcher = new VaadinDispatcher()
         dispatcher.vaadinTransactionManager = vaadinTransactionManager
         dispatcher.vaadinApplicationHolder = vaadinApplicationHolder
-        vaadinClasses.allClasses.each {
+        vaadinClasses.allClasses.each { clazz ->
             // Don't inject if there's an explicit annotation
-            if ( it.isAnnotationPresent(NoVaadinApi.class) ||
+            if ( clazz.isAnnotationPresent(NoVaadinApi.class) ||
                 // Don't inject domain objects
-                it.isAnnotationPresent(Entity.class) ||
+                clazz.isAnnotationPresent(Entity.class) ||
                 // Don't inject our internal classes
-                it in this.excludedClasses) {
+                clazz in this.excludedClasses) {
                 if (log.isDebugEnabled()) {
-                    log.debug("SKIPPING: ${it} -> ANNOTATIONS: ${it.declaredAnnotations}")
+                    log.debug("SKIPPING: ${clazz} -> ANNOTATIONS: ${clazz.declaredAnnotations}")
                 }
             } else {
                 if (log.isDebugEnabled()) {
-                    log.debug("INJECTING API: ${it} -> ANNOTATIONS: ${it.declaredAnnotations}")
+                    log.debug("INJECTING API: ${clazz} -> ANNOTATIONS: ${clazz.declaredAnnotations}")
                 }
 
                 // Dispatcher
-                it.metaClass.getDispatcher = {-> dispatcher }
+                clazz.metaClass.getDispatcher = {-> dispatcher }
                 
-                // Message
-                it.metaClass.message = {Map args ->
-                    if (args?.error) {
-                        return vaadinApplicationHolder.application.i18n(args?.error, (args?.locale ?: LocaleContextHolder.getLocale()))
-                    } else {
-                        return vaadinApplicationHolder.application.i18n(args?.code, args?.default, args?.args, (args?.locale ?: LocaleContextHolder.getLocale()))
-                    }
-                }
-                    
-                // Flash
-                it.metaClass.getFlash = {->
-                    vaadinApplicationHolder.application.dispatcher.activeRequest.flash
-                }
-                
-                if (it != vaadinApplicationHolder.application.class) {
+                if (clazz != vaadinApplicationHolder.application.class) {
                     // Application
-                    it.metaClass.getApplication = {-> vaadinApplicationHolder.application }
-
-                    // Spring
-                    it.metaClass.getBean << { String name ->
+                    clazz.metaClass.getApplication = {-> vaadinApplicationHolder.application }
+                    // Beans
+                    clazz.metaClass.getBean << { String name ->
                         return vaadinApplicationHolder.application.getBean(name)
                     }
-                    it.metaClass.getBean << { Class type ->
+                    // Beans
+                    clazz.metaClass.getBean << { Class type ->
                         return vaadinApplicationHolder.application.getBean(type)
                     }
                 }
@@ -154,20 +140,38 @@ class VaadinApi {
      */
     protected injectControllersApi(VaadinClasses vaadinClasses) {
         vaadinClasses.getArtefacts("controller").each { artefact ->
+            // VaadinClass
             Class clazz = artefact.clazz
             clazz.metaClass.static.getVaadinClass = {-> artefact }
+            // Message
+            clazz.metaClass.message = {Map args ->
+                if (args?.error) {
+                    return vaadinApplicationHolder.application.i18n(args?.error, (args?.locale ?: LocaleContextHolder.getLocale()))
+                } else {
+                    return vaadinApplicationHolder.application.i18n(args?.code, args?.default, args?.args, (args?.locale ?: LocaleContextHolder.getLocale()))
+                }
+            }
+            // Params
             clazz.metaClass.getParams = {
                 vaadinApplicationHolder.application.dispatcher.activeRequest.params
             }
+            // Flash
+            clazz.metaClass.getFlash = {->
+                vaadinApplicationHolder.application.dispatcher.activeRequest.flash
+            }
+            // Redirect
             clazz.metaClass.redirect = {Map args ->
                 vaadinApplicationHolder.application.dispatcher.activeRequest.redirect(args)
             }
+            // Render
             clazz.metaClass.render = {Map args ->
                 vaadinApplicationHolder.application.dispatcher.activeRequest.render(args)
             }
+            // Render
             clazz.metaClass.render = {String view ->
                 vaadinApplicationHolder.application.dispatcher.activeRequest.render(view)
             }
+            // Render
             clazz.metaClass.render = {Component component ->
                 vaadinApplicationHolder.application.dispatcher.activeRequest.render(component)
             }
