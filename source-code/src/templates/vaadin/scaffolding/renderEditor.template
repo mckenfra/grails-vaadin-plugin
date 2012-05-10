@@ -38,7 +38,7 @@
             out << """\
 					<v:${tagType} name="${fullPropertyName}"${attrsText}
 						readOnly="${readOnly}" required="${isRequired()}" requiredError="Please enter a ${property.naturalName}" invalidCommitted="true"
-						componentError="\${${fullDomainInstanceName}?.errors?.hasFieldErrors('${property.name}') ? message(error:${fullDomainInstanceName}?.errors?.getFieldError('${property.name}'), args:[${fullDomainInstanceName}]) : null}">
+						componentError="\${${domainInstance}?.errors?.hasFieldErrors('${fullPropertyName}') ? message(error:${domainInstance}?.errors?.getFieldError('${fullPropertyName}'), args:[${domainInstance}]) : null}">
 						<g:message code="${domainClass.propertyName}.${fullPropertyName}.label" default="${property.naturalName}"/>
 					</v:${tagType}>"""
         } else {
