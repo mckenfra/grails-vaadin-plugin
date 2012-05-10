@@ -41,7 +41,6 @@
     }
 
 %><%=packageName%>
-<%= '<' + '%@ page import="com.vaadin.data.util.BeanItem" %' + '>' %>
 
 <g:set var="entityName" value="\${message(code: '${domainClass.propertyName}.label', default: '${className}')}" />
 <g:if test="\${flash.message}">
@@ -69,8 +68,7 @@
 		<h1><g:message code="default.edit.label" args="[entityName]"/></h1>
 		<div>
 			<v:verticalLayout>
-				<v:form var="editForm" writeThrough="false" invalidCommitted="true"
-					itemDataSource="\${new BeanItem<${className}>(${propertyName})}">
+				<v:form var="editForm" bean="\${${propertyName}}" writeThrough="false" invalidCommitted="true">
 					<%  displayedProps.each { p-> %>
 ${renderEditor(p)}<%  } %>
 				</v:form>

@@ -2,6 +2,7 @@ package org.grails.plugin.vaadin.taglib
 
 import org.springframework.web.servlet.support.RequestContextUtils as RCU
 
+import org.grails.plugin.vaadin.data.DomainItem;
 import org.grails.plugin.vaadin.gsp.ColumnDef;
 import org.grails.plugin.vaadin.gsp.DefaultColumnDef;
 import org.grails.plugin.vaadin.gsp.DefaultFieldDef;
@@ -808,10 +809,20 @@ class VaadinTagLib {
      */
     protected Closure formConfigurer = { Map props, Form form ->
         // Remove specific properties
-        def dataSource = Utils.removeCaseInsensitive(props, 'itemDataSource')
+        def itemDataSource = Utils.removeCaseInsensitive(props, 'itemDataSource')
+        def bean = Utils.removeCaseInsensitive(props, 'bean')
         def fields = Utils.removeCaseInsensitive(props, 'fields')
 
         // Process specific properties
+        def dataSource
+        if (bean) {
+            if (grailsApplication.isArtefactOfType("Domain", bean.getClass())) {
+                dataSource = new DomainItem(grailsApplication, bean)
+            } else {
+                dataSource = new BeanItem(bean)
+            }
+        }
+        if (itemDataSource) { dataSource = itemDataSource }
         if (fields) {
             def fieldDefs = []
             fields.each {
@@ -844,7 +855,6 @@ class VaadinTagLib {
         def name = Utils.removeCaseInsensitive(props, 'name')
         def instance = Utils.removeCaseInsensitive(props, 'instance')
         def pattern = Utils.removeCaseInsensitive(props, 'pattern')
-        def fieldError = Utils.removeCaseInsensitive(props, 'fieldError')
         def resolution = Utils.removeCaseInsensitive(props, 'resolution')
         def textChange = Utils.removeCaseInsensitive(props, 'onTextChange')
         def valueChange = Utils.removeCaseInsensitive(props, 'onValueChange')
@@ -853,7 +863,6 @@ class VaadinTagLib {
 
         // Process specific properties
         if (pattern) { field.addValidator(new RegexpValidator(pattern, "Invalid Value")) }
-        if (fieldError) { field.componentError = toComponentError(fieldError) }
         if (resolution) { field.resolution = toDateResolution(resolution) }
         if (textChange) { field.addListener(toTextChangeListener(textChange)) }
         if (valueChange) { field.addListener(toValueChangeListener(valueChange)) }
@@ -1084,6 +1093,7 @@ class VaadinTagLib {
                 case "onrepaintrequest": if (v) component.addListener(toRepaintRequestListener(v)); break;
                 case "width": if (v) component.setWidth(v.toString()); break;
                 case "height": if (v) component.setHeight(v.toString()); break;
+                case "componenterror": if (v) component.componentError = toComponentError(v); break;
                 default: component."${k}" = (v == "false" ? false : (v == "true" ? true : v))
             }
         }
@@ -1675,7 +1685,12 @@ class VaadinTagLib {
             throw new IllegalArgumentException("Method ${namespace}.commit() must have 'form' attribute")
         }
         return {dispatch->
-            form.commit()
+            try {
+                form.commit()
+                return true
+            } catch(err) {
+                return false
+            }
         }
     }
 
