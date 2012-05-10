@@ -252,7 +252,7 @@ class VaadinRequest {
      */
     public String getFragment() {
         def useInlineId = (this.id || this.id == "0") && action != "index"
-        def paramsWithoutId = params?.findAll { k,v-> ! (useInlineId && k == "id") }
+        def paramsWithoutId = params?.findAll { k,v-> ! (useInlineId && k == "id") && k != "instance" }
         def hasParams = paramsWithoutId?.size()
         return "${controller}" +
             (action == "index" ? "" : "/${action}") +
