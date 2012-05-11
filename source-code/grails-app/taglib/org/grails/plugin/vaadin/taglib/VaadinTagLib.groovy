@@ -41,6 +41,7 @@ import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.terminal.ErrorMessage;
+import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
@@ -1509,7 +1510,15 @@ class VaadinTagLib {
      * if not already.
      */
     protected Resource toResource(value) {
-        return value instanceof Resource ? value : new ThemeResource(value.toString())
+        if (!value || value instanceof Resource) return value
+        String pathOrUrl = value.toString()
+        // Url
+        if (pathOrUrl.startsWith('/') || pathOrUrl.indexOf('://')) {
+            return new ExternalResource(pathOrUrl)
+        // Theme resource
+        } else {
+            return new ThemeResource(pathOrUrl)
+        }
     }
     
     /**
