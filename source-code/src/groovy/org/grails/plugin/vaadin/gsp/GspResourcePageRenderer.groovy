@@ -166,6 +166,9 @@ class GspResourcePageRenderer implements ApplicationContextAware, ServletContext
             if (args.action) {
                 webRequest.setActionName(args.action)
             }
+            if (args.attributes && args.attributes instanceof Map) {
+                args.attributes.each { k,v-> request.setAttribute(k, v) }
+            }
             RequestContextHolder.setRequestAttributes(webRequest)
             def template = templateEngine.createTemplate(source)
             if (template != null) {

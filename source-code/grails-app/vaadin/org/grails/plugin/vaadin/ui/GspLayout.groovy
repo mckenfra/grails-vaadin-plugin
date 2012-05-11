@@ -215,7 +215,7 @@ class GspLayout extends CustomLayout {
             return vaadinGspRenderer.render([
                 (gspDef.type) : gspDef.uri, params: params, model: model,
                 flash: flash, controller: controllerName,
-                session: application.context.httpSession ])
+                session: application.context.httpSession, attributes:[vaadinApplication:application] ])
         }
         templateContents = evaluateGspContent(templateBody, components)
     }
