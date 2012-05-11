@@ -4,7 +4,7 @@ includeTargets << grailsScript("_GrailsCompile")
 srcDir="src/lib/groovy"
 tgtDir="target/lib"
 libDir="lib"
-jarFile="${libDir}/background-servlet-2.5.jar"
+jarFile="${libDir}/vaadin-background-servlet-2.5.jar"
 servlet25Library="${grailsHome}/lib/javax.servlet/servlet-api/jars/servlet-api-2.5.jar"
 grailsLibDir="${grailsHome}/lib"
 grailsDistDir="${grailsHome}/dist"
