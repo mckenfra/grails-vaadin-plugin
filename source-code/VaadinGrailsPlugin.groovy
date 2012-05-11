@@ -151,11 +151,9 @@ class VaadinGrailsPlugin {
     }
 
     def doWithSpring = {
-        def config = application.config.vaadin
-        if (!config || !(config.applicationClass)) {
-            log.warn "VaadinConfig not found!"
-            return
-        }
+        // Load config into application, if not already loaded
+        def config = loadVaadinConfig(application)
+        if (!config) return
 
         def vaadinApplicationClass = null
         application.vaadinClasses.each { vaadinGrailsClass ->
@@ -204,8 +202,7 @@ class VaadinGrailsPlugin {
     }
 
     def doWithWebDescriptor = { webXml ->
-        // Load config into application
-        // Note this closure gets called BEFORE doWithSpring, so we do the loading here
+        // Load config into application, if not already loaded
         def config = loadVaadinConfig(application)
         if (!config) return
         def vaadinApplicationClass = config.applicationClass
@@ -276,9 +273,12 @@ class VaadinGrailsPlugin {
     }
     
     def loadVaadinConfig(application) {
+        // Return if already loaded
+        if (application.config.vaadin?.applicationClass) return application.config.vaadin
+
+        // Load config
         ClassLoader parent = getClass().getClassLoader();
         GroovyClassLoader loader = new GroovyClassLoader(parent);
-
         ConfigObject config;
 
         try {
@@ -299,8 +299,12 @@ class VaadinGrailsPlugin {
             log.warn "Unable to find Vaadin plugin config file: ${VAADIN_CONFIG_FILE}.groovy"
         }
 
-        //noinspection GroovyVariableNotAssigned
-        return config?.vaadin;
+        // Ensure valid
+        if (! (application.config.vaadin?.applicationClass)) {
+            log.warn "VaadinConfig is invalid - applicationClass not found!"
+            return null
+        }
+        return application.config.vaadin
     }
     
     def doWithDynamicMethods = { ctx ->
