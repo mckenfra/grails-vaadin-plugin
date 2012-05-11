@@ -34,7 +34,46 @@ import org.grails.plugin.vaadin.utils.Stopwatch;
  * @author Francis McKenzie
  */
 abstract class VaadinApplication extends Application implements HttpServletRequestListener {
-    def log = LogFactory.getLog(VaadinApplication.class)
+    static log = LogFactory.getLog(VaadinApplication.class)
+    
+    /**
+     * For enabling/disabling various system messages based on VaadinConfig settings.
+     */
+    static Application.CustomizedSystemMessages customizedSystemMessages
+    
+    /**
+     * For enabling/disabling various system messages based on VaadinConfig settings.
+     */
+    static Application.CustomizedSystemMessages getSystemMessages() { 
+        if (!customizedSystemMessages) {
+            synchronized(VaadinApplication.class) {
+                if (!customizedSystemMessages) {
+                    def messages = new Application.CustomizedSystemMessages()
+                    def grailsApplication = getBean("grailsApplication")
+                    def vaadinConfig = grailsApplication.config.vaadin
+                    messages.authenticationErrorNotificationEnabled = vaadinConfig?.authenticationErrorNotificationEnabled != false
+                    messages.communicationErrorNotificationEnabled = vaadinConfig?.communicationErrorNotificationEnabled != false
+                    messages.cookiesDisabledNotificationEnabled = vaadinConfig?.cookiesDisabledNotificationEnabled != false
+                    messages.internalErrorNotificationEnabled = vaadinConfig?.internalErrorNotificationEnabled != false
+                    messages.outOfSyncNotificationEnabled = vaadinConfig?.outOfSyncNotificationEnabled != false
+                    messages.sessionExpiredNotificationEnabled = vaadinConfig?.sessionExpiredNotificationEnabled != false
+                    customizedSystemMessages = messages
+                    
+                    if (log.isDebugEnabled()) {
+                        log.debug """\
+SYSTEM MESSAGES:
+  authenticationErrorNotificationEnabled = ${messages.authenticationErrorNotificationEnabled}
+  communicationErrorNotificationEnabled = ${messages.communicationErrorNotificationEnabled}
+  cookiesDisabledNotificationEnabled = ${messages.cookiesDisabledNotificationEnabled}
+  internalErrorNotificationEnabled = ${messages.internalErrorNotificationEnabled}
+  outOfSyncNotificationEnabled = ${messages.outOfSyncNotificationEnabled}
+  sessionExpiredNotificationEnabled = ${messages.sessionExpiredNotificationEnabled}
+"""
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * Injects Vaadin API into all project Vaadin classes,

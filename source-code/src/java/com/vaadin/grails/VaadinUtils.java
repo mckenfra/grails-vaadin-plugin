@@ -15,13 +15,23 @@
  */
 package com.vaadin.grails;
 
+import groovy.util.ConfigObject;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.codehaus.groovy.grails.commons.ApplicationHolder;
+import org.codehaus.groovy.grails.commons.GrailsApplication;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.NoSuchMessageException;
+
+import com.vaadin.grails.terminal.gwt.server.GrailsAwareApplicationServlet;
 
 /**
  * Vaadin plugin utility methods - mostly used for supporting dynamic method.
@@ -30,6 +40,7 @@ import org.springframework.context.NoSuchMessageException;
  * @since 1.2
  */
 public class VaadinUtils {
+    private static final transient Logger log = LoggerFactory.getLogger(VaadinUtils.class);
 
     public static <T> T getBean(final Class<T> clazz) throws BeansException {
         return ApplicationHolder.getApplication().getMainContext().getBean(clazz);
@@ -119,5 +130,55 @@ public class VaadinUtils {
             }
         }
         return message;
+    }
+    
+    
+    /**
+     * Extracts the 'javascriptLibraries' setting from VaadinConfig
+     * @return The list of libraries to add to the head element of the page
+     */
+    public static List<String> getJavascriptLibraries(GrailsApplication grailsApplication) {
+        List<String> result = null;
+        
+        // Get VaadinConfig
+        ConfigObject vaadin = (ConfigObject) grailsApplication.getConfig().getProperty("vaadin");
+        if (vaadin == null) {
+            log.warn("VaadinConfig not found!");
+            return null;
+        }
+        
+        // Get 'javascriptLibraries' config setting
+        Object javascriptLibraries = null;
+        Map<?,?> config = vaadin.flatten();
+        if (config != null) {
+            javascriptLibraries = config.get("javascriptLibraries");
+        }
+        if (javascriptLibraries == null) {
+            log.warn("Property 'javascriptLibraries' not found in VaadinConfig");
+            return null;
+        }
+        
+        // Extract value
+        if (javascriptLibraries instanceof List<?>) {
+            List<?> libs = (List<?>) javascriptLibraries;
+            result = new ArrayList<String>(libs.size());
+            for (Object lib : libs) {
+                if (lib != null && lib.toString().trim().length() > 0) {
+                    result.add(lib.toString().trim());
+                }
+            }
+        } else if (javascriptLibraries.getClass().isArray()) {
+            Object[] libs = (Object[]) javascriptLibraries;
+            result = new ArrayList<String>(libs.length);
+            for (Object lib : libs) {
+                if (lib != null && lib.toString().trim().length() > 0) {
+                    result.add(lib.toString().trim());
+                }
+            }
+        } else {
+            log.warn("VaadinConfig setting 'javascriptLibraries' is of wrong type: " + javascriptLibraries.getClass());
+        }
+        
+        return result;
     }
 }

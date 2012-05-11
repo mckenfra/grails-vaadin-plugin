@@ -97,32 +97,34 @@ class VaadinGrailsPlugin {
     }
 
     def configureComponentClass = { Class clazz ->
-
-        //Commented out - end-user should use the logging plugin of their choice
-        //(e.g. Grails default or 'sublog' plugin, etc).
-        //add log property:
-        //def log = LoggerFactory.getLogger(clazz)
-        //clazz.metaClass.getLog << {-> log}
-
-        //add i18n methods:
-        clazz.metaClass.i18n = {String key, Collection args = null, Locale locale = LocaleContextHolder.getLocale() ->
-            Object[] oArgs = args ? args as Object[] : null
-            return VaadinUtils.i18n(key, oArgs, locale)
-        }
-        clazz.metaClass.i18n = {String key, String defaultMsg, Collection args = null, Locale locale = LocaleContextHolder.getLocale() ->
-            Object[] oArgs = args ? args as Object[] : null
-            return VaadinUtils.i18n(key, oArgs, defaultMsg, locale);
-        }
-        clazz.metaClass.i18n = {MessageSourceResolvable resolvable, Locale locale = LocaleContextHolder.getLocale() ->
-            return VaadinUtils.i18n(resolvable, locale);
-        }
-
-        //Dynamic Spring bean instance lookup methods:
-        clazz.metaClass.getBean = { String name ->
-            return VaadinUtils.getBean(name)
-        }
-        clazz.metaClass.getBean = { Class type ->
-            return VaadinUtils.getBean(type)
+        while(! (clazz.interface || clazz.name.startsWith("java") || clazz.metaClass.'static'.methods.find { it.name == 'i18n' })) {
+            if (log.isDebugEnabled()) {
+                log.debug "CONFIGURING: ${clazz}"
+            }
+    
+            // Inject i18n methods:
+            clazz.metaClass.'static'.i18n = {String key, Collection args = null, Locale locale = LocaleContextHolder.getLocale() ->
+                Object[] oArgs = args ? args as Object[] : null
+                return VaadinUtils.i18n(key, oArgs, locale)
+            }
+            clazz.metaClass.'static'.i18n = {String key, String defaultMsg, Collection args = null, Locale locale = LocaleContextHolder.getLocale() ->
+                Object[] oArgs = args ? args as Object[] : null
+                return VaadinUtils.i18n(key, oArgs, defaultMsg, locale);
+            }
+            clazz.metaClass.'static'.i18n = {MessageSourceResolvable resolvable, Locale locale = LocaleContextHolder.getLocale() ->
+                return VaadinUtils.i18n(resolvable, locale);
+            }
+    
+            // Inject dynamic Spring bean instance lookup methods:
+            clazz.metaClass.'static'.getBean = { String name ->
+                return VaadinUtils.getBean(name)
+            }
+            clazz.metaClass.'static'.getBean = { Class type ->
+                return VaadinUtils.getBean(type)
+            }
+            
+            // Loop to superclass
+            clazz = clazz.superclass
         }
     }
     
@@ -151,6 +153,7 @@ class VaadinGrailsPlugin {
     def doWithSpring = {
         def config = application.config.vaadin
         if (!config || !(config.applicationClass)) {
+            log.warn "VaadinConfig not found!"
             return
         }
 

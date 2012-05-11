@@ -23,7 +23,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.vaadin.Application;
+import com.vaadin.grails.VaadinUtils;
 import com.vaadin.terminal.gwt.server.GAEApplicationServlet;
+import com.vaadin.ui.Window;
 
 import org.codehaus.groovy.grails.commons.GrailsApplication;
 import org.slf4j.Logger;
@@ -31,7 +33,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author Les Hazlewood
@@ -201,4 +205,42 @@ public class GrailsAwareGAEApplicationServlet extends GAEApplicationServlet {
         // one:
         super.service(request, response);
     }
+    
+    /**
+     * Adds the JavaScript libraries configured in VaadinConfig to the head of the HTML page.
+     */
+    @Override
+    protected void writeAjaxPageHtmlVaadinScripts(Window window, String themeName, Application application,
+            BufferedWriter out, String appUrl, String themeUri, String appId, HttpServletRequest request)
+            throws ServletException, IOException {
+        
+        // Write Vaadin libs first
+        super.writeAjaxPageHtmlVaadinScripts(window, themeName, application, out, appUrl, themeUri, appId, request);
+        
+        // Now user libs
+        List<String> javascriptLibraries = VaadinUtils.getJavascriptLibraries(getGrailsApplication());
+        if (javascriptLibraries != null && javascriptLibraries.size() > 0) {
+            if (log.isDebugEnabled()) {
+                log.debug("Adding javascript libraries: " + javascriptLibraries);
+            }
+            
+            out.write("<script type=\"text/javascript\">\n");
+            out.write("//<![CDATA[\n");
+            for (String library : javascriptLibraries) {
+                // Ignore
+                if (library == null) {
+                    continue;
+                }
+                String src = null;
+                // External URL
+                if (library.indexOf("://") > 0) {
+                    src = library;
+                } else {
+                    src = request.getContextPath() + (library.startsWith("/") ? "" : "/") + library;
+                }
+                out.write("document.write(\"<script language='javascript' src='" + src + "'><\\/script>\");\n");
+            }
+            out.write("//]]>\n</script>\n");
+        }
+    }    
 }

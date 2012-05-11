@@ -16,6 +16,23 @@ vaadin {
     productionMode = false
 
     googleAppEngineMode = false
+    
+    // Add paths to any JavaScript libraries that should be added to head element of Vaadin page
+    javascriptLibraries = ["","",""]
+    
+    // Show popup on authentication error
+    authenticationErrorNotificationEnabled = true
+    // Show popup on communication error
+    communicationErrorNotificationEnabled = true
+    // Show popup on cookies disabled
+    cookiesDisabledNotificationEnabled = true
+    // Show popup on internal error
+    internalErrorNotificationEnabled = true
+    // Show popup on out-of-sync error
+    outOfSyncNotificationEnabled = true
+    // Show popup on session expired.
+    // Note: if false, a new session is created automatically.
+    sessionExpiredNotificationEnabled = true
 }
 
 environments {
