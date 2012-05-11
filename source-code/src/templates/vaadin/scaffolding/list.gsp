@@ -20,7 +20,7 @@
 			<v:link icon="images/skin/database_add.png" action="create"><g:message code="default.new.label" args="[entityName]"/></v:link>
 		</v:horizontalLayout>
 	</div>
-	<div id="list" class="content scaffold-list" role="main">
+	<div id="list-${domainClass.propertyName}" class="content scaffold-list" role="main">
 		<h1><g:message code="default.list.label" args="[entityName]"/></h1>
 		<div>
 			<v:verticalLayout>
