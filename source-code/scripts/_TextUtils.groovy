@@ -1,14 +1,15 @@
 /**
+ * =====================================================
+ * 
  * Utilities for modifying text in files.
  * 
  * @author Francis McKenzie
  * @date 16-April 2012
+ * 
+ * =====================================================
  */
 
-// -----------------------------------------------------
-// -----------------------------------------------------
- 
-/**
+/** 
  * Regex search-and-replace on text in a file.
  * 
  * <p> 
@@ -123,7 +124,12 @@ replaceTextInFile = { args ->
     return succeeded
 }
 
-String applyReplacers(text, replacers) {
+/**
+ * Executes replacers in turn on specified text. (INTERNAL METHOD)
+ * 
+ * Throws exception if none of replacers can find text to replace.
+ */
+protected String applyReplacers(text, replacers) {
     boolean oneMatch = false
     replacers.each {
         try {
@@ -137,7 +143,12 @@ String applyReplacers(text, replacers) {
     return text
 }
 
-// This should be curried, e.g.: patternReplacer.curry(/mypattern/, 'myreplacement')
+/**
+ * Simple replacer that does a regex search-and-replace on specified text.
+ * 
+ * As a replacer, it should be curried, i.e.:
+ *   patternReplacer.curry(/mypattern/, 'myreplacement')
+ */
 patternReplacer = { pattern, replacement, text ->
     boolean foundPattern = text =~ pattern
     if (! foundPattern) {

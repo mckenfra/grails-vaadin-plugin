@@ -9,7 +9,7 @@ import grails.util.GrailsNameUtils
 
 includeTargets << grailsScript("_GrailsInit")
 includeTargets << grailsScript("_GrailsCreateArtifacts")
-includeTargets << new File("${vaadinPluginDir}/scripts/_TextUtils.groovy")
+includeTargets << new File("${vaadinPluginDir}/scripts/_ConfigUtils.groovy")
 
 vaadinApplicationShortName = ""
 vaadinApplicationPackage = ""
@@ -120,8 +120,28 @@ target ('installVaadinViews': "Installs Vaadin fiew files") {
     event("StatusUpdate", ["Installed Vaadin base views"])
 }
 
+target ('updateBuildConfig': "Adds Vaadin Addon to BuildConfig repositories") {
+    // No dependencies
+
+    // Add config
+    def succeeded = addGroovyConfig(
+        file:new File("${basedir}/grails-app/conf/BuildConfig.groovy"),
+        within:'grails.project.dependency.resolution = { repositories *CLOSURE }',
+        configs:[
+            [code: 'mavenRepo "http://maven.vaadin.com/vaadin-addons"',
+            comment: 'Vaadin Addons',
+            test:'http://maven.vaadin.com/vaadin-addons']
+        ]
+    )
+    if (succeeded) {
+        event("StatusUpdate", ["Updated BuildConfig.groovy"])
+    } else {
+        grailsConsole.updateStatus "No changes made to BuildConfig.groovy"
+    }
+}
+
 target ('default': "Creates a new Vaadin Application") {
-    depends(createVaadinApp, updateVaadinConfig, installVaadinTheme, installVaadinViews)
+    depends(createVaadinApp, updateVaadinConfig, installVaadinTheme, installVaadinViews, updateBuildConfig)
     
     event("StatusFinal", ["Finished Vaadin application generation"])
 }
