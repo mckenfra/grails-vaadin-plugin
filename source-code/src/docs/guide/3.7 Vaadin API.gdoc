@@ -1,0 +1,48 @@
+The Vaadin plugin automatically injects an API into an application's Vaadin classes.
+The injected API is as follows:
+
+h3. All Vaadin Classes
+
+{table}
+ *Field* | *Description*
+ *vaadinApplication* | Gets the Vaadin [Application|http://vaadin.com/api/com/vaadin/Application.html] object for this session.
+ *getBean()* | Specify a Spring bean to retrieve by name.
+ *i18n()* | Provides same functionality as the Grails [g:message|http://grails.org/doc/latest/ref/Tags/message.html] tag.
+{table}
+
+{note}
+A Vaadin class requiring API injection must:
+
+* Exist under the @grails-app/vaadin@ directory
+
+* Have @vaadin@ in its package name, or the package name of any of its superclasses.
+{note}
+
+h3. Preventing API Injection
+
+You can add the annotation @\@NoVaadinAPI@ to any class in your application,
+and this will prevent the above API from being injected.
+
+To create a Vaadin Application without the API injection for any classes, and
+without the controller-view dispatching mechanism, just subclass
+@com.vaadin.Application@ in your Vaadin Application class, instead of
+@org.grails.plugin.vaadin.VaadinApplication@
+
+h3. Accessing Vaadin Application
+
+In Vaadin Controllers, Views, Taglibs and Classes the current session's Vaadin Application
+can be obtained through the @vaadinApplication@ variable.
+
+If other classes need to access the Vaadin Application, they can use the following code:
+
+{code:java}
+import org.grails.plugin.vaadin.VaadinApplicationContextHolder
+
+class MyClass {
+	def myMethod() {
+	
+	    // Gets the session's Vaadin Application
+		def app = VaadinApplicationContextHolder.vaadinApplication
+	}
+}
+{code}

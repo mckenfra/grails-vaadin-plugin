@@ -1,0 +1,74 @@
+A Vaadin controller is very similar to a regular Grails controller. It must exist under
+@grails-app/controllers@ and must have a name ending with @VaadinController@.
+
+Grails treats Vaadin controllers like regular controllers. Therefore in general the features
+available to regular controllers should also be available to Vaadin controllers. See
+the [controllers|http://grails.org/doc/latest/guide/single.html#controllers] section of
+the Grails user guide for further details about controllers.
+
+However, note that Vaadin controllers do not operate within the standard servlet request/response
+lifecycle. As such, some under-the-hood differences do exist, therefore not all controller
+functionality may work as expected in Vaadin controllers. Some key differences to be aware
+of are described in the following sections.
+
+h3. URIs and Fragments
+
+As previously discussed, Vaadin Controllers are accessed in the browser by placing
+the controller name at the start of the browser *fragment*, rather than in the URI. So:
+
+{code:java}
+// Regular Grails Controller
+http://localhost:8080/grailsapp/book/list
+
+// Vaadin Controller
+http://localhost:8080/grailsapp/vaadinapp#book/list
+{code}
+
+h3. Controller API
+
+Note that [render|http://grails.org/doc/latest/ref/Controllers/render.html],
+[redirect|http://grails.org/doc/latest/ref/Controllers/redirect.html],
+[params|http://grails.org/doc/latest/ref/Controllers/params.html],
+[flash|http://grails.org/doc/latest/ref/Controllers/flash.html] are specifically overridden
+in Vaadin controllers, to provide support for the plugin's page-dispatching
+mechanism. However, they can be treated like the corresponding regular Grails methods. 
+
+Controllers can reference @vaadinApplication@ to get the Vaadin Application object
+for the current session.
+
+h3. Passing Domain Instances
+
+Unlike regular controllers, Vaadin controllers can receive Grails domain instances (and any
+other Java object) in their params map. By contrast, the
+[params|http://docs.oracle.com/javaee/6/api/javax/servlet/ServletRequest.html#getParameterMap()]
+in a standard servlet request can only be strings.
+
+This means that we can pass a domain instance from our controller to our view, which can
+then pass it to another controller in the params map of a [link|Tags] tag.
+
+However, note that the second controller must
+[merge|http://grails.org/doc/latest/ref/Domain%20Classes/merge.html] the domain instance
+into its persistence session before using it. For example:
+
+{code:java}
+class BookController {
+  def update {
+  
+    // Get the book instance passed in the params
+    def book = params.instance
+  
+    // Attempt to merge Book instance into current persistence context
+    def bookMergedAndValidated = book.merge()
+
+    // Merging failed, possibly due to validation error
+    if (!bookMergedAndValidated) {
+      render(view: "edit", model: [bookInstance: book])
+      return
+    }
+    
+    // Merging succeeded, now you can save the instance
+    bookMergedAndValidated.save(flush:true)
+    [bookInstance: bookMergedAndValidated]
+  }
+}
+{code}
