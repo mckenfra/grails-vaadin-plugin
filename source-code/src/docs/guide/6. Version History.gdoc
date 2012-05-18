@@ -1,5 +1,6 @@
 {table}
  *Version* | *Date* | *Description*
+ 1.6.2.1 | 18-May 2012 | *Improvements*:\\- Reduced memory footprint and improved stability.
  1.6.2 | 3-May 2012 | *Improvements*:\\- Scaffold all property types, e.g. bytearray, locale\\- Many new tags, e.g. include, tabs, accordion, file 
  1.6.1 | 15-Apr 2012 | *Improvements*:\\- Create Vaadin GUIs using GSPs & tags\\- Allow regular Grails controllers & Vaadin to be mixed together in one app 
  1.6 | 5-Apr 2012 | *Improvements*:\\- Controllers & Views framework, and Grails-style scaffolding\\- Instant setup of a new app with 'no-brainer' install script
