@@ -264,15 +264,16 @@ class VaadinRequest {
     /**
      * Converts this 'request' into a URI fragment - for example '#book/show/15'
      * 
+     * @params props The request properties
      * @return The URI fragment corresponding to this 'request'
      */
-    protected String toFragment() {
-        def useInlineId = (this.id || this.id == "0") && action != "index"
-        def paramsWithoutId = params?.findAll { k,v-> ! (useInlineId && k == "id") && k != "instance" }
+    protected static String toFragment(Map props) {
+        def useInlineId = (props?.id || props?.id == "0") && props?.action != "index"
+        def paramsWithoutId = props?.params?.findAll { k,v-> ! (useInlineId && k == "id") && k != "instance" }
         def hasParams = paramsWithoutId?.size()
-        return "${controller}" +
-            (action == "index" ? "" : "/${action}") +
-            (useInlineId ? "/${this.id}" : "") +
+        return "${props?.controller}" +
+            (props?.action == "index" ? "" : "/${props?.action}") +
+            (useInlineId ? "/${props?.id}" : "") +
             (!hasParams ? "" : "?" + paramsWithoutId.entrySet().collect { "${it.key}=${it.value}" }.join("&"))
     }
     
@@ -281,7 +282,7 @@ class VaadinRequest {
      * 
      * @param fragment The URI fragment to convert into request props
      */
-    protected Map fromFragment(String fragment) {
+    protected static Map fromFragment(String fragment) {
         def result = [params:[:]]
         if (fragment) {
             def m = fragment =~ $/#?/?(\w+)(?:/(\w+)(?:/(\d+))?)?(?:\?(.*))?/$
@@ -360,7 +361,7 @@ class VaadinRequest {
         this.redirected = false
         
         // Lock the fragment
-        this.fragment = toFragment()
+        this.fragment = toFragment(this.properties)
     }
     
     /**
