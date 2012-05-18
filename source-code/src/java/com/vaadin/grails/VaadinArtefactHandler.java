@@ -15,21 +15,69 @@
  */
 package com.vaadin.grails;
 
+import groovy.lang.Closure;
+import groovy.lang.GroovyObject;
+
 import org.codehaus.groovy.grails.commons.ArtefactHandlerAdapter;
-import org.grails.plugin.vaadin.VaadinClasses;
+import org.codehaus.groovy.grails.commons.GrailsClassUtils;
 
 /**
- * This now depends on {@link org.grails.plugin.vaadin.VaadinClasses}
- * to determine if a class is a Vaadin Class
+ * TODO - Class JavaDoc
  * 
- * @author Les Hazlewood, Francis McKenzie
+ * @author Les Hazlewood
  * @since 1.2
  */
 public class VaadinArtefactHandler extends ArtefactHandlerAdapter {
+
+    private static final String VAADIN_COMPONENT_DISCOVERY_TOKEN = "vaadin";
+
     public static final String TYPE = "Vaadin";
 
     public static boolean isVaadinClass(final Class<?> clazz) {
-        return VaadinClasses.isVaadinClass(clazz);
+        if (clazz == null) {
+            return false;
+        }
+
+        // its not a closure
+        if (Closure.class.isAssignableFrom(clazz)) {
+            return false;
+        }
+
+        if (GrailsClassUtils.isJdk5Enum(clazz)) {
+            return false;
+        }
+
+        // Check to see if the class is annotated as a VaadinComponent. This
+        // annotation can be added to the
+        // class explicitly by the end-user or automatically during compilation
+        // by the VaadinASTTransformation impl.
+        // If found, we obviously consider this class a Grails Vaadin component
+        // to be managed
+        // TODO - NOT ENABLED: Global AST Transformations do not work at the
+        // moment:
+        /*
+         * if (clazz.getAnnotation(VaadinComponent.class) != null) {
+         * System.out.println("***** Class " + clazz.getName() +
+         * " DOES have the VaadinComponent annotation."); return true; }
+         */
+
+        // Not explicilty annotated - last resort is to try a heuristic:
+        // If the class (or any of its parent classes) has the word 'vaadin' in
+        // its fully-qualified class name, then
+        // we assume it is a Vaadin component intended to be managed (all Vaadin
+        // packages start with 'com.vaadin', so
+        // any UI subclasses would be discovered).
+        Class<?> testClass = clazz;
+        boolean result = false;
+        while ((testClass != null) && !testClass.equals(GroovyObject.class) && !testClass.equals(Object.class)) {
+            if (testClass.getName().contains(VaadinArtefactHandler.VAADIN_COMPONENT_DISCOVERY_TOKEN)) {
+                result = true;
+                break;
+            }
+            testClass = testClass.getSuperclass();
+        }
+
+        return result;
     }
 
     public VaadinArtefactHandler() {
