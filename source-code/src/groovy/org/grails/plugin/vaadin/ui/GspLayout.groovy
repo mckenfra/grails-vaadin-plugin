@@ -217,8 +217,8 @@ class GspLayout extends CustomLayout {
         }
         
         // Get required classes
-        def vaadinGspLocator = getBean("vaadinGspLocator")
-        def vaadinGspRenderer = getBean("vaadinGspRenderer")
+        def vaadinGspLocator = getVaadinApplication().getBean("vaadinGspLocator")
+        def vaadinGspRenderer = getVaadinApplication().getBean("vaadinGspRenderer")
         if (! vaadinGspLocator || ! vaadinGspRenderer) {
             throw new Exception("GSP locator and renderer classes required, but not found!")
         }
