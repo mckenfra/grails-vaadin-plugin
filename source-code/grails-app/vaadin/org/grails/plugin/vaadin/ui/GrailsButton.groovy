@@ -1,5 +1,6 @@
 package org.grails.plugin.vaadin.ui
 
+import com.vaadin.Application;
 import com.vaadin.ui.Button
 
 /**
@@ -85,6 +86,7 @@ class GrailsButton extends Button {
     @Override
     public void attach() {
         // For following the link
+        final Application application = getApplication()
         def dispatch = args ?
             { application.dispatcher.dispatch(args) } :
             { application.dispatcher.dispatchWithFragment(fragment) }

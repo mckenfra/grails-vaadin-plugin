@@ -188,7 +188,7 @@ class VaadinTagLib {
             throw new IllegalArgumentException("Tag <${namespace}:createLayout> must have 'name' attribute")
         }
         
-        return applyAttrsAndBodyToComponent(attrs, null, new GspTemplateLayout(name, body, params, null, flash, controllerName))
+        return applyAttrsAndBodyToComponent(attrs, null, new GspTemplateLayout(request.vaadinApplication, name, body, params, null, flash, controllerName))
     }
     
     /**
@@ -213,7 +213,7 @@ class VaadinTagLib {
      * @attr name REQUIRED The name of the layout view
      */
     Closure createLocation = { attrs, body ->
-        return applyAttrsAndBodyToComponent(attrs, null, new GspLayout(body))
+        return applyAttrsAndBodyToComponent(attrs, null, new GspLayout(request.vaadinApplication, body))
     }
     
     /**
@@ -289,7 +289,7 @@ class VaadinTagLib {
      * The tab contents should be specified in the body of the tag.
      */
     Closure tab = { attrs, body ->
-        attrs.body = new GspLayout(body)
+        attrs.body = new GspLayout(request.vaadinApplication, body)
         attachConfig(attrs, null, TabSheet.class, "tab")
     }
 
@@ -317,7 +317,7 @@ class VaadinTagLib {
      */
     Closure warning = { attrs, body ->
         def msg = body()
-        application.mainWindow.showNotification(msg?.toString(), Notification.TYPE_WARNING_MESSAGE)
+        request.vaadinApplication.mainWindow.showNotification(msg?.toString(), Notification.TYPE_WARNING_MESSAGE)
     }
 
     /**
@@ -327,7 +327,7 @@ class VaadinTagLib {
      */
     Closure error = { attrs, body ->
         def msg = body()
-        application.mainWindow.showNotification(msg?.toString(), Notification.TYPE_ERROR_MESSAGE)
+        request.vaadinApplication.mainWindow.showNotification(msg?.toString(), Notification.TYPE_ERROR_MESSAGE)
     }
 
     /**
@@ -548,7 +548,7 @@ class VaadinTagLib {
      */
     Closure customField = { attrs, body ->
         attrs.type = 'customField'
-        attrs.compositionRoot = new GspLayout(body)
+        attrs.compositionRoot = new GspLayout(request.vaadinApplication, body)
         attachConfig(attrs, null, Form.class, "field")
     }
     
@@ -1669,7 +1669,7 @@ class VaadinTagLib {
             throw new IllegalArgumentException("Method ${namespace}.confirm() must have 'message' attribute")
         }
         return { dispatch->
-            createConfirmPopup(application.mainWindow, message, {
+            createConfirmPopup(request.vaadinApplication.mainWindow, message, {
                 dispatch()
             })
             return false

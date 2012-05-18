@@ -1,56 +1,40 @@
 package org.grails.plugin.vaadin
 
 import com.vaadin.Application
+import com.vaadin.grails.VaadinUtils
 import com.vaadin.ui.Component;
 
 import grails.persistence.Entity
 import org.apache.commons.logging.LogFactory
-import org.grails.plugin.vaadin.services.VaadinApplicationService
+import org.codehaus.groovy.grails.commons.GrailsApplication;
+import org.codehaus.groovy.grails.commons.GrailsClass;
+import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.i18n.LocaleContextHolder
 
 /**
- * Injects the Vaadin API into all Vaadin classes.
+ * Injects the Vaadin API into all Vaadin Classes and Controllers.
  * <p>
- * Note that a class is considered a Vaadin class if it:
+ * A class is considered a Vaadin class if it meets the following requirements:
  * <ul>
- * <li>Has 'vaadin' in the package name of itself, or any of its superclasses.</li>
- * <li>Has 'VaadinController' at the end of the class name.</li>
- * <li>Is located under the grails-app directory</li>
- * </ul>
- * <p>
- * Note that injection can be disabled for a particular class by annotating
- * with the {@link org.grails.plugin.vaadin.NoVaadinApi} annotation.
- * <p>
- * The Vaadin API injects the following methods, depending on the type of the
- * Vaadin Class:
- * <h3>All Vaadin Classes</h3>
- * <ul>
- * <li><b>application</b>: Gets the com.vaadin.Application object for this session.</li>
- * <li><b>flash</b>: Gets a Grails-like 'flash' object for the current 'request'</li>
- * <li><b>message()</b>: Provides same functionality as the Grails 'message' tag</li>
- * <li><b>getBean()</b>: Specify a Spring bean to retrieve by name</li>
- * <li><b>dispatcher</b>: Use this to dispatch requests to display different Vaadin pages.
- * See {@link org.grails.plugin.vaadin.VaadinDispatcher}</li>
+ * <li>Exists under the <code>grails-app</code> directory</li>
+ * <li>Has a name ending <code>VaadinController</code> or has the word <code>vaadin</code> in its package name, or the package name of any of its superclasses.</li>
  * </ul>
  * 
  * <h3>Vaadin Controllers</h3>
  * <ul>
+ * <li><b>vaadinApplication</b>: Gets the com.vaadin.Application object for this session.</li>
+ * <li><b>message()</b>: Provides same functionality as the Grails 'message' tag</li>
+ * <li><b>flash</b>: Gets a Grails-like 'flash' object for the current 'request'</li>
  * <li><b>params</b>: Gets params map for the current 'request'</li>
  * <li><b>redirect</b>: Mimics Grails's redirect function for controllers</li>
  * <li><b>render</b>: Mimics Grails's render function for controllers</li>
  * </ul>
  * 
- * <p>
- * Please note that in the above description, 'request' does not refer to a
- * JavaEE ServletRequest. It is an internal construct for referring to a call
- * to the dispatch() method of {@link org.grails.plugin.vaadin.VaadinDispatcher},
- * in order to display a particular Vaadin 'page', using a VaadinController class
- * and a GSP view.
- * <p>
- * The resulting construction of Vaadin Components in the GSP view may
- * lead to round trip requests to the server, but this is all hidden by Vaadin
- * and handled automatically with Ajax.
- * Refer to <a href="http://vaadin.com">http://vaadin.com</a> for more information.  
+ * <h3>All Vaadin Classes</h3>
+ * <ul>
+ * <li><b>i18n()</b>: Provides same functionality as the Grails 'message' tag</li>
+ * <li><b>getBean()</b>: Specify a Spring bean to retrieve by name</li>
+ * </ul>
  * 
  * @author Francis McKenzie
  */
@@ -58,137 +42,136 @@ class VaadinApi {
     def log = LogFactory.getLog(this.class)
     
     /**
-     * Injected - session-scoped proxy for holding reference to the app
+     * Injects the Vaadin API into the Vaadin classes and controllers in the specified application.
+     * 
+     * @param application The application that contains the Vaadin classes and controllers.
      */
-    def vaadinApplicationHolder
-    /**
-     * Injected - session-scoped, required by dispatcher
-     */
-    def vaadinTransactionManager
+    def injectApi(GrailsApplication application) {
+        // Vaadin Classes
+        application.vaadinClasses.each { injectApi(it) }
+        // Vaadin Controllers
+        application.getArtefacts("Controller").findAll { it.name.endsWith("Vaadin") }.each { injectApi(it) }
+    }
     
     /**
-     * Injects the Vaadin API into the specified Vaadin Classes using
-     * the specified Vaadin Application.
-     * @param application The current Vaadin Application (should be session-scoped)
-     * @param vaadinClasses Holds all Vaadin Classes and Artefacts.
+     * Injects the Vaadin API into the specified Vaadin class
+     * 
+     * @param vaadinClass The Vaadin class requiring API injection
      */
-    def injectApi(Application application, VaadinClasses vaadinClasses) {
+    def injectApi(GrailsClass grailsClass) {
+        injectApi(grailsClass.clazz)
+    }
+    
+    /**
+     * Injects the Vaadin API into the specified Vaadin class
+     * 
+     * @param vaadinClass The Vaadin class requiring API injection
+     */
+    def injectApi(Class clazz) {
+        if (!isExcludedClass(clazz)) {
+            
+            // Base API
+            injectBaseApi(clazz)
+            
+            // Controllers API
+            if (clazz.name.endsWith("VaadinController")) {
+                injectControllersApi(clazz)
+            }
+        }
+    }
+    
+    /**
+     * Injects the Vaadin Base Api into the specified Vaadin class
+     * 
+     * @param vaadinClass The Vaadin class requiring API injection
+     */
+    protected void injectBaseApi(Class clazz) {
+        while(! (clazz.interface ||
+            clazz.name.startsWith("java") ||
+            clazz.name.startsWith("com.vaadin.") ||
+            clazz.metaClass.methods.find { it.name == 'i18n' })) {
+            if (log.isDebugEnabled()) {
+                log.debug "BASE API: ${clazz}"
+            }
+            // Application
+            clazz.metaClass.'static'.getVaadinApplication = {->
+                return VaadinApplicationContextHolder.vaadinApplication
+            }
+            // i18n methods
+            clazz.metaClass.'static'.i18n = {String key, Collection args = null, Locale locale = LocaleContextHolder.getLocale() ->
+                Object[] oArgs = args ? args as Object[] : null
+                return VaadinUtils.i18n(key, oArgs, locale)
+            }
+            clazz.metaClass.'static'.i18n = {String key, String defaultMsg, Collection args = null, Locale locale = LocaleContextHolder.getLocale() ->
+                Object[] oArgs = args ? args as Object[] : null
+                return VaadinUtils.i18n(key, oArgs, defaultMsg, locale);
+            }
+            clazz.metaClass.'static'.i18n = {MessageSourceResolvable resolvable, Locale locale = LocaleContextHolder.getLocale() ->
+                return VaadinUtils.i18n(resolvable, locale);
+            }
+            // Dynamic Spring bean instance lookup
+            clazz.metaClass.'static'.getBean = { String name ->
+                return VaadinUtils.getBean(name)
+            }
+            clazz.metaClass.'static'.getBean = { Class type ->
+                return VaadinUtils.getBean(type)
+            }
+            
+            // Loop to superclass
+            clazz = clazz.superclass
+        }
+    }
+    
+    /**
+     * Injects the Vaadin Controllers Api into the specified Vaadin class
+     * 
+     * @param vaadinClass The Vaadin class requiring API injection
+     */
+    protected void injectControllersApi(Class clazz) {
         if (log.isDebugEnabled()) {
-            log.debug("APPLICATION: ${application?.class}")
+            log.debug("CONTROLLERS API: ${clazz}")
         }
-        
-        // Update the session-scoped service
-        vaadinApplicationHolder.application = application
 
-        // All classes
-        injectBaseApi(vaadinClasses)
-        
-        // Controllers
-        injectControllersApi(vaadinClasses)
-        
-        // Start the dispatcher
-        application.dispatcher.init(vaadinClasses.getArtefacts("controller"))
-    }
-
-    /**
-     * Injects the Vaadin Base API into the specified Vaadin Classes.
-     * 
-     * @param vaadinClasses Holds all Vaadin Classes and Artefacts.
-     */
-    protected injectBaseApi(VaadinClasses vaadinClasses) {
-        final dispatcher = new VaadinDispatcher()
-        dispatcher.vaadinTransactionManager = vaadinTransactionManager
-        dispatcher.vaadinApplicationHolder = vaadinApplicationHolder
-        vaadinClasses.allClasses.each { clazz ->
-            // Don't inject if there's an explicit annotation
-            if ( clazz.isAnnotationPresent(NoVaadinApi.class) ||
-                // Don't inject domain objects
-                clazz.isAnnotationPresent(Entity.class) ||
-                // Don't inject our internal classes
-                clazz in this.excludedClasses) {
-                if (log.isDebugEnabled()) {
-                    log.debug("SKIPPING: ${clazz} -> ANNOTATIONS: ${clazz.declaredAnnotations}")
-                }
-            } else {
-                if (log.isDebugEnabled()) {
-                    log.debug("INJECTING API: ${clazz} -> ANNOTATIONS: ${clazz.declaredAnnotations}")
-                }
-
-                // Dispatcher
-                clazz.metaClass.getDispatcher = {-> dispatcher }
-                
-                if (clazz != vaadinApplicationHolder.application.class) {
-                    // Application
-                    clazz.metaClass.getApplication = {-> vaadinApplicationHolder.application }
-                    // Beans
-                    clazz.metaClass.getBean << { String name ->
-                        return vaadinApplicationHolder.application.getBean(name)
-                    }
-                    // Beans
-                    clazz.metaClass.getBean << { Class type ->
-                        return vaadinApplicationHolder.application.getBean(type)
-                    }
-                }
-            }
+        // Application
+        clazz.metaClass.getVaadinApplication = {
+            VaadinRequestContextHolder.requestAttributes.vaadinApplication
+        }
+        // Params
+        clazz.metaClass.getParams = {
+            VaadinRequestContextHolder.requestAttributes?.params
+        }
+        // Flash
+        clazz.metaClass.getFlash = {->
+            VaadinRequestContextHolder.requestAttributes?.flash
+        }
+        // Redirect
+        clazz.metaClass.redirect = {Map args ->
+            VaadinRequestContextHolder.requestAttributes?.redirect(args)
+        }
+        // Render
+        clazz.metaClass.render = {Map args ->
+            VaadinRequestContextHolder.requestAttributes?.render(args)
+        }
+        // Render
+        clazz.metaClass.render = {String view ->
+            VaadinRequestContextHolder.requestAttributes?.render(view)
+        }
+        // Render
+        clazz.metaClass.render = {Component component ->
+            VaadinRequestContextHolder.requestAttributes?.render(component)
         }
     }
     
     /**
-     * Injects the Vaadin Controllers API into the specified Vaadin Classes.
+     * Checks if specified class should be excluded from Api injection
      * 
-     * @param vaadinClasses Holds all Vaadin Classes and Artefacts.
+     * @param clazz The class to check
+     * @return True if the class should be excluded form Api injection
      */
-    protected injectControllersApi(VaadinClasses vaadinClasses) {
-        vaadinClasses.getArtefacts("controller").each { artefact ->
-            // VaadinClass
-            Class clazz = artefact.clazz
-            clazz.metaClass.static.getVaadinClass = {-> artefact }
-            // Message
-            clazz.metaClass.message = {Map args ->
-                if (args?.error) {
-                    return vaadinApplicationHolder.application.i18n(args?.error, (args?.locale ?: LocaleContextHolder.getLocale()))
-                } else {
-                    return vaadinApplicationHolder.application.i18n(args?.code, args?.default, args?.args, (args?.locale ?: LocaleContextHolder.getLocale()))
-                }
-            }
-            // Params
-            clazz.metaClass.getParams = {
-                vaadinApplicationHolder.application.dispatcher.activeRequest.params
-            }
-            // Flash
-            clazz.metaClass.getFlash = {->
-                vaadinApplicationHolder.application.dispatcher.activeRequest.flash
-            }
-            // Redirect
-            clazz.metaClass.redirect = {Map args ->
-                vaadinApplicationHolder.application.dispatcher.activeRequest.redirect(args)
-            }
-            // Render
-            clazz.metaClass.render = {Map args ->
-                vaadinApplicationHolder.application.dispatcher.activeRequest.render(args)
-            }
-            // Render
-            clazz.metaClass.render = {String view ->
-                vaadinApplicationHolder.application.dispatcher.activeRequest.render(view)
-            }
-            // Render
-            clazz.metaClass.render = {Component component ->
-                vaadinApplicationHolder.application.dispatcher.activeRequest.render(component)
-            }
-        }
-    }
-    
-    /**
-     * Retrieve classes that should be excluded from API-injection.
-     * <p>
-     * Note that only classes in grails-app subdirectories, or classes with
-     * recognised name suffixes (e.g. *VaadinController) will be considered
-     * for api injection
-     * @return List of classes to exclude from API-injection
-     */
-    protected List<Class> getExcludedClasses() {
-        return [
-            VaadinApplicationService.class
-        ]
+    protected boolean isExcludedClass(Class clazz) {
+        // Don't inject if there's an explicit annotation
+        return clazz.isAnnotationPresent(NoVaadinApi.class) ||
+            // Don't inject domain objects
+            clazz.isAnnotationPresent(Entity.class)
     }
 }

@@ -50,13 +50,19 @@ abstract class VaadinApplication extends Application implements HttpServletReque
                 if (!customizedSystemMessages) {
                     def messages = new Application.CustomizedSystemMessages()
                     def grailsApplication = getBean("grailsApplication")
+                    if (! grailsApplication) {
+                        throw new NullPointerException("Unable to retrieve spring bean 'grailsApplication'")
+                    }
                     def vaadinConfig = grailsApplication.config.vaadin
-                    messages.authenticationErrorNotificationEnabled = vaadinConfig?.authenticationErrorNotificationEnabled != false
-                    messages.communicationErrorNotificationEnabled = vaadinConfig?.communicationErrorNotificationEnabled != false
-                    messages.cookiesDisabledNotificationEnabled = vaadinConfig?.cookiesDisabledNotificationEnabled != false
-                    messages.internalErrorNotificationEnabled = vaadinConfig?.internalErrorNotificationEnabled != false
-                    messages.outOfSyncNotificationEnabled = vaadinConfig?.outOfSyncNotificationEnabled != false
-                    messages.sessionExpiredNotificationEnabled = vaadinConfig?.sessionExpiredNotificationEnabled != false
+                    if (! vaadinConfig) {
+                        throw new NullPointerException("Vaadin Config not found in grails application!")
+                    }
+                    messages.authenticationErrorNotificationEnabled = vaadinConfig.authenticationErrorNotificationEnabled != false
+                    messages.communicationErrorNotificationEnabled = vaadinConfig.communicationErrorNotificationEnabled != false
+                    messages.cookiesDisabledNotificationEnabled = vaadinConfig.cookiesDisabledNotificationEnabled != false
+                    messages.internalErrorNotificationEnabled = vaadinConfig.internalErrorNotificationEnabled != false
+                    messages.outOfSyncNotificationEnabled = vaadinConfig.outOfSyncNotificationEnabled != false
+                    messages.sessionExpiredNotificationEnabled = vaadinConfig.sessionExpiredNotificationEnabled != false
                     customizedSystemMessages = messages
                     
                     if (log.isDebugEnabled()) {
@@ -74,6 +80,11 @@ SYSTEM MESSAGES:
             }
         }
     }
+    
+    /**
+     * The dispatcher for routing requests
+     */
+    VaadinDispatcher dispatcher
 
     /**
      * Injects Vaadin API into all project Vaadin classes,
@@ -89,15 +100,8 @@ SYSTEM MESSAGES:
         // Timing
         def stopwatch = Stopwatch.enabled ? new Stopwatch("Startup", this.class) : null
         
-        // Inject API into all Vaadin classes
-        def vaadinApi = getBean("vaadinApi")
-        def grailsApp = getBean("grailsApplication")
-        if (! vaadinApi || ! grailsApp) {
-            throw new NullPointerException("Unable to retrieve spring beans 'vaadinApi' or 'grailsApplication'")
-        } else {
-            VaadinClasses classes = new VaadinClasses(grailsApp)
-            vaadinApi.injectApi(this, classes)
-        }
+        // Start the dispatcher
+        dispatcher = new VaadinDispatcher(this)
         
         // Trigger call to init() method
         super.start(applicationUrl, applicationProperties, context)
@@ -125,6 +129,9 @@ SYSTEM MESSAGES:
             log.debug request.requestURL
         }
         
+        // Set the application
+        VaadinApplicationContextHolder.setVaadinApplication(this)
+        
         // Ignore /appName/UIDL requests - these are the AJAX calls
         // Otherwise, assume it's the main request
         // Then, if the app is already running we have a problem - no repaint
@@ -136,14 +143,24 @@ SYSTEM MESSAGES:
             }
             
             // Refresh
-            dispatcher.refresh()
+            if (dispatcher) {
+                dispatcher.refresh()
+            } else {
+                // Log
+                if (log.isDebugEnabled()) {
+                    log.debug "No dispatcher to refresh!"
+                }
+            }
         }
     }
     
     /**
-     * Not used
+     * Clears the Vaadin Application stored in ThreadLocal.
      */
-    public void onRequestEnd(HttpServletRequest request, HttpServletResponse response) {}
+    public void onRequestEnd(HttpServletRequest request, HttpServletResponse response) {
+        // Clear the application
+        VaadinApplicationContextHolder.setVaadinApplication(null)
+    }
     
     /**
      * Detects if specified request is a browser refresh

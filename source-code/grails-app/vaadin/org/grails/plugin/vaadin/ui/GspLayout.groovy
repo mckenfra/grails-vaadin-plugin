@@ -1,5 +1,6 @@
 package org.grails.plugin.vaadin.ui
 
+import com.vaadin.Application;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomLayout;
 
@@ -77,10 +78,23 @@ class GspLayout extends CustomLayout {
         bodyComponents = [:]
         return removed
     }
-    
+    /**
+     * The Vaadin Application - only used if not attached.
+     */
+    protected vaadinApplication
+    /**
+     * If this component is attached, gets the Vaadin Application of the parent,
+     * else gets the Vaadin Application from this class's <code>vaadinApplication</code>
+     * field.
+     */
+    Application getVaadinApplication() {
+        return this.application ?: this.vaadinApplication
+    }
+
     /**
      * Creates a new GspLayout with the specified GSP as the root view.
      * 
+     * @param application Current vaadin application - required because we render immediately, not when attached.
      * @param gsp The uri of the GSP view, template or resource.
      * @param params The params map to use when rendering the GSP.
      * @param model The model map to use when rendering the GSP.
@@ -88,9 +102,9 @@ class GspLayout extends CustomLayout {
      * @param controllerName The controller name to use when rendering the GSP.
      * @param root True if this is the root Gsp of the page (defaults to false)
      */
-    public GspLayout(String gsp, Map params = null, Map model = null, Map flash = null,
+    public GspLayout(Application application, String gsp, Map params = null, Map model = null, Map flash = null,
         String controllerName = null, boolean root = false) {
-        this(gsp, null, params, model, flash, controllerName, root, "", null)
+        this(application, gsp, null, params, model, flash, controllerName, root, "", null)
     }
     
     /**
@@ -98,11 +112,12 @@ class GspLayout extends CustomLayout {
      * <p>
      * Note this is primarily used by tag libraries.
      * 
+     * @param application Current vaadin application - required because we render immediately, not when attached.
      * @param body The tag's body closure
      * @param root True if this is the root Gsp of the page (defaults to false)
      */
-    public GspLayout(Closure body, boolean root = false) {
-        this(null, body, null, null, null, null, root, "", null)
+    public GspLayout(Application application, Closure body, boolean root = false) {
+        this(application, null, body, null, null, null, null, root, "", null)
     }
     
     /**
@@ -111,6 +126,7 @@ class GspLayout extends CustomLayout {
      * <p>
      * Note this is primarily used by tag libraries.
      * 
+     * @param application Current vaadin application - required because we render immediately, not when attached.
      * @param gsp The URI of the GSP layout to use as a template
      * @param body The tag's body closure
      * @param params The params map to use when rendering the layout.
@@ -118,26 +134,28 @@ class GspLayout extends CustomLayout {
      * @param flash The flash scope object to use when rendering the layout.
      * @param controllerName The controller name to use when rendering the GSP.
      */
-    public GspLayout(String gsp, Closure body, Map params = null, Map model = null,
+    public GspLayout(Application application, String gsp, Closure body, Map params = null, Map model = null,
         Map flash = null, String controllerName = null) {
-        this(gsp, body, params, model, flash, controllerName, false, "", null)
+        this(application, gsp, body, params, model, flash, controllerName, false, "", null)
     }
     
     /**
      * Creates a new GspLayout from the existing one, but using the specified
      * Gsp template in place of the existing one's template.
      *
+     * @param application Current vaadin application - required because we render immediately, not when attached.
      * @param other The existing GspLayout to use.
      * @param gsp The uri of the GSP view, template or resource to use
      */
-    public GspLayout(GspLayout other, String gsp) {
-        this(gsp, null, other.params, other.model, other.flash,
+    public GspLayout(Application application, GspLayout other, String gsp) {
+        this(application, gsp, null, other.params, other.model, other.flash,
             other.controllerName, false, "", other.removeBodyComponents())
     }
     
     /**
      * Common constructor called by other constructors.
      * 
+     * @param application Current vaadin application - required because we render immediately, not when attached.
      * @param gsp The URI of the GSP layout to use as a template
      * @param body The tag's body closure
      * @param params The params map to use when rendering the layout.
@@ -148,9 +166,10 @@ class GspLayout extends CustomLayout {
      * @param text The initial text to use for template contents
      * @param components The initial set of components to use for template
      */
-    protected GspLayout(String gsp, Closure body, Map params, Map model, Map flash,
+    protected GspLayout(Application application, String gsp, Closure body, Map params, Map model, Map flash,
         String controllerName, boolean root, String text, Map<String,Component> components) {
         super()
+        this.vaadinApplication = application
         this.templateGsp = gsp
         this.body = body
         this.params = params
@@ -215,7 +234,7 @@ class GspLayout extends CustomLayout {
             return vaadinGspRenderer.render([
                 (gspDef.type) : gspDef.uri, params: params, model: model,
                 flash: flash, controller: controllerName,
-                session: application.context.httpSession, attributes:[vaadinApplication:application] ])
+                session: getVaadinApplication().context.httpSession, attributes:[vaadinApplication:getVaadinApplication()] ])
         }
         templateContents = evaluateGspContent(templateBody, components)
     }
@@ -254,7 +273,7 @@ class GspLayout extends CustomLayout {
     protected CharSequence evaluateGspContent(Closure body, Map<String,Component> components) {
         // Execute body
         GspLayoutNode node = new GspLayoutNode(this, body, components)
-        GspContext context = new GspContext(application.context.session)
+        GspContext context = new GspContext(getVaadinApplication().context.session)
         
         // Evaluate body - discard text
         def text = context.evaluate(node, root)?.toString()

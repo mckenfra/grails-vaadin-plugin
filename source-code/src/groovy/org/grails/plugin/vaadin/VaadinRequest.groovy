@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory
 import org.codehaus.groovy.grails.web.util.TypeConvertingMap;
 import org.grails.plugin.vaadin.utils.Utils;
 
+import com.vaadin.Application;
 import com.vaadin.ui.Component;
 
 /**
@@ -57,7 +58,15 @@ class VaadinRequest {
      * For debugging, a unique id for this instance
      */
     protected cid
-    
+    /**
+     * Vaadin Application for this request
+     */
+    Application vaadinApplication
+    /**
+     * This request's fragment equivalent
+     */
+    String fragment
+
     protected Object controller
     protected String action
     protected Object view
@@ -140,11 +149,18 @@ class VaadinRequest {
     /**
      * Create an empty request
      */
-    public VaadinRequest() { this(null) }
+    public VaadinRequest(Application application) { this(application, [:]) }
+    /**
+     * Create a request with specified fragment
+     */
+    public VaadinRequest(Application application, String fragment, Type type = Type.PAGE) {
+        this(application, fromFragment(fragment), type)
+    }
     /**
      * Create a request with the specified properties
      */
-    public VaadinRequest(Map props, Type type = Type.PAGE) {
+    public VaadinRequest(Application application, Map props, Type type = Type.PAGE) {
+        this.vaadinApplication = application
         this.properties = props
         this.type = type
         
@@ -250,7 +266,7 @@ class VaadinRequest {
      * 
      * @return The URI fragment corresponding to this 'request'
      */
-    public String getFragment() {
+    protected String toFragment() {
         def useInlineId = (this.id || this.id == "0") && action != "index"
         def paramsWithoutId = params?.findAll { k,v-> ! (useInlineId && k == "id") && k != "instance" }
         def hasParams = paramsWithoutId?.size()
@@ -258,6 +274,28 @@ class VaadinRequest {
             (action == "index" ? "" : "/${action}") +
             (useInlineId ? "/${this.id}" : "") +
             (!hasParams ? "" : "?" + paramsWithoutId.entrySet().collect { "${it.key}=${it.value}" }.join("&"))
+    }
+    
+    /**
+     * Converts the specified fragment into request props - for example '#book/show/15'
+     * 
+     * @param fragment The URI fragment to convert into request props
+     */
+    protected Map fromFragment(String fragment) {
+        def result = [params:[:]]
+        if (fragment) {
+            def m = fragment =~ $/#?/?(\w+)(?:/(\w+)(?:/(\d+))?)?(?:\?(.*))?/$
+            if (m) {
+                result.controller = m[0][1]
+                result.action = m[0][2]
+                result.id = m[0][3]
+                m[0][4]?.split(/&/)?.each {
+                    def kv = it.split(/=/)
+                    result.params[kv[0]] = kv.length > 1 ? kv[1] : null
+                }
+            }
+        }
+        return result
     }
     
     /**
@@ -320,6 +358,9 @@ class VaadinRequest {
         this.flash = this.flash ?: [:] // Maintain flash between redirects
         this.dispatched = false
         this.redirected = false
+        
+        // Lock the fragment
+        this.fragment = toFragment()
     }
     
     /**

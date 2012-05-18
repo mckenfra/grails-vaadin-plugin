@@ -1,5 +1,6 @@
 package org.grails.plugin.vaadin
 
+import org.codehaus.groovy.grails.commons.GrailsApplication;
 import org.codehaus.groovy.grails.plugins.metadata.GrailsPlugin
 import org.codehaus.groovy.grails.web.util.TypeConvertingMap
 import org.grails.plugin.vaadin.ui.GspLayout;
@@ -40,29 +41,13 @@ class VaadinDispatcher {
      */
     static Map defaultRequest = [controller:"home", action:"index"]
     /**
-     * For debugging, a unique id for this instance
+     * Vaadin Application for this dispatcher
      */
-    protected cid
+    Application vaadinApplication
     /**
-     * Set by api - provides access to current application
+     * Most recent browser page
      */
-    def vaadinApplicationHolder
-    /**
-     * Current application
-     */
-    final getApplication() { vaadinApplicationHolder.application }
-    /**
-     * Set by api - provides hibernate transaction around controllers
-     */
-    def vaadinTransactionManager
-    /**
-     * Controller names mapped to controller instances
-     */
-    protected Map controllers = [:]
-    /**
-     * Most recent browser page request
-     */
-    protected VaadinRequest pageRequest = new VaadinRequest()
+    protected String page
     /**
      * If true, the dispatcher is stopped and will not send requests to controllers
      */
@@ -90,9 +75,9 @@ class VaadinDispatcher {
      */
     protected UriFragmentUtility getOrCreateFragmentUtility() {
         if (! this.fragmentUtility ) {
-            if (application.mainWindow) {
+            if (vaadinApplication.mainWindow) {
                 this.fragmentUtility = new UriFragmentUtility()
-                application.mainWindow.addComponent(this.fragmentUtility)
+                vaadinApplication.mainWindow.addComponent(this.fragmentUtility)
             } else {
                 throw new Exception("Application must have main window!")
             }
@@ -105,30 +90,12 @@ class VaadinDispatcher {
     protected boolean fragmentListenerStarted = false
     
     /**
-     * Registers the controllers to use for dispatching. Note that unlike
-     * Grails, a single instance of a controller and view is used - the instance
-     * is created in this method. Grails, by contrast, creates a new controller instance
-     * for every request.
-     * <p>
-     * If there is more than one class with the same logical name, then whichever
-     * class is in the main project, rather than a plugin, takes precedence.
+     * Create a dispatcher for the specified VaadinApplication.
      * 
-     * @param controllerClasses The list of controller classes in the app
+     * @param application The Vaadin Application for this dispatcher
      */
-    def init(List<VaadinClass> controllerClasses) {
-        controllers = [:]
-        controllerClasses.each {
-            // Don't replace an existing class with a class from a plugin
-            if (! (controllers.containsKey(it.logicalPropertyName) &&
-                it.clazz.isAnnotationPresent(GrailsPlugin.class)) ) {
-                controllers[it.logicalPropertyName] = it.clazz.newInstance()
-            }
-        }
-        def timestamp = new Date().time
-        cid = { timestamp }
-        if (log.isDebugEnabled()) {
-            log.debug "INIT: ${cid()}"
-        }
+    public VaadinDispatcher(Application application) {
+        this.vaadinApplication = application
     }
     
     /**
@@ -141,22 +108,22 @@ class VaadinDispatcher {
     def startFragmentListener() {
         if (! this.fragmentListenerStarted) {
             if (log.isDebugEnabled()) {
-                log.debug("STARTING-${cid()}: Fragment Listener")
+                log.debug("STARTING: Fragment Listener")
             }
             final VaadinDispatcher parent = this
             getOrCreateFragmentUtility().addListener(new FragmentChangedListener() {
                 public void fragmentChanged(FragmentChangedEvent source) {
                     if (!parent.stopped) {
                         String fragment = source?.uriFragmentUtility?.fragment
-                        parent.application.dispatcher.dispatchWithFragment(fragment)
+                        parent.vaadinApplication.dispatcher.dispatchWithFragment(fragment)
                     }
                 }
             });
             this.fragmentListenerStarted = true
         }
-        if (! this.pageRequest.dispatched && !stopped) {
+        if (!page && !stopped) {
             if (log.isDebugEnabled()) {
-                log.debug("DEFAULT-${cid()}: Home controller")
+                log.debug("DEFAULT: Home controller")
             }
             this.dispatch([:]) // Goes home
         }
@@ -169,28 +136,15 @@ class VaadinDispatcher {
      * @param fragment The URI fragment
      */
     def dispatchWithFragment(String fragment) {
-        def controller, action, id, params = [:]
-        if (fragment) {
-            def m = fragment =~ $/#?/?(\w+)(?:/(\w+)(?:/(\d+))?)?(?:\?(.*))?/$
-            if (m) {
-                controller = m[0][1]
-                action = m[0][2]
-                id = m[0][3]
-                m[0][4]?.split(/&/)?.each {
-                    def kv = it.split(/=/)
-                    params[kv[0]] = kv.length > 1 ? kv[1] : null
-                } 
-            }
-        }
-        dispatch([controller:controller, action:action, id:id, params:params])
+        dispatch(new VaadinRequest(vaadinApplication, fragment, VaadinRequest.Type.PAGE))
     }
     
     /**
      * Dispatches the active page request again, or goes to home page if no active page
      */
     def refresh() {
-        if (pageRequest) {
-            dispatch(pageRequest)
+        if (page) {
+            dispatchWithFragment(page)
         } else {
             dispatch([:])
         }
@@ -208,7 +162,7 @@ class VaadinDispatcher {
      * @param requestArgs The args containing the details of the request
      */
     def dispatch(Map requestArgs) {
-        dispatch(new VaadinRequest(requestArgs, VaadinRequest.Type.PAGE))
+        dispatch(new VaadinRequest(vaadinApplication, requestArgs, VaadinRequest.Type.PAGE))
     }
     
     /**
@@ -227,17 +181,17 @@ class VaadinDispatcher {
         Component newView = this.request(request)
         
         // Update page request
-        this.pageRequest = request
+        this.page = request.fragment
         
         // Update browser
         getOrCreateFragmentUtility().setFragment(request.fragment, false)
         
         // Attach Gsp to Window
-        def oldView = application.mainWindow.componentIterator.find { ! (it instanceof UriFragmentUtility) }
+        def oldView = vaadinApplication.mainWindow.componentIterator.find { ! (it instanceof UriFragmentUtility) }
         if (oldView) {
-            application.mainWindow.replaceComponent(oldView, newView)
+            vaadinApplication.mainWindow.replaceComponent(oldView, newView)
         } else {
-            application.mainWindow.addComponent(newView)
+            vaadinApplication.mainWindow.addComponent(newView)
         }
     }
 
@@ -260,6 +214,17 @@ class VaadinDispatcher {
     protected Component request(VaadinRequest request) {
         Component result
         
+        // Get the transaction manager for wrapping the request in a transaction
+        def vaadinTransactionManager = vaadinApplication.getBean("vaadinTransactionManager")
+        if (! vaadinTransactionManager) {
+            throw new NullPointerException("Unable to retrieve spring bean 'vaadinTransactionManager'")
+        }
+        // Get grails application that holds the controllers
+        def grailsApplication = vaadinApplication.getBean("grailsApplication")
+        if (! grailsApplication) {
+            throw new NullPointerException("Unable to retrieve spring bean 'grailsApplication'")
+        }
+        
         int redirects = 0
         while (true) {
             // Check we're not in an endless redirect loop
@@ -268,7 +233,7 @@ class VaadinDispatcher {
             }
             
             // Execute the controller and view in a transaction
-            result = vaadinTransactionManager.wrapInTransaction({executeRequest(request)})
+            result = vaadinTransactionManager.wrapInTransaction({executeRequest(request, grailsApplication)})
             
             // Quit if we're not redirecting
             if(!request.redirected) break
@@ -285,38 +250,43 @@ class VaadinDispatcher {
      * Executes the controller and view (if not redirected) for specified request.
      * 
      * @param request The request to execute
+     * @param grailsApplication The grailsApplication that holds the controllers
      */
-    protected Component executeRequest(VaadinRequest request) {
+    protected Component executeRequest(VaadinRequest request, GrailsApplication grailsApplication) {
         // Returns generated view, or null if redirected
         Component view
         
         // Initialise request based on active request, clear model
-        request.startRequest(activeRequest ?: pageRequest, defaultRequest)
+        VaadinRequest activeRequest = VaadinRequestContextHolder.requestAttributes ?: new VaadinRequest(vaadinApplication, page)
+        request.startRequest(activeRequest, defaultRequest)
 
         // Log
         if (log.isDebugEnabled()) {
-            log.debug "DISPATCH-${cid()}: ${request}"
+            log.debug "DISPATCH: ${request}"
         }
         
         // Timing logging
         def stopwatch = Stopwatch.enabled ? new Stopwatch("#${request.fragment}", this.class) : null
         
-        // Get controller object
-        def controllerInstance = controllers[request.controller]
-        if (! controllerInstance) {
+        // Get controller class
+        def controllerClass = grailsApplication.getArtefactByLogicalPropertyName("Controller", "${request.controller}Vaadin")
+        if (! controllerClass) {
             throw new IllegalArgumentException("Controller not found '${request.controller}'")
         }
 
         // Get action method
-        def method = controllerInstance.metaClass.getMetaMethod(request.action)
+        def method = controllerClass.metaClass.getMetaMethod(request.action)
         if (!method) {
-            throw new IllegalArgumentException("Action '${request.action}' not found for controller '${controllerInstance.class}'")
+            throw new IllegalArgumentException("Action '${request.action}' not found for controller '${controllerClass}'")
         }
+        
+        // Instantiate controller
+        def controllerInstance = controllerClass.newInstance()
         
         // Set request as thread's active request - this exposes the request to the controller,
         // which can update it through a call to render() or redirect()
-        def previousRequest = this.activeRequest
-        this.activeRequest = request
+        def previousRequest = VaadinRequestContextHolder.requestAttributes
+        VaadinRequestContextHolder.requestAttributes = request
 
         try {
             // Execute controller action
@@ -324,7 +294,7 @@ class VaadinDispatcher {
             
             // Log result
             if (log.isDebugEnabled()) {
-                log.debug "RETURNED-${cid()}: ${request} ${Utils.toString(result)}"
+                log.debug "RETURNED: ${request} ${Utils.toString(result)}"
             }
             
             // Only execute view if not redirected
@@ -334,39 +304,21 @@ class VaadinDispatcher {
     
                 // Execute view
                 if (request.viewIsName) {
-                    view = new GspLayout(request.viewFullName, request.params, request.model, request.flash, request.controller, request.type == VaadinRequest.Type.PAGE)
+                    view = new GspLayout(vaadinApplication, request.viewFullName, request.params, request.model, request.flash, request.controller, request.type == VaadinRequest.Type.PAGE)
                 } else if (request.view instanceof Component) {
                     view = request.view
                 } else {
-                    view = new GspLayout({"${request.view}"}, request.type == VaadinRequest.Type.PAGE)
+                    view = new GspLayout(vaadinApplication, {"${request.view}"}, request.type == VaadinRequest.Type.PAGE)
                 }
             }
         } finally {
             // Remove active request
-            this.activeRequest = previousRequest
+            VaadinRequestContextHolder.requestAttributes = previousRequest
         
             // Timing logging
             stopwatch?.stop()
         }
         
         return view
-    }
-    
-    /**
-     * Holds the active request in the current thread
-     */
-    protected static ThreadLocal activeRequestHolder = new ThreadLocal<VaadinRequest>()
-    /**
-     * Gets the active request
-     */
-    public VaadinRequest getActiveRequest() {
-        return activeRequestHolder.get()
-    }
-    /**
-     * Sets the active request
-     */
-    public void setActiveRequest(VaadinRequest request) {
-        if (!request) activeRequestHolder.remove()
-        else activeRequestHolder.set(request)
-    }  
+    }    
 }

@@ -1,5 +1,6 @@
 package org.grails.plugin.vaadin.ui
 
+import com.vaadin.Application;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.CustomLayout;
@@ -31,6 +32,18 @@ class GrailsIncludeLayout extends CustomLayout {
      * parameters such as 'controller' or 'action'
      */
     String fragment
+    /**
+     * The Vaadin Application - only used if not attached.
+     */
+    protected vaadinApplication
+    /**
+     * If this component is attached, gets the Vaadin Application of the parent,
+     * else gets the Vaadin Application from this class's <code>vaadinApplication</code>
+     * field.
+     */
+    Application getVaadinApplication() {
+        return this.application ?: this.vaadinApplication
+    }
     
     /**
      * Empty constructor
@@ -42,11 +55,13 @@ class GrailsIncludeLayout extends CustomLayout {
     /**
      * Creates a new instance by executing the specified fragment request.
      *
+     * @param application The current VaadinApplication
      * @param fragment The fragment to request, for example "book/list"
      */
-    public GrailsIncludeLayout(String fragment) {
+    public GrailsIncludeLayout(Application application, String fragment) {
         super()
         this.fragment = fragment
+        this.vaadinApplication = application
         include()
     }
     
@@ -78,7 +93,7 @@ class GrailsIncludeLayout extends CustomLayout {
      * Replaces the existing Gsp in this container with the result.
      */
     public void include() {
-        addView(dispatcher.request(args ?: fragment))
+        addView(getVaadinApplication().dispatcher.request(args ?: fragment))
     }
     
     /**

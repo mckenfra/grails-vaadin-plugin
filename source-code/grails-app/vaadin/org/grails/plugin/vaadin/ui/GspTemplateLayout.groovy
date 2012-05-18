@@ -1,5 +1,6 @@
 package org.grails.plugin.vaadin.ui
 
+import com.vaadin.Application;
 import com.vaadin.ui.CustomLayout;
 
 /**
@@ -27,7 +28,7 @@ class GspTemplateLayout extends CustomLayout {
      * is resolved relative to 'views/layouts'
      */
     String name
-    
+
     /**
      * Empty constructor
      */
@@ -42,6 +43,7 @@ class GspTemplateLayout extends CustomLayout {
      * <p>
      * Note this is primarily used by tag libraries.
      *
+     * @param application Current vaadin application - required because we render immediately, not when attached.
      * @param name The layout name or URI of the GSP to use as a template
      * @param body The tag's body closure
      * @param params The params map to use when rendering the layout.
@@ -49,10 +51,10 @@ class GspTemplateLayout extends CustomLayout {
      * @param flash The flash scope object to use when rendering the layout.
      * @param controllerName The controller name to use when rendering the GSP.
      */
-    public GspTemplateLayout(String name, Closure body, Map params = null, Map model = null, Map flash = null, String controllerName = null) {
+    public GspTemplateLayout(Application application, String name, Closure body, Map params = null, Map model = null, Map flash = null, String controllerName = null) {
         super()
         this.name = name
-        addGspLayout(new GspLayout(toLayoutName(name), body, params, model, flash, controllerName))
+        addGspLayout(new GspLayout(application, toLayoutName(name), body, params, model, flash, controllerName))
     }
     
     /**
@@ -69,14 +71,21 @@ class GspTemplateLayout extends CustomLayout {
     /**
      * Renders the Gsp corresponding to the configured layout name or URI,
      * and replaces the existing Gsp in this container with the result.
+     * <p>
+     * Should only be called after this component is attached.
      */
     public void update() {
-        addGspLayout(new GspLayout(this.gspLayout, toLayoutName(name)))
+        if (!application) {
+            throw new Exception("Cannot update this component if not attached!")
+        }
+        addGspLayout(new GspLayout(application, this.gspLayout, toLayoutName(name)))
     }
     
     /**
      * Changes the template used for rendering the Gsp. The original body
      * components are added to the new template.
+     * <p>
+     * Should only be called after this component is attached.
      * 
      * @param name The layout name or URI of the Gsp to use as layout.
      */
@@ -88,6 +97,8 @@ class GspTemplateLayout extends CustomLayout {
     /**
      * Changes the template used for rendering the Gsp. The original body
      * components are added to the new template.
+     * <p>
+     * Should only be called after this component is attached.
      * 
      * @param name The layout name or URI of the Gsp to use as layout.
      */

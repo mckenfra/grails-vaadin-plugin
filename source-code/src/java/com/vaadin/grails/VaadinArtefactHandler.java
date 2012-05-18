@@ -22,14 +22,15 @@ import org.codehaus.groovy.grails.commons.ArtefactHandlerAdapter;
 import org.codehaus.groovy.grails.commons.GrailsClassUtils;
 
 /**
- * TODO - Class JavaDoc
+ * Configures Vaadin Classes and Controllers in grails application.
  * 
- * @author Les Hazlewood
+ * @author Les Hazlewood, Francis McKenzie
  * @since 1.2
  */
 public class VaadinArtefactHandler extends ArtefactHandlerAdapter {
 
     private static final String VAADIN_COMPONENT_DISCOVERY_TOKEN = "vaadin";
+    private static final String VAADIN_CONTROLLER_DISCOVERY_TOKEN = "VaadinController";
 
     public static final String TYPE = "Vaadin";
 
@@ -68,8 +69,8 @@ public class VaadinArtefactHandler extends ArtefactHandlerAdapter {
         // packages start with 'com.vaadin', so
         // any UI subclasses would be discovered).
         Class<?> testClass = clazz;
-        boolean result = false;
-        while ((testClass != null) && !testClass.equals(GroovyObject.class) && !testClass.equals(Object.class)) {
+        boolean result = testClass.getName().endsWith(VaadinArtefactHandler.VAADIN_CONTROLLER_DISCOVERY_TOKEN);
+        while (!result && (testClass != null) && !testClass.equals(GroovyObject.class) && !testClass.equals(Object.class)) {
             if (testClass.getName().contains(VaadinArtefactHandler.VAADIN_COMPONENT_DISCOVERY_TOKEN)) {
                 result = true;
                 break;

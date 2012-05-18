@@ -22,12 +22,8 @@ import org.slf4j.LoggerFactory
 import org.slf4j.Logger
 import com.vaadin.grails.terminal.gwt.server.GrailsAwareApplicationServlet
 
-import org.springframework.context.MessageSourceResolvable;
-import org.springframework.context.i18n.LocaleContextHolder
-import com.vaadin.grails.VaadinUtils
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.grails.plugin.vaadin.VaadinApi
-import org.springframework.aop.scope.ScopedProxyFactoryBean
 import org.grails.plugin.vaadin.gsp.GspResourcePageRenderer
 import org.grails.plugin.vaadin.gsp.GspResourceLocator
 import org.grails.plugin.vaadin.VaadinTransactionManager
@@ -41,7 +37,7 @@ class VaadinGrailsPlugin {
     private static final transient Logger log = LoggerFactory.getLogger("org.codehaus.groovy.grails.plugins.VaadinGrailsPlugin");
 
     // the plugin version
-    def version = "1.6.2-SNAPSHOT"
+    def version = "1.6.2.1-SNAPSHOT"
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "1.1 > *"
     // the other plugins this plugin depends on
@@ -60,9 +56,7 @@ class VaadinGrailsPlugin {
     def artefacts = [VaadinArtefactHandler]
     def watchedResources = [
         "file:./grails-app/vaadin/**/*.groovy",
-        "file:./grails-app/controllers/**/*VaadinController.groovy",
-        "file:./grails-app/services/**/*.groovy",
-        "file:./grails-app/taglib/**/*.groovy"
+        "file:./grails-app/controllers/**/*VaadinController.groovy"
     ]
     // release-plugin --zipOnly
 
@@ -96,38 +90,6 @@ class VaadinGrailsPlugin {
         }
     }
 
-    def configureComponentClass = { Class clazz ->
-        while(! (clazz.interface || clazz.name.startsWith("java") || clazz.metaClass.'static'.methods.find { it.name == 'i18n' })) {
-            if (log.isDebugEnabled()) {
-                log.debug "CONFIGURING: ${clazz}"
-            }
-    
-            // Inject i18n methods:
-            clazz.metaClass.'static'.i18n = {String key, Collection args = null, Locale locale = LocaleContextHolder.getLocale() ->
-                Object[] oArgs = args ? args as Object[] : null
-                return VaadinUtils.i18n(key, oArgs, locale)
-            }
-            clazz.metaClass.'static'.i18n = {String key, String defaultMsg, Collection args = null, Locale locale = LocaleContextHolder.getLocale() ->
-                Object[] oArgs = args ? args as Object[] : null
-                return VaadinUtils.i18n(key, oArgs, defaultMsg, locale);
-            }
-            clazz.metaClass.'static'.i18n = {MessageSourceResolvable resolvable, Locale locale = LocaleContextHolder.getLocale() ->
-                return VaadinUtils.i18n(resolvable, locale);
-            }
-    
-            // Inject dynamic Spring bean instance lookup methods:
-            clazz.metaClass.'static'.getBean = { String name ->
-                return VaadinUtils.getBean(name)
-            }
-            clazz.metaClass.'static'.getBean = { Class type ->
-                return VaadinUtils.getBean(type)
-            }
-            
-            // Loop to superclass
-            clazz = clazz.superclass
-        }
-    }
-    
     /**
      * Currently (to v2.0.2) GrailsApplication.addArtefact() will add multiple copies of the same class.
      * So this method first checks if the class has already been added to GrailsApplication, and only
@@ -155,33 +117,20 @@ class VaadinGrailsPlugin {
         def config = loadVaadinConfig(application)
         if (!config) return
 
-        def vaadinApplicationClass = null
-        application.vaadinClasses.each { vaadinGrailsClass ->
-
-            configureComponentClass(vaadinGrailsClass.clazz)
-
-            if (vaadinGrailsClass.clazz.name.equals(config.applicationClass)) {
-                vaadinApplicationClass = vaadinGrailsClass.clazz
-            }
-        }
-
+        // Vaadin Application Bean
+        def vaadinApplicationClass = application.vaadinClasses.find {
+            it.clazz.name.equals(config.applicationClass)
+        }?.clazz
         if (vaadinApplicationClass) {
             configureVaadinApplication.delegate = delegate
             configureVaadinApplication(vaadinApplicationClass, config)
         }
         
         // Beans for scaffolded applications
-        vaadinApplicationHolder(ScopedProxyFactoryBean) {
-            targetBeanName = 'vaadinApplicationService'
-            proxyTargetClass = true
-        }
         vaadinTransactionManager(VaadinTransactionManager) {
             persistenceInterceptor = ref("persistenceInterceptor")
         }
-        vaadinApi(VaadinApi) {
-            vaadinApplicationHolder = vaadinApplicationHolder
-            vaadinTransactionManager = vaadinTransactionManager
-        }
+        vaadinApi(VaadinApi)
         
         // Beans for using Vaadin in GSPs
         vaadinGspRenderer(GspResourcePageRenderer, ref("groovyPagesTemplateEngine")) { bean ->
@@ -189,7 +138,6 @@ class VaadinGrailsPlugin {
             groovyPageLocator = groovyPageLocator
             grailsResourceLocator = grailsResourceLocator
         }
-        
         vaadinGspLocator(GspResourceLocator) { bean ->
             bean.lazyInit = true
             groovyPageLocator = groovyPageLocator
@@ -308,7 +256,7 @@ class VaadinGrailsPlugin {
     }
     
     def doWithDynamicMethods = { ctx ->
-        // TODO add 'i18n' methods here
+        ctx.vaadinApi.injectApi(application)
     }
 
     def onChange = { event ->
@@ -338,13 +286,21 @@ class VaadinGrailsPlugin {
             // it to reload the Spring bean later
             def vaadinApplicationClass = null
 
+            // Vaadin Classes
             application.vaadinClasses.each { vaadinGrailsClass ->
                 // def reloadedClass = application.classLoader.getClassLoader().reloadClass(vaadinGrailsClass.clazz.name)
                 def reloadedClass = application.classLoader.loadClass(vaadinGrailsClass.clazz.name)
                 if (reloadedClass.name.equals(config.applicationClass)) {
                     vaadinApplicationClass = reloadedClass
                 }
-                configureComponentClass(reloadedClass)
+                application.mainContext.vaadinApi.injectApi(reloadedClass)
+                addVaadinArtefactToGrails(reloadedClass, application)
+            }
+            
+            // Vaadin Controllers
+            application.getArtefacts("Controller").findAll { it.name.endsWith("Vaadin") }.each {
+                def reloadedClass = application.classLoader.loadClass(it.clazz.name)
+                application.mainContext.vaadinApi.injectApi(reloadedClass)
                 addVaadinArtefactToGrails(reloadedClass, application)
             }
 
