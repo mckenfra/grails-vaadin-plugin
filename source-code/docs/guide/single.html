@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
     <head>
-        <title>Vaadin Grails Plugin 1.6.2-SNAPSHOT</title>
+        <title>Vaadin Grails Plugin 1.6.2.1-SNAPSHOT</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8" />
         <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8" />
@@ -63,7 +63,7 @@ function addJsClass(el) {
                         <div class="project">
                             <h1>Vaadin Grails Plugin - Reference Documentation</h1>
                             <p><strong>Authors:</strong> Ondrej Kvasnovsky, Francis McKenzie</p>
-                            <p><strong>Version:</strong> 1.6.2-SNAPSHOT</p>
+                            <p><strong>Version:</strong> 1.6.2.1-SNAPSHOT</p>
                             
                         </div>
 
@@ -87,7 +87,9 @@ function addJsClass(el) {
                             
                             <div class="toc-item" style="margin-left:10px"><a href="#3.5%20Mixing%20Vaadin%20and%20Grails"><strong>3.5</strong><span>Mixing Vaadin and Grails</span></a></div>
                             
-                            <div class="toc-item" style="margin-left:10px"><a href="#3.6.%20Vaadin%20API"><strong>3.6</strong><span>Vaadin API</span></a></div>
+                            <div class="toc-item" style="margin-left:10px"><a href="#3.6%20Vaadin%20Controllers"><strong>3.6</strong><span>Vaadin Controllers</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="#3.7%20Vaadin%20API"><strong>3.7</strong><span>Vaadin API</span></a></div>
                             
                             <div class="toc-item" style="margin-left:0px"><a href="#4.%20Known%20Issues%20and%20Limitations"><strong>4</strong><span>Known Issues and Limitations</span></a></div>
                             
@@ -111,10 +113,10 @@ Please visit <a href="http://vaadin.com" target="blank">http://vaadin.com</a> fo
 in <code>grails-app/conf/BuildConfig.groovy</code>, i.e.:<p class="paragraph"/><div class="code"><pre>plugins &#123;
     // Other plugin dependencies here
     // . . .
-    // . . .<p class="paragraph"/>    compile ':vaadin:1.6.2&#45;SNAPSHOT'
+    // . . .<p class="paragraph"/>    compile ':vaadin:1.6.2.1&#45;SNAPSHOT'
 &#125;</pre></div><p class="paragraph"/>This will trigger installation of the plugin when we compile or run our app. But since
 we need to use scripts in the plugin beforehand, we also have to install the plugin
-manually the first time. Run the following at the command line:<p class="paragraph"/><div class="code"><pre>grails install&#45;plugin vaadin 1.6.2&#45;SNAPSHOT</pre></div><p class="paragraph"/><h4>Create the Application</h4><p class="paragraph"/>After installing the plugin, you should run the following at the command line to
+manually the first time. Run the following at the command line:<p class="paragraph"/><div class="code"><pre>grails install&#45;plugin vaadin 1.6.2.1&#45;SNAPSHOT</pre></div><p class="paragraph"/><h4>Create the Application</h4><p class="paragraph"/>After installing the plugin, you should run the following at the command line to
 create your Vaadin application:<p class="paragraph"/><div class="code"><pre>grails generate&#45;vaadin&#45;app com.somewhere.MyApp</pre></div><p class="paragraph"/>This will install the necessary files and apply configuration changes to your application,
 to make it ready for Vaadin. See details in the <a href="../ref/Command Line/generate-vaadin-app.html" class="Command Line">generate-vaadin-app</a> section.<p class="paragraph"/><h4>Run the Application</h4><p class="paragraph"/>If you now execute the following at the command line, you should see the default Grails
 home page - however note this is implemented in Vaadin, even though it (should) look
@@ -213,19 +215,61 @@ Vaadin controller and views.<p class="paragraph"/>You could then access each as 
 </blockquote>
 
 
-<h2 id="3.6. Vaadin API">3.6 Vaadin API</h2>
+<h2 id="3.6 Vaadin Controllers">3.6 Vaadin Controllers</h2>
+A Vaadin controller is very similar to a regular Grails controller. It must exist under
+<code>grails-app/controllers</code> and must have a name ending with <code>VaadinController</code>.<p class="paragraph"/>Grails treats Vaadin controllers like regular controllers. Therefore in general the features
+available to regular controllers should also be available to Vaadin controllers. See
+the <a href="http://grails.org/doc/latest/guide/single.html#controllers" target="blank">controllers</a> section of
+the Grails user guide for further details about controllers.<p class="paragraph"/>However, note that Vaadin controllers do not operate within the standard servlet request/response
+lifecycle. As such, some under-the-hood differences do exist, therefore not all controller
+functionality may work as expected in Vaadin controllers. Some key differences to be aware
+of are described in the following sections.<p class="paragraph"/><h3>URIs and Fragments</h3><p class="paragraph"/>As previously discussed, Vaadin Controllers are accessed in the browser by placing
+the controller name at the start of the browser <strong class="bold">fragment</strong>, rather than in the URI. So:<p class="paragraph"/><div class="code"><pre>// Regular Grails Controller
+http://localhost:8080/grailsapp/book/list<p class="paragraph"/>// Vaadin Controller
+http://localhost:8080/grailsapp/vaadinapp&#35;book/list</pre></div><p class="paragraph"/><h3>Controller API</h3><p class="paragraph"/>Note that <a href="http://grails.org/doc/latest/ref/Controllers/render.html" target="blank">render</a>,
+<a href="http://grails.org/doc/latest/ref/Controllers/redirect.html" target="blank">redirect</a>,
+<a href="http://grails.org/doc/latest/ref/Controllers/params.html" target="blank">params</a>,
+<a href="http://grails.org/doc/latest/ref/Controllers/flash.html" target="blank">flash</a> are specifically overridden
+in Vaadin controllers, to provide support for the plugin's page-dispatching
+mechanism. However, they can be treated like the corresponding regular Grails methods.<p class="paragraph"/>Controllers can reference <code>vaadinApplication</code> to get the Vaadin Application object
+for the current session.<p class="paragraph"/><h3>Passing Domain Instances</h3><p class="paragraph"/>Unlike regular controllers, Vaadin controllers can receive Grails domain instances (and any
+other Java object) in their params map. By contrast, the
+<a href="http://docs.oracle.com/javaee/6/api/javax/servlet/ServletRequest.html#getParameterMap()" target="blank">params</a>
+in a standard servlet request can only be strings.<p class="paragraph"/>This means that we can pass a domain instance from our controller to our view, which can
+then pass it to another controller in the params map of a <a href="../ref/Tags/link.html" class="Tags">link</a> tag.<p class="paragraph"/>However, note that the second controller must
+<a href="http://grails.org/doc/latest/ref/Domain%20Classes/merge.html" target="blank">merge</a> the domain instance
+into its persistence session before using it. For example:<p class="paragraph"/><div class="code"><pre>class BookController &#123;
+  def update &#123;<p class="paragraph"/>    // Get the book instance passed in the params
+    def book = params.instance<p class="paragraph"/>    // Attempt to merge Book instance into current persistence context
+    def bookMergedAndValidated = book.merge()<p class="paragraph"/>    // Merging failed, possibly due to validation error
+    <span class="java&#45;keyword">if</span> (!bookMergedAndValidated) &#123;
+      render(view: <span class="java&#45;quote">"edit"</span>, model: &#91;bookInstance: book&#93;)
+      <span class="java&#45;keyword">return</span>
+    &#125;<p class="paragraph"/>    // Merging succeeded, now you can save the instance
+    bookMergedAndValidated.save(flush:<span class="java&#45;keyword">true</span>)
+    &#91;bookInstance: bookMergedAndValidated&#93;
+  &#125;
+&#125;</pre></div>
+
+
+
+<h2 id="3.7 Vaadin API">3.7 Vaadin API</h2>
 The Vaadin plugin automatically injects an API into an application's Vaadin classes.
-The injected API is as follows:<p class="paragraph"/><h3>All Vaadin Classes</h3><p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Field</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td><strong class="bold">application</strong></td><td>Gets the Vaadin <a href="http://vaadin.com/api/com/vaadin/Application.html" target="blank">Application</a> object for this session.</td></tr><tr class="table-even"><td><strong class="bold">dispatcher</strong></td><td>Can be used to <a href="../gapi/org/grails/plugin/vaadin/VaadinDispatcher.html" class="api">dispatch</a> requests to display different Vaadin pages.</td></tr><tr class="table-odd"><td><strong class="bold">getBean()</strong></td><td>Specify a Spring bean to retrieve by name.</td></tr></table><p class="paragraph"/><blockquote class="note">
-A class is considered a Vaadin class if it meets the following requirements:
+The injected API is as follows:<p class="paragraph"/><h3>All Vaadin Classes</h3><p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Field</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td><strong class="bold">vaadinApplication</strong></td><td>Gets the Vaadin <a href="http://vaadin.com/api/com/vaadin/Application.html" target="blank">Application</a> object for this session.</td></tr><tr class="table-even"><td><strong class="bold">getBean()</strong></td><td>Specify a Spring bean to retrieve by name.</td></tr><tr class="table-odd"><td><strong class="bold">i18n()</strong></td><td>Provides same functionality as the Grails <a href="http://grails.org/doc/latest/ref/Tags/message.html" target="blank">g:message</a> tag.</td></tr></table><p class="paragraph"/><blockquote class="note">
+A Vaadin class requiring API injection must:
 <ul class="star">
-<li>Exists under the <code>grails-app</code> directory</li>
-<li>Has a name ending <code>VaadinController</code> or has the word <code>vaadin</code> in its package name, or the package name of any of its superclasses.</li>
-</ul><p class="paragraph"/></blockquote><p class="paragraph"/><h3>Vaadin Controllers</h3><p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Field</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td><strong class="bold">flash</strong></td><td>Gets a Grails-like <a href="http://grails.org/doc/latest/ref/Tag%20Libraries/flash.html" target="blank">flash</a> object for the current 'request'.</td></tr><tr class="table-even"><td><strong class="bold">message()</strong></td><td>Provides same functionality as the Grails <a href="http://grails.org/doc/latest/ref/Tags/message.html" target="blank">g:message</a> tag.</td></tr><tr class="table-odd"><td><strong class="bold">params</strong></td><td>Gets a Grails-like <a href="http://grails.org/doc/latest/ref/Tag%20Libraries/params.html" target="blank">params</a> map for the current 'request'.</td></tr><tr class="table-even"><td><strong class="bold">redirect</strong></td><td>Mimics Grails's <a href="http://grails.org/doc/latest/ref/Controllers/redirect.html" target="blank">redirect</a> function for controllers</td></tr><tr class="table-odd"><td><strong class="bold">render</strong></td><td>Mimics Grails's <a href="http://grails.org/doc/latest/ref/Controllers/render.html" target="blank">render</a> function for controllers</td></tr></table><p class="paragraph"/>Please consult the Vaadin Plugin <a href="../gapi/index.html" class="api">API docs</a> for more information.<p class="paragraph"/><h3>Preventing API Injection</h3><p class="paragraph"/>You can add the annotation <code>&#64;NoVaadinAPI</code> to any class in your application,
+<li>Exist under the <code>grails-app/vaadin</code> directory</li>
+<li>Have <code>vaadin</code> in its package name, or the package name of any of its superclasses.</li>
+</ul><p class="paragraph"/></blockquote><p class="paragraph"/><h3>Preventing API Injection</h3><p class="paragraph"/>You can add the annotation <code>&#64;NoVaadinAPI</code> to any class in your application,
 and this will prevent the above API from being injected.<p class="paragraph"/>To create a Vaadin Application without the API injection for any classes, and
 without the controller-view dispatching mechanism, just subclass
 <code>com.vaadin.Application</code> in your Vaadin Application class, instead of
-<code>org.grails.plugin.vaadin.VaadinApplication</code>
-
+<code>org.grails.plugin.vaadin.VaadinApplication</code><p class="paragraph"/><h3>Accessing Vaadin Application</h3><p class="paragraph"/>In Vaadin Controllers, Views, Taglibs and Classes the current session's Vaadin Application
+can be obtained through the <code>vaadinApplication</code> variable.<p class="paragraph"/>If other classes need to access the Vaadin Application, they can use the following code:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> org.grails.plugin.vaadin.VaadinApplicationContextHolder<p class="paragraph"/>class MyClass &#123;
+	def myMethod() &#123;<p class="paragraph"/>	    // Gets the session's Vaadin Application
+		def app = VaadinApplicationContextHolder.vaadinApplication
+	&#125;
+&#125;</pre></div>
 
 
 <h1 id="4. Known Issues and Limitations">4 Known Issues and Limitations</h1>

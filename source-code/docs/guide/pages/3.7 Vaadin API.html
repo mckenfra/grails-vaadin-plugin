@@ -2,12 +2,12 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>Vaadin Grails Plugin 1.6.2.1-SNAPSHOT</title>
+    <title>3.7 Vaadin API 1.6.2.1-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link rel="stylesheet" href="../../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
-    <link rel="stylesheet" href="../../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
     <script type="text/javascript">
-function addJsClass(el) {
+function addJsClass() {
     var classes = document.body.className.split(" ");
     classes.push("js");
     document.body.className = classes.join(" ");
@@ -16,14 +16,13 @@ function addJsClass(el) {
 </head>
 
 <body class="body" onload="addJsClass();">
-
 <div id="navigation">
     <ul>
         <li>
             <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
                 <a href="../../guide/index.html" class="button">Table of contents</a>
 
-                <div id="nav-summary-childs">
+                <div id="nav-summary-childs" style="display:none;">
                     
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/1.%20Overview.html"><strong>1</strong><span>Overview</span></a>
                     </div>
@@ -64,16 +63,59 @@ function addJsClass(el) {
 <table id="colset" border="0" cellpadding="0" cellspacing="0">
     <tr>
         <td id="col1">
-            <div id="main" class="reference corner-all">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../../guide/2.%20Installation.html">&lt;&lt; <strong>2</strong><span>Installation</span></a></div>
+                
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
-                <h1>error</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Shows an error-type <a href="http://vaadin.com/api/com/vaadin/ui/Window.Notification.html" target="blank">Window.Notification</a> in the application's main window.<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/><div class="code"><pre>&#60;v:error&#62;Hello world!&#60;/v:error&#62;</pre></div><p class="paragraph"/><h2>Description </h2><p class="paragraph"/><h4>Body</h4>
+                
+                    <div class="toc-item next-right"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span> >></a></div>
+                
+
+
+                <div class="project">
+                    <h1>3.7 Vaadin API - Reference Documentation</h1>
+
+                    <p><strong>Authors:</strong> Ondrej Kvasnovsky, Francis McKenzie</p>
+
+                    <p><strong>Version:</strong> 1.6.2.1-SNAPSHOT</p>
+
+                    
+                </div>
+
+                
+
+                
+
+<h2 id="3.7 Vaadin API">3.7 Vaadin API</h2>
+The Vaadin plugin automatically injects an API into an application's Vaadin classes.
+The injected API is as follows:<p class="paragraph"/><h3>All Vaadin Classes</h3><p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Field</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td><strong class="bold">vaadinApplication</strong></td><td>Gets the Vaadin <a href="http://vaadin.com/api/com/vaadin/Application.html" target="blank">Application</a> object for this session.</td></tr><tr class="table-even"><td><strong class="bold">getBean()</strong></td><td>Specify a Spring bean to retrieve by name.</td></tr><tr class="table-odd"><td><strong class="bold">i18n()</strong></td><td>Provides same functionality as the Grails <a href="http://grails.org/doc/latest/ref/Tags/message.html" target="blank">g:message</a> tag.</td></tr></table><p class="paragraph"/><blockquote class="note">
+A Vaadin class requiring API injection must:
 <ul class="star">
-<li>Used as the notification message - can be raw HTML.</li>
-</ul><p class="paragraph"/><h4>Attributes</h4><p class="paragraph"/><blockquote class="note">
-See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Window.Notification.html" target="blank">Window.Notification</a> API docs for full list of allowed attributes
-</blockquote>
+<li>Exist under the <code>grails-app/vaadin</code> directory</li>
+<li>Have <code>vaadin</code> in its package name, or the package name of any of its superclasses.</li>
+</ul><p class="paragraph"/></blockquote><p class="paragraph"/><h3>Preventing API Injection</h3><p class="paragraph"/>You can add the annotation <code>&#64;NoVaadinAPI</code> to any class in your application,
+and this will prevent the above API from being injected.<p class="paragraph"/>To create a Vaadin Application without the API injection for any classes, and
+without the controller-view dispatching mechanism, just subclass
+<code>com.vaadin.Application</code> in your Vaadin Application class, instead of
+<code>org.grails.plugin.vaadin.VaadinApplication</code><p class="paragraph"/><h3>Accessing Vaadin Application</h3><p class="paragraph"/>In Vaadin Controllers, Views, Taglibs and Classes the current session's Vaadin Application
+can be obtained through the <code>vaadinApplication</code> variable.<p class="paragraph"/>If other classes need to access the Vaadin Application, they can use the following code:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> org.grails.plugin.vaadin.VaadinApplicationContextHolder<p class="paragraph"/>class MyClass &#123;
+	def myMethod() &#123;<p class="paragraph"/>	    // Gets the session's Vaadin Application
+		def app = VaadinApplicationContextHolder.vaadinApplication
+	&#125;
+&#125;</pre></div>
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../../guide/2.%20Installation.html">&lt;&lt; <strong>2</strong><span>Installation</span></a></div>
+                
+                    <div class="toc-item next-right"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span> >></a></div>
+                
+                <div style="clear:both"></div>
             </div>
         </td>
         <td id="col2">
@@ -84,10 +126,8 @@ See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Window.Notification.html
                 </div>
                 <div class="menu">
                     
-                    <div class="menu-block">
-                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Command Line</h1>
-                        <div class="menu-sub">
-                            
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Command Line</h1><div class="menu-sub">
+                        
                             
                             <div class="menu-item"><a href="../../ref/Command%20Line/create-vaadin-controller.html">create-vaadin-controller</a>
                             </div>
@@ -107,13 +147,11 @@ See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Window.Notification.html
                             <div class="menu-item"><a href="../../ref/Command%20Line/install-vaadin-templates.html">install-vaadin-templates</a>
                             </div>
                             
-                        </div>
+                            </div>
                     </div>
                     
-                    <div class="menu-block">
-                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Tags</h1>
-                        <div class="menu-sub selected">
-                            
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Tags</h1><div class="menu-sub">
+                        
                             
                             <div class="menu-item"><a href="../../ref/Tags/accordion.html">accordion</a>
                             </div>
@@ -208,7 +246,7 @@ See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Window.Notification.html
                             <div class="menu-item"><a href="../../ref/Tags/warning.html">warning</a>
                             </div>
                             
-                        </div>
+                            </div>
                     </div>
                     
                 </div>
@@ -222,8 +260,7 @@ See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Window.Notification.html
     
 </div>
 
-
-<script type="text/javascript" src="../../js/docs.js"></script>
+<script type="text/javascript" src="../js/docs.js"></script>
 
 </body>
 </html>

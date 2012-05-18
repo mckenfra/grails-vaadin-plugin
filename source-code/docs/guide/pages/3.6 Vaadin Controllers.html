@@ -2,12 +2,12 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>Vaadin Grails Plugin 1.6.2.1-SNAPSHOT</title>
+    <title>3.6 Vaadin Controllers 1.6.2.1-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link rel="stylesheet" href="../../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
-    <link rel="stylesheet" href="../../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
     <script type="text/javascript">
-function addJsClass(el) {
+function addJsClass() {
     var classes = document.body.className.split(" ");
     classes.push("js");
     document.body.className = classes.join(" ");
@@ -16,14 +16,13 @@ function addJsClass(el) {
 </head>
 
 <body class="body" onload="addJsClass();">
-
 <div id="navigation">
     <ul>
         <li>
             <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
                 <a href="../../guide/index.html" class="button">Table of contents</a>
 
-                <div id="nav-summary-childs">
+                <div id="nav-summary-childs" style="display:none;">
                     
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/1.%20Overview.html"><strong>1</strong><span>Overview</span></a>
                     </div>
@@ -64,16 +63,78 @@ function addJsClass(el) {
 <table id="colset" border="0" cellpadding="0" cellspacing="0">
     <tr>
         <td id="col1">
-            <div id="main" class="reference corner-all">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../../guide/2.%20Installation.html">&lt;&lt; <strong>2</strong><span>Installation</span></a></div>
+                
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
-                <h1>error</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Shows an error-type <a href="http://vaadin.com/api/com/vaadin/ui/Window.Notification.html" target="blank">Window.Notification</a> in the application's main window.<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/><div class="code"><pre>&#60;v:error&#62;Hello world!&#60;/v:error&#62;</pre></div><p class="paragraph"/><h2>Description </h2><p class="paragraph"/><h4>Body</h4>
-<ul class="star">
-<li>Used as the notification message - can be raw HTML.</li>
-</ul><p class="paragraph"/><h4>Attributes</h4><p class="paragraph"/><blockquote class="note">
-See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Window.Notification.html" target="blank">Window.Notification</a> API docs for full list of allowed attributes
-</blockquote>
+                
+                    <div class="toc-item next-right"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span> >></a></div>
+                
+
+
+                <div class="project">
+                    <h1>3.6 Vaadin Controllers - Reference Documentation</h1>
+
+                    <p><strong>Authors:</strong> Ondrej Kvasnovsky, Francis McKenzie</p>
+
+                    <p><strong>Version:</strong> 1.6.2.1-SNAPSHOT</p>
+
+                    
+                </div>
+
+                
+
+                
+
+<h2 id="3.6 Vaadin Controllers">3.6 Vaadin Controllers</h2>
+A Vaadin controller is very similar to a regular Grails controller. It must exist under
+<code>grails-app/controllers</code> and must have a name ending with <code>VaadinController</code>.<p class="paragraph"/>Grails treats Vaadin controllers like regular controllers. Therefore in general the features
+available to regular controllers should also be available to Vaadin controllers. See
+the <a href="http://grails.org/doc/latest/guide/single.html#controllers" target="blank">controllers</a> section of
+the Grails user guide for further details about controllers.<p class="paragraph"/>However, note that Vaadin controllers do not operate within the standard servlet request/response
+lifecycle. As such, some under-the-hood differences do exist, therefore not all controller
+functionality may work as expected in Vaadin controllers. Some key differences to be aware
+of are described in the following sections.<p class="paragraph"/><h3>URIs and Fragments</h3><p class="paragraph"/>As previously discussed, Vaadin Controllers are accessed in the browser by placing
+the controller name at the start of the browser <strong class="bold">fragment</strong>, rather than in the URI. So:<p class="paragraph"/><div class="code"><pre>// Regular Grails Controller
+http://localhost:8080/grailsapp/book/list<p class="paragraph"/>// Vaadin Controller
+http://localhost:8080/grailsapp/vaadinapp&#35;book/list</pre></div><p class="paragraph"/><h3>Controller API</h3><p class="paragraph"/>Note that <a href="http://grails.org/doc/latest/ref/Controllers/render.html" target="blank">render</a>,
+<a href="http://grails.org/doc/latest/ref/Controllers/redirect.html" target="blank">redirect</a>,
+<a href="http://grails.org/doc/latest/ref/Controllers/params.html" target="blank">params</a>,
+<a href="http://grails.org/doc/latest/ref/Controllers/flash.html" target="blank">flash</a> are specifically overridden
+in Vaadin controllers, to provide support for the plugin's page-dispatching
+mechanism. However, they can be treated like the corresponding regular Grails methods.<p class="paragraph"/>Controllers can reference <code>vaadinApplication</code> to get the Vaadin Application object
+for the current session.<p class="paragraph"/><h3>Passing Domain Instances</h3><p class="paragraph"/>Unlike regular controllers, Vaadin controllers can receive Grails domain instances (and any
+other Java object) in their params map. By contrast, the
+<a href="http://docs.oracle.com/javaee/6/api/javax/servlet/ServletRequest.html#getParameterMap()" target="blank">params</a>
+in a standard servlet request can only be strings.<p class="paragraph"/>This means that we can pass a domain instance from our controller to our view, which can
+then pass it to another controller in the params map of a <a href="../ref/Tags/link.html" class="Tags">link</a> tag.<p class="paragraph"/>However, note that the second controller must
+<a href="http://grails.org/doc/latest/ref/Domain%20Classes/merge.html" target="blank">merge</a> the domain instance
+into its persistence session before using it. For example:<p class="paragraph"/><div class="code"><pre>class BookController &#123;
+  def update &#123;<p class="paragraph"/>    // Get the book instance passed in the params
+    def book = params.instance<p class="paragraph"/>    // Attempt to merge Book instance into current persistence context
+    def bookMergedAndValidated = book.merge()<p class="paragraph"/>    // Merging failed, possibly due to validation error
+    <span class="java&#45;keyword">if</span> (!bookMergedAndValidated) &#123;
+      render(view: <span class="java&#45;quote">"edit"</span>, model: &#91;bookInstance: book&#93;)
+      <span class="java&#45;keyword">return</span>
+    &#125;<p class="paragraph"/>    // Merging succeeded, now you can save the instance
+    bookMergedAndValidated.save(flush:<span class="java&#45;keyword">true</span>)
+    &#91;bookInstance: bookMergedAndValidated&#93;
+  &#125;
+&#125;</pre></div>
+
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../../guide/2.%20Installation.html">&lt;&lt; <strong>2</strong><span>Installation</span></a></div>
+                
+                    <div class="toc-item next-right"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span> >></a></div>
+                
+                <div style="clear:both"></div>
             </div>
         </td>
         <td id="col2">
@@ -84,10 +145,8 @@ See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Window.Notification.html
                 </div>
                 <div class="menu">
                     
-                    <div class="menu-block">
-                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Command Line</h1>
-                        <div class="menu-sub">
-                            
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Command Line</h1><div class="menu-sub">
+                        
                             
                             <div class="menu-item"><a href="../../ref/Command%20Line/create-vaadin-controller.html">create-vaadin-controller</a>
                             </div>
@@ -107,13 +166,11 @@ See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Window.Notification.html
                             <div class="menu-item"><a href="../../ref/Command%20Line/install-vaadin-templates.html">install-vaadin-templates</a>
                             </div>
                             
-                        </div>
+                            </div>
                     </div>
                     
-                    <div class="menu-block">
-                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Tags</h1>
-                        <div class="menu-sub selected">
-                            
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Tags</h1><div class="menu-sub">
+                        
                             
                             <div class="menu-item"><a href="../../ref/Tags/accordion.html">accordion</a>
                             </div>
@@ -208,7 +265,7 @@ See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Window.Notification.html
                             <div class="menu-item"><a href="../../ref/Tags/warning.html">warning</a>
                             </div>
                             
-                        </div>
+                            </div>
                     </div>
                     
                 </div>
@@ -222,8 +279,7 @@ See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Window.Notification.html
     
 </div>
 
-
-<script type="text/javascript" src="../../js/docs.js"></script>
+<script type="text/javascript" src="../js/docs.js"></script>
 
 </body>
 </html>
