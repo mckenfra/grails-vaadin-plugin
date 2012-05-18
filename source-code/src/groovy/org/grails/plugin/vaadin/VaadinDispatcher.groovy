@@ -33,7 +33,7 @@ import org.apache.commons.logging.LogFactory
  * @author Francis McKenzie
  * @see VaadinRequest
  */
-class VaadinDispatcher {
+class VaadinDispatcher implements Serializable {
     def log = LogFactory.getLog(this.class)
     
     /**
