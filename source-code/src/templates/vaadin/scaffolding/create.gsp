@@ -55,7 +55,7 @@
 		</ul>
 	</v:error>
 </g:hasErrors>
-<v:layout name="vaadin">
+<v:layout name="main">
 <v:location name="body">
 	<div class="navigation toolbar" role="navigation">
 		<v:horizontalLayout spacing="false">
