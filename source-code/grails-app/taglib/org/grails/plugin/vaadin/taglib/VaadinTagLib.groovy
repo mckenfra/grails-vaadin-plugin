@@ -1679,8 +1679,9 @@ class VaadinTagLib {
         if (!message) {
             throw new IllegalArgumentException("Method ${namespace}.confirm() must have 'message' attribute")
         }
+        final application = request.vaadinApplication
         return { button ->
-            createConfirmPopup(request.vaadinApplication.mainWindow, message, {
+            createConfirmPopup(application.mainWindow, message, {
                 button.dispatch()
             })
             return false
