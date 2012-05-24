@@ -10,8 +10,8 @@ vaadin {
 	
     autowire = "byName" //how should dependencies be injected? other option is 'byType'
 
-    // The context relative path where you want to access your Vaadin UI. Default is the context root.
-    contextRelativePath = "/"
+    // The context relative path where you want to access your Vaadin UI.
+    contextRelativePath = "/vaadin"
               
     productionMode = false
 
@@ -20,19 +20,15 @@ vaadin {
     // Add paths to any JavaScript libraries that should be added to head element of Vaadin page
     javascriptLibraries = ["","",""]
     
-    // Show popup on authentication error
-    authenticationErrorNotificationEnabled = true
-    // Show popup on communication error
-    communicationErrorNotificationEnabled = true
-    // Show popup on cookies disabled
-    cookiesDisabledNotificationEnabled = true
-    // Show popup on internal error
-    internalErrorNotificationEnabled = true
-    // Show popup on out-of-sync error
-    outOfSyncNotificationEnabled = true
-    // Show popup on session expired.
-    // Note: if false, a new session is created automatically.
-    sessionExpiredNotificationEnabled = true
+    // Controls what happens when for example session expires
+    systemMessages {
+        authenticationErrorNotificationEnabled = true
+        communicationErrorNotificationEnabled = true
+        cookiesDisabledNotificationEnabled = true
+        internalErrorNotificationEnabled = true
+        outOfSyncNotificationEnabled = true
+        sessionExpiredNotificationEnabled = true
+    }
 }
 
 environments {

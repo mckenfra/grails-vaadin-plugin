@@ -24,6 +24,7 @@ import com.vaadin.grails.terminal.gwt.server.GrailsAwareApplicationServlet
 
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.grails.plugin.vaadin.VaadinApi
+import org.grails.plugin.vaadin.VaadinSystemMessages
 import org.grails.plugin.vaadin.gsp.GspResourcePageRenderer
 import org.grails.plugin.vaadin.gsp.GspResourceLocator
 import org.grails.plugin.vaadin.VaadinTransactionManager
@@ -131,8 +132,9 @@ class VaadinGrailsPlugin {
             persistenceInterceptor = ref("persistenceInterceptor")
         }
         vaadinApi(VaadinApi)
-        
-        // Beans for using Vaadin in GSPs
+        vaadinSystemMessages(VaadinSystemMessages, application) { bean ->
+            bean.lazyInit = true
+        }
         vaadinGspRenderer(GspResourcePageRenderer, ref("groovyPagesTemplateEngine")) { bean ->
             bean.lazyInit = true
             groovyPageLocator = groovyPageLocator

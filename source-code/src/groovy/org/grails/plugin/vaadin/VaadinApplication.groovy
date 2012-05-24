@@ -37,50 +37,21 @@ abstract class VaadinApplication extends Application implements HttpServletReque
     static log = LogFactory.getLog(VaadinApplication.class)
     
     /**
-     * For enabling/disabling various system messages based on VaadinConfig settings.
+     * System messages configured from Vaadin config
      */
-    static Application.CustomizedSystemMessages customizedSystemMessages
-    
+    static Application.CustomizedSystemMessages systemMessages
     /**
-     * For enabling/disabling various system messages based on VaadinConfig settings.
+     * Lazy-creation of system messages configured from Vaadin config
      */
-    static Application.CustomizedSystemMessages getSystemMessages() { 
-        if (!customizedSystemMessages) {
-            synchronized(VaadinApplication.class) {
-                if (!customizedSystemMessages) {
-                    def messages = new Application.CustomizedSystemMessages()
-                    def grailsApplication = getBean("grailsApplication")
-                    if (! grailsApplication) {
-                        throw new NullPointerException("Unable to retrieve spring bean 'grailsApplication'")
-                    }
-                    def vaadinConfig = grailsApplication.config.vaadin
-                    if (! vaadinConfig) {
-                        throw new NullPointerException("Vaadin Config not found in grails application!")
-                    }
-                    messages.authenticationErrorNotificationEnabled = vaadinConfig.authenticationErrorNotificationEnabled != false
-                    messages.communicationErrorNotificationEnabled = vaadinConfig.communicationErrorNotificationEnabled != false
-                    messages.cookiesDisabledNotificationEnabled = vaadinConfig.cookiesDisabledNotificationEnabled != false
-                    messages.internalErrorNotificationEnabled = vaadinConfig.internalErrorNotificationEnabled != false
-                    messages.outOfSyncNotificationEnabled = vaadinConfig.outOfSyncNotificationEnabled != false
-                    messages.sessionExpiredNotificationEnabled = vaadinConfig.sessionExpiredNotificationEnabled != false
-                    customizedSystemMessages = messages
-                    
-                    if (log.isDebugEnabled()) {
-                        log.debug """\
-SYSTEM MESSAGES:
-  authenticationErrorNotificationEnabled = ${messages.authenticationErrorNotificationEnabled}
-  communicationErrorNotificationEnabled = ${messages.communicationErrorNotificationEnabled}
-  cookiesDisabledNotificationEnabled = ${messages.cookiesDisabledNotificationEnabled}
-  internalErrorNotificationEnabled = ${messages.internalErrorNotificationEnabled}
-  outOfSyncNotificationEnabled = ${messages.outOfSyncNotificationEnabled}
-  sessionExpiredNotificationEnabled = ${messages.sessionExpiredNotificationEnabled}
-"""
-                    }
+    public static Application.CustomizedSystemMessages getSystemMessages() {
+        if (!systemMessages) {
+            synchronized(VaadinApplication) {
+                if (!systemMessages) {
+                    systemMessages = getBean("vaadinSystemMessages")
                 }
             }
         }
     }
-    
     /**
      * The dispatcher for routing requests
      */
@@ -95,7 +66,7 @@ SYSTEM MESSAGES:
         ApplicationContext context) {
         
         // Log start status
-        log.info "STARTING ${this.class.simpleName}....."
+        log.info "STARTING: ${this.class.simpleName} ${applicationUrl}....."
         
         // Timing
         def stopwatch = Stopwatch.enabled ? new Stopwatch("Startup", this.class) : null
@@ -107,7 +78,7 @@ SYSTEM MESSAGES:
         super.start(applicationUrl, applicationProperties, context)
         
         // Start listener to respond to URI fragment changes
-        // (Note - dispatcher has has just been injected by above api call)
+        // This will dispatch /home/index if no page has been shown yet
         dispatcher.startFragmentListener()
         
         // Log start status
@@ -126,7 +97,7 @@ SYSTEM MESSAGES:
     public void onRequestStart(HttpServletRequest request, HttpServletResponse response) {
         // Log
         if (log.isDebugEnabled()) {
-            log.debug request.requestURL
+            log.debug "${request.requestURL}${request.queryString?'?'+request.queryString:''}"
         }
         
         // Set the application
