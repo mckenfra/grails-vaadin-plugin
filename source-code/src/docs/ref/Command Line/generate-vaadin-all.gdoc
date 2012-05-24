@@ -19,7 +19,7 @@ Generates the Controller and Views for the specified domain class.
 Note that this command is identical to Grails's [generate-all|http://grails.org/doc/latest/ref/Command%20Line/generate-all.html]
 except that it uses different templates - located at @src/templates/vaadin@
 
-The generate-vaadin-all command generates an implementation of CRUD including a controller and views for the given domain class. The argument is optional, but if you don't include it the command will ask you for the name of the domain class to scaffold. So for a domain class @org.bookstore.Book@, this command will generate the controller @grails-app/controllers/org/bookstore/BookVaadinController.groovy@ and its associated views in @grails-app/views/book-vaadin@.
+The generate-vaadin-all command generates an implementation of CRUD including a controller and views for the given domain class. The argument is optional, but if you don't include it the command will ask you for the name of the domain class to scaffold. So for a domain class @org.bookstore.Book@, this command will generate the controller @grails-app/controllers/org/bookstore/BookVaadinController.groovy@ and its associated views in @grails-app/views/vaadin/book@.
 
 Usage:
 {code:java}

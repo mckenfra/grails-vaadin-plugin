@@ -8,12 +8,12 @@ h2. Examples
 
 {code:java}
 // No filename stored
-<v:form itemDataSource="${new BeanItem<Book>(bookInstance)}">
+<v:form bean="${bookInstance}">
   <v:file name="file">File</v:file>
 </v:form>
 
 // Filename stored in separate field
-<v:form itemDataSource="${new BeanItem<Book>(bookInstance)}">
+<v:form bean="${bookInstance}">
   <v:text name="filename" var="filenameField">File Name</v:text>
   <v:file name="file" filename="${bookInstance.filename}"
     onupload="${{evt->filenameField = evt.fileName}}">File</v:file>
@@ -49,13 +49,13 @@ h4. Attributes
 
 h5. Specific
 
-* @name@ (required) The property name of the field
+* @name@ (optional) The property name of the field
 
 * @caption@ (optional) The caption of the field. Overrides the body content.
 
 * @filename@ (optional) The default filename to use for the download link. Note that when a file has just been uploaded, its original filename is displayed. This is lost, however, after the file is saved to the dataSource.
 
-* @onupload@ (optional) Either a [SucceededListener|http://vaadin.com/api/com/vaadin/ui/Upload.SucceededListener.html] or a Closure that expects a [SucceededEvent|http://vaadin.com/api/com/vaadin/ui/Upload.SucceededEvent.html] parameter
+* @onupload@ (optional) Either a [SucceededListener|http://vaadin.com/api/com/vaadin/ui/Upload.SucceededListener.html] or a Closure that takes a [SucceededEvent|http://vaadin.com/api/com/vaadin/ui/Upload.SucceededEvent.html] parameter
 
 h5. General
 

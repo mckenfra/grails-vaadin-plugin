@@ -21,7 +21,7 @@ the controller name at the start of the browser *fragment*, rather than in the U
 http://localhost:8080/grailsapp/book/list
 
 // Vaadin Controller
-http://localhost:8080/grailsapp/vaadinapp#book/list
+http://localhost:8080/grailsapp/vaadin#book/list
 {code}
 
 h3. Controller API

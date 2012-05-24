@@ -29,7 +29,7 @@ class HelloVaadinController {
 
 h4. 3. Create the View
 
-Create file @grails-app/views/hello-vaadin/greetings.gsp@ with the following contents:
+Create file @grails-app/views/vaadin/hello/greetings.gsp@ with the following contents:
 
 {code}
 <div>
@@ -40,7 +40,7 @@ Create file @grails-app/views/hello-vaadin/greetings.gsp@ with the following con
 h4. 4. Run the App
 
 Finally, run the application using @grails run-app@ and then browse to
-@http://localhost:8080/myapp#hello/greetings@. You should see the
+@http://localhost:8080/myapp/vaadin#hello/greetings@. You should see the
 "Hello World!" message displayed.
 
 (Note that you will need to replace @'myapp'@ in the above URL with the name of your
@@ -49,10 +49,10 @@ grails project.)
 h4. 5. Use the Grails Theme
 
 Let's improve the appearance of our new page. Change the text in file
-@grails-app/views/hello-vaadin/greetings.gsp@ to the following:
+@grails-app/views/vaadin/hello/greetings.gsp@ to the following:
 
 {code}
-<v:layout name="vaadin">
+<v:layout name="main">
   <v:label location="body">Hello world!</v:label>
 </v:layout>
 {code}
@@ -61,7 +61,7 @@ Now refresh your browser page - you should see your "Hello World!" message again
 but this time within the familiar Grails theme.
 
 {note}
-Notice we used the special tag @<v:layout name="vaadin">@ in the final step. This
-[layout|Tags] tag looks for a @.gsp@ file with the specified name in @grails-app/views/layouts@.
-Take a look at @vaadin.gsp@ in this directory in your app!
+Notice we used the special tag @<v:layout name="main">@ in the final step. This
+[layout|Tags] tag looks for a @.gsp@ file with the specified name in @grails-app/views/vaadin/layouts@.
+Take a look at @main.gsp@ in this directory in your app!
 {note} 

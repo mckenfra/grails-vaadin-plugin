@@ -8,7 +8,7 @@ h2. Examples
 
 {code:java}
 // Within a form
-<v:form itemDataSource="${new BeanItem<Book>(bookInstance)}">
+<v:form bean="${bookInstance}">
   <v:textArea name="introduction" rows="10" columns="50">Introduction</v:textArea>
 </v:form>
 
@@ -37,7 +37,9 @@ h5. Specific
 
 * @columns@ (optional) The number of columns to display.
 
-* @onTextChange@ (optional) Either a [TextChangeListener|http://vaadin.com/api/com/vaadin/event/FieldEvents.TextChangeListener.html] or a Closure that expects a [TextChangeEvent|http://vaadin.com/api/com/vaadin/event/FieldEvents.TextChangeEvent.html] parameter
+* @onTextChange@ (optional) Either a [TextChangeListener|http://vaadin.com/api/com/vaadin/event/FieldEvents.TextChangeListener.html] or a Closure that takes a [TextChangeEvent|http://vaadin.com/api/com/vaadin/event/FieldEvents.TextChangeEvent.html] parameter.
+
+* @onValueChange@ (optional) Either a [ValueChangeListener|http://vaadin.com/api/com/vaadin/data/Property.ValueChangeListener.html] or a Closure that takes a [ValueChangeEvent|http://vaadin.com/api/com/vaadin/data/Property.ValueChangeEvent.html] parameter.
 
 h5. General
 

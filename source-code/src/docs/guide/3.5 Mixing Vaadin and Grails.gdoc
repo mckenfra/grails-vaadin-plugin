@@ -1,37 +1,3 @@
-The default configuration is for  Vaadin to be served from the root context path, i.e. @'/'@.
-However, this means that Vaadin will prevent any requests from reaching 'regular'
-Grails controllers.
-
-If you want to mix Vaadin controllers with Grails controllers in the same app,
-you should change the @contextRelativePath@ setting in @grails-app/conf/VaadinConfig.groovy@
-to be something other than @'/'@.
-
-h3. Example
-
-The following is set in @grails-app/conf/VaadinConfig.groovy@:
-
-{code:java}
-vaadin {
-  // Other settings
-  // ....
-
-  contextRelativePath = "/myvaadinapp"
-}
-{code}
-
-The application contains a regular Grails controller @grails-app/controllers/BookController.groovy@:
-
-{code:java}
-class BookController {
-  def index() {}
-}
-{code}
-
-The Vaadin application is then accessible via @http://localhost:8080/myapp/myvaadinapp@,
-while the regular Grails controller is accessible via
-@http://localhost:8080/myapp/book@
-
-{note}
 For any Domain class, you can easily create a regular-Grails CRUD interface and a Vaadin
 CRUD interface for it in the same app.
 
@@ -43,5 +9,12 @@ You could then access each as follows:
 
 *Grails*: @http://localhost:8080/myapp/book@
 
-*Vaadin*: @http://localhost:8080/myapp/myvaadinapp#book@ 
+*Vaadin*: @http://localhost:8080/myapp/vaadin#book@ 
+
+{note}
+The default configuration is for Vaadin to be served from path @/vaadin@ - 
+see the @contextRelativePath@ setting in the [Configuration|guide:4. Configuration].
+
+Note that if you change this to @'/'@ it will prevent any requests from reaching 'regular'
+Grails controllers.
 {note}

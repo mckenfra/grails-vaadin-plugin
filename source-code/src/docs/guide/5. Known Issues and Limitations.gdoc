@@ -1,0 +1,16 @@
+The following is a list of known issues/limitations with the Vaadin plugin:
+
+h4. Sitemesh
+
+The Vaadin plugin supports constructing Vaadin interfaces using GSP views. However,
+the GSP views are rendered using a mock HttpRequest/HttpResponse. The implementation
+does not currently support Sitemesh layouts. However, you can easily use the
+[layout|Tags] tag to use another GSP as a layout template.
+
+h4. Vaadin API
+
+Although the Vaadin plugin's support for Controllers is a lot like
+standard Grails, it is a separate implementation. Therefore some of the methods
+that you expect to find in Grails Controllers _may_ not be available in 
+VaadinControllers. However, let us know if anything important is missing, and we'll
+work on getting those added.

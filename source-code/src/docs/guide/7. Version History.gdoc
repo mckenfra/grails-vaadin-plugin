@@ -1,0 +1,15 @@
+{table}
+ *Version* | *Date* | *Description*
+ 1.6.2.1 | 24-May 2012 | *Improvements*:\\- Reduced memory footprint and improved stability + multiple bugfixes.\\- Support configuring SystemMessages\\- Support including additional javascript libraries\\- Support embedding a Vaadin application in a @.gsp@ page
+ 1.6.2 | 3-May 2012 | *Improvements*:\\- Scaffold all property types, e.g. bytearray, locale\\- Many new tags, e.g. include, tabs, accordion, file 
+ 1.6.1 | 15-Apr 2012 | *Improvements*:\\- Create Vaadin GUIs using GSPs & tags\\- Allow regular Grails controllers & Vaadin to be mixed together in one app 
+ 1.6 | 5-Apr 2012 | *Improvements*:\\- Controllers & Views framework, and Grails-style scaffolding\\- Instant setup of a new app with 'no-brainer' install script
+ 1.5.3 | 1-Mar 2012 | Vaadin updated to 6.7.5
+ 1.5 | Earlier | Possible to run it together with Grails 2.0.0.\\Vaadin updated to 6.7.4.\\Config option for custom servlet class name added.\\Automatic redeploy fixed (so you can do changes in\\Vaadin classes without restarting the application).
+ 1.4 | Earlier | Added the possibility to specify your own widgetset to be used by Vaadin servlet.\\This is very useful for using add-ons
+ 1.3 | Earlier | Simple Vaadin upgrade to version 6.5.1
+ 1.2 | Earlier | Created new 'vaadin' artefact type - all Vaadin code should now\\reside in @grails-app/vaadin@\\New features:\\- Seamless integration with Grails Internationalization (i18n)\\- Spring bean lookup from any Vaadin component.
+ 1.1.2 | Earlier | Upgraded to the latest stable Vaadin release (6.3.4), fixing these issues.
+ 1.1.1 | Earlier |  A minor point release that ensures compatibility with Grails 1.1 and higher.\\However, Groovy 1.7 language features (anonymous inner classes, etc)\\are only available in Grails 1.3+ environments\\(Groovy 1.7 is part of Grails 1.3+).
+ 1.1 | Earlier | Latest stable Vaadin release (6.3.3). Ability to specify a path to your Vaadin UI\\other than the root context path,\\e.g. @http://localhost:8080/myapp/vaadinUI@\\Environment-specific configuration support (production, development, etc).\\Custom environments too 'beta', 'uat', etc).
+{table}

@@ -8,7 +8,7 @@ h2. Examples
 
 {code:java}
 // Within a form
-<v:form itemDataSource="${new BeanItem<Book>(bookInstance)}">
+<v:form bean="${bookInstance}">
   <v:customField name="customField" caption="My Field">
 	<ul>
 		<li>Author: ${bookInstance.author}<li>

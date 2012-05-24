@@ -40,5 +40,5 @@ h4. Attributes
 
 * @header@ (optional) The header of the column. Overrides the body content. 
 
-* @generator@ (optional) Must be a Closure that expects a single @item@ parameter, which is a Vaadin [Item|http://vaadin.com/api/com/vaadin/data/Item.html] object, corresponding to the data in the current row. The closure should return a Vaadin Component.
+* @generator@ (optional) Must be a Closure that takes a single @item@ parameter, which is a Vaadin [Item|http://vaadin.com/api/com/vaadin/data/Item.html] object, corresponding to the data in the current row. The closure should return a Vaadin Component.
  

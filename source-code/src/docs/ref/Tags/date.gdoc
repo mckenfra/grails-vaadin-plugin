@@ -7,7 +7,7 @@ Adds a [DateField|http://vaadin.com/api/com/vaadin/ui/DateField.html] to the par
 h2. Examples
 
 {code:java}
-<v:form itemDataSource="${new BeanItem<Book>(bookInstance)}">
+<v:form bean="${bookInstance}">
   <v:date name="datePublished">Date Published</v:date>
 </v:form>
 {code}
@@ -31,7 +31,7 @@ h5. Specific
 
 * @resolution@ (optional) The resolution for the date field. Allowed values: @day@, @hour@, @minute@, @month@, @millisecond@, @second@, @year@
 
-* @onValueChange@ (optional) Either a [ValueChangeListener|http://vaadin.com/api/com/vaadin/data/Property.ValueChangeListener.html] or a Closure that expects a [ValueChangeEvent|http://vaadin.com/api/com/vaadin/data/Property.ValueChangeEvent.html] parameter
+* @onValueChange@ (optional) Either a [ValueChangeListener|http://vaadin.com/api/com/vaadin/data/Property.ValueChangeListener.html] or a Closure that takes a [ValueChangeEvent|http://vaadin.com/api/com/vaadin/data/Property.ValueChangeEvent.html] parameter
 
 {note}
 Remember to set @immediate="true"@ if you want the @ValueChangeEvent@ to fire immediately when the user selects a new value.

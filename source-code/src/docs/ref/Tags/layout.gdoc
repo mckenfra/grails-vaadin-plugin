@@ -6,7 +6,8 @@ Renders the tag's body using another Gsp as a template.
 
 h2. Examples
 
-Take a GSP layout template called @/grails-app/views/layouts/greetinglayout.gsp@ with the following content:  
+Take a GSP layout template called @/grails-app/views/vaadin/layouts/greetinglayout.gsp@
+with the following content:  
 
 {code:java}
 <h1>Greeting<h1>
@@ -51,7 +52,7 @@ h4. Attributes
 
 h5. Specific 
 
-* @name@ (required) The name of the GSP layout template. Must be relative to directory @grails-app/views/layouts@
+* @name@ (required) The name of the GSP layout template. Either an absolute path, or else relative to directory @grails-app/views/vaadin/layouts@
 
 h5. General 
 

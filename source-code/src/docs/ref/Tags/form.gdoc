@@ -7,16 +7,19 @@ Adds a Vaadin [Form|http://vaadin.com/api/com/vaadin/ui/Form.html] component to 
 h2. Examples
 
 {code:java}
-<v:form itemDataSource="${new BeanItem<Book>(bookInstance)}" writeThrough="false">
+<v:form bean="${bookInstance}" writeThrough="false">
   <v:field name="title" readOnly="false" required="true" requiredError="Please enter a Title">
     Title
   </v:field>
-  <v:field name="author" readOnly="false" required="true" requiredError="Please enter an Author">
+  <v:text name="author" readOnly="false" required="true" requiredError="Please enter an Author">
     Author
-  </v:field>
-  <v:field name="description" readOnly="false" required="false"/>
+  </v:text>
+  <v:date name="datePublished" readOnly="false" required="false">
+    Date Published
+  </v:date>
+  <v:textArea name="description" readOnly="false" required="false"/>
     Description
-  </v:field>
+  </v:textArea>
 </v:form>
 {code}
 
@@ -33,7 +36,15 @@ h4. Attributes
 
 h5. Specific
 
+* @bean@ (optional) The bean (e.g. domain instance) to use to provide the underlying form data.
+
 * @itemDataSource@ (optional) The [Item|http://vaadin.com/api/com/vaadin/data/Item.html] object to use to provide the underlying form data.
+
+{note}
+Vaadin's [BeanItem|http://vaadin.com/api/com/vaadin/data/util/BeanItem.html] class cannot handle embedded or nested properties.
+
+This plugin provides a [DomainItem|api:org.grails.plugin.vaadin.data.DomainItem] class that supports embedded and nested properties. The @bean@ attribute automatically uses this class.
+{note}
 
 h5. General
 

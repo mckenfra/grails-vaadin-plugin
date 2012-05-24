@@ -25,7 +25,7 @@ scaffold a CRUD interface:
 grails generate-vaadin-all com.somepackage.Author
 {code}
 
-You can then browse the CRUD interface by visiting @http://localhost:8080/myapp#author@.
+You can then browse the CRUD interface by visiting @http://localhost:8080/myapp/vaadin#author@.
 
 Some of the benefits of Vaadin should now become apparent! Notice the
 lazy-loading, infinitely scrollable table on the list screen. Also, for any Date fields

@@ -46,13 +46,25 @@ Example usages for above controller:
 
 <v:link fragment="#book/list">Book List</v:link>
 
-// ICON IMAGES
+/* ONCLICK */
+
+<v:link onclick="${{it.caption = new Date()}}">Click Here!</v:link>
+
+/** ICON */
 
 // In web-app/images
-<v:link icon="${resource(file:'images/grails_logo.png')}"/>
+<v:link icon="${resource(file:'images/spinner.gif')}">Loading</v:link>
 
 // In web-app/VAADIN/themes/[activetheme]/images
-<v:link icon="images/myvaadinthemeimage.png"/>
+<v:link icon="images/spinner.gif">Loading</v:link>
+
+/** STYLING */
+
+// Use image as button (i.e. no button styling)
+<v:link class="transparent" icon="images/spinner.gif"/>
+
+// Make button look like HTML anchor
+<v:link class="link">Hello World!</v:link>
 {code}
 
 When calling this tag as a GSP method, use the @createLink@ method as follows:
@@ -87,7 +99,7 @@ h5. Specific
 
 * @fragment@ (optional) The fragment to link to, for example @#book/list@
 
-* @onclick@ (optional) Similar to the HTML onclick attribute. Here, the attribute expects a closure that takes a @dispatch@ parameter. If the closure does not return false, the link is followed. If the closure returns false, the link is not followed, but the closure can subsequently cause the link to be followed by executing the dispatch() parameter.
+* @onclick@ (optional) Similar to the HTML onclick attribute. Here, the attribute takes a closure, in which @it@ is the enclosing button component. If the closure returns false, the link is not followed. The closure can trigger the link to be followed later with @it.dispatch()@.
 
 h5. General 
 
@@ -106,6 +118,12 @@ h5. General
 {note}
 See Vaadin [Button|http://vaadin.com/api/com/vaadin/ui/Button.html] API docs for full list of allowed attributes for a button.
 {note}
+
+h4. CSS Styles
+
+* @link@ Style the button like an HTML anchor tag
+
+* @transparent@ Style the button without any border, background or padding.
 
 h2. Special Use Cases
 

@@ -8,7 +8,7 @@ h2. Examples
 
 {code:java}
 // Within a form
-<v:form itemDataSource="${new BeanItem<Book>(bookInstance)}">
+<v:form bean="${bookInstance}">
   <v:checkBox name="bestseller">Bestseller</v:checkBox>
 </v:form>
 
@@ -29,11 +29,11 @@ h4. Attributes
 
 h5. Specific
 
-* @name@ (required) The property name of the field
+* @name@ (optional) The property name of the field
 
 * @caption@ (optional) The caption of the field. Overrides the body content.
 
-* @onValueChange@ (optional) Either a [ValueChangeListener|http://vaadin.com/api/com/vaadin/data/Property.ValueChangeListener.html] or a Closure that expects a [ValueChangeEvent|http://vaadin.com/api/com/vaadin/data/Property.ValueChangeEvent.html] parameter
+* @onValueChange@ (optional) Either a [ValueChangeListener|http://vaadin.com/api/com/vaadin/data/Property.ValueChangeListener.html] or a Closure that takes a [ValueChangeEvent|http://vaadin.com/api/com/vaadin/data/Property.ValueChangeEvent.html] parameter.
 
 {note}
 Remember to set @immediate="true"@ if you want the @ValueChangeEvent@ to fire immediately when the user selects a new value.

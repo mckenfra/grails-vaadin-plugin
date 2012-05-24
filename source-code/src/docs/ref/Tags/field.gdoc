@@ -8,7 +8,7 @@ h2. Examples
 
 {code:java}
 // Within a form
-<v:form itemDataSource="${new BeanItem<Book>(bookInstance)}" writeThrough="false">
+<v:form bean="${bookInstance}" writeThrough="false">
   <v:field name="title" readOnly="false" required="true" requiredError="Please enter a Title">
     Title
   </v:field>
@@ -40,13 +40,13 @@ h4. Attributes
 
 h5. Specific
 
-* @name@ (required) The property name of the field
+* @name@ (optional) The property name of the field
 
 * @caption@ (optional) The caption of the field. Overrides the body content.
 
-* @type@ (optional) The class (or its fully-qualified name) of the Vaadin Component to use for the field.
+* @type@ (optional) The class (or its fully-qualified name) of the Vaadin Component to use for the field, or a recognised short type-name: @date@, @checkBox@, @comboBox@, @listSelect@, @optionGroup@, @password@, @select@, @text@, @textArea@, @upload@, @file@, @customField@ 
 
-* @onValueChange@ (optional) Either a [ValueChangeListener|http://vaadin.com/api/com/vaadin/data/Property.ValueChangeListener.html] or a Closure that expects a [ValueChangeEvent|http://vaadin.com/api/com/vaadin/data/Property.ValueChangeEvent.html] parameter
+* @onValueChange@ (optional) Either a [ValueChangeListener|http://vaadin.com/api/com/vaadin/data/Property.ValueChangeListener.html] or a Closure that takes a [ValueChangeEvent|http://vaadin.com/api/com/vaadin/data/Property.ValueChangeEvent.html] parameter
 
 h5. General
 

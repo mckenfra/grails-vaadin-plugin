@@ -32,7 +32,7 @@ h4. Attributes
 
 h5. Specific 
 
-* @ontab@ (optional) Either a [SelectedTabChangeListener|http://vaadin.com/api/com/vaadin/ui/Accordion.SelectedTabChangeListener.html] or a Closure that expects a [SelectedTabChangeEvent|http://vaadin.com/api/com/vaadin/ui/Accordion.SelectedTabChangeEvent.html] parameter
+* @ontab@ (optional) Either a [SelectedTabChangeListener|http://vaadin.com/api/com/vaadin/ui/Accordion.SelectedTabChangeListener.html] or a Closure that takes a [SelectedTabChangeEvent|http://vaadin.com/api/com/vaadin/ui/Accordion.SelectedTabChangeEvent.html] parameter.
 
 h5. General 
 

@@ -23,7 +23,7 @@ to make it ready for Vaadin. Specifically it does the following:
 * *Install Theme*
 ** The grails theme for Vaadin will be installed in @web-app/VAADIN/themes/main@
 * *Install Base Views*
-** The Vaadin home page view and layout template will be installed to @grails-app/views@
+** The Vaadin home page view and layout template will be installed to @grails-app/views/vaadin@
 * *Update BuildConfig*
 ** The Vaadin Addons repository needs to be added to the project's repositories list. Note the plugin depends on @customfield@ and @easyuploads@ addons. The Vaadin Addons repository is @http://maven.vaadin.com/vaadin-addons@ 
 

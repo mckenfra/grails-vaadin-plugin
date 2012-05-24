@@ -6,7 +6,7 @@ Adds the tag's body to the specified location in the parent container.
 
 h2. Examples
 
-Take a GSP layout template called @/grails-app/views/layouts/greetinglayout.gsp@ with the following content:  
+Take a GSP layout template called @/grails-app/views/vaadin/layouts/greetinglayout.gsp@ with the following content:  
 
 {code:java}
 <h1>Greeting<h1>

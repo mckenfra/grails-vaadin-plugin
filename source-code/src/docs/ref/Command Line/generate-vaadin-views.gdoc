@@ -18,12 +18,12 @@ Generates the Vaadin CRUD GSP views in the @grails-app/views@ dir for the specif
 Note that this command is identical to Grails's [generate-views|http://grails.org/doc/latest/ref/Command%20Line/generate-views.html]
 except that it uses different templates - located at @src/templates/vaadin/scaffolding/*.gsp@.
 
-The @generate-vaadin-views@ command generates just the GSP views that implement CRUD for the given domain class. The argument is optional, but if you don't include it the command will ask you for the name of the domain class to scaffold. So for a domain class @org.bookstore.Book@, the command will generate the appropriate 'list', 'show', 'create' and 'edit' views in @grails-app/views/book-vaadin@.
+The @generate-vaadin-views@ command generates just the GSP views that implement CRUD for the given domain class. The argument is optional, but if you don't include it the command will ask you for the name of the domain class to scaffold. So for a domain class @org.bookstore.Book@, the command will generate the appropriate 'list', 'show', 'create' and 'edit' views in @grails-app/views/vaadin/book@.
 
 {note}
-Note that unlike the Grails's @generate-views@ command, an additional @-vaadin@ suffix is added
-to the 'domain' directory name. For example, the views for the @Book@ domain will be created in
-@grails-app/views/book-vaadin@.
+Note that unlike the Grails's @generate-views@ command, an additional @/vaadin@ prefix is prepended
+before the 'domain' directory name. For example, the views for the @Book@ domain will be created in
+@grails-app/views/vaadin/book@.
 
 The benefit is that you can generate regular Grails views
 and Vaadin views in the same app.

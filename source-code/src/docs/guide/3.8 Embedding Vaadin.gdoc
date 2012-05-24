@@ -1,0 +1,9 @@
+The plugin provides the [create-vaadin-embedded|Command Line] command which allows you
+to easily [embed|https://vaadin.com/book/-/page/application.embedding.html]
+your Vaadin application in a Grails page.
+
+The benefit of this approach is that your Vaadin Application is then hosted inside
+a @<div>@ in a regular Grails view. You can then customize the 'host' view like any
+other Grails view - e.g use Sitemesh, or include other javascript and CSS resources
+using the @<r:resource>@ tag. The Vaadin Application then just becomes one section of
+the page.
