@@ -1,7 +1,10 @@
 package org.grails.plugin.vaadin
 
+import grails.util.GrailsNameUtils;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory
+import org.codehaus.groovy.grails.commons.GrailsClass;
 import org.codehaus.groovy.grails.web.util.TypeConvertingMap;
 import org.grails.plugin.vaadin.utils.Utils;
 
@@ -57,7 +60,7 @@ class VaadinRequest {
     /**
      * For debugging, a unique id for this instance
      */
-    protected cid
+    protected uid
     /**
      * Vaadin Application for this request
      */
@@ -67,7 +70,7 @@ class VaadinRequest {
      */
     String fragment
 
-    protected Object controller
+    protected String controllerName // May be set as a controller class or instance
     protected String action
     protected Object view
     protected boolean viewIsName = true
@@ -95,7 +98,28 @@ class VaadinRequest {
     /**
      * The requested controller - for example 'book'
      */
-    public String getController() { this.controller?.toString() }
+    public String getController() { this.controllerName }
+    /**
+     * The requested controller - for example 'book'
+     */
+    public void setController(Object controller) {
+        if (controller == null) {
+            this.controllerName = null
+        } else if (controller instanceof GrailsClass) {
+            this.controllerName = controller.logicalPropertyName - "Vaadin"
+        } else {
+            Class clazz = controller?.class == Class ? controller : controller?.class
+            
+            // Get the logical property name of the controller class or instance
+            if (clazz?.name?.endsWith("VaadinController")) {
+                this.controllerName = GrailsNameUtils.getLogicalName(clazz, "VaadinController")
+                
+            // Not a VaadinController - just convert to a string
+            } else {
+                this.controllerName = controller?.toString()
+            }
+        }
+    }
     /**
      * The requested action - for example 'show'
      */
@@ -164,10 +188,10 @@ class VaadinRequest {
         this.properties = props
         this.type = type
         
-        def timestamp = new Date().time
-        cid = { timestamp }
+        // For debugging
+        uid = new Date().time
         if (log.isDebugEnabled()) {
-            log.debug "INIT: ${cid()}"
+            log.debug "INIT: ${uid}"
         }
     }
 
@@ -186,7 +210,7 @@ class VaadinRequest {
             throw new IllegalArgumentException("Invalid redirect args ${args}")
         }
         if (log.isDebugEnabled()) {
-            log.debug "REDIRECT-${cid()}: ${args} >> ${this.properties}"
+            log.debug "REDIRECT-${uid}: ${args} >> ${this.properties}"
         }
         this.controller = args.controller ?: this.controller
         this.action = args.action ?: this.action
@@ -267,14 +291,19 @@ class VaadinRequest {
      * @params props The request properties
      * @return The URI fragment corresponding to this 'request'
      */
-    protected static String toFragment(Map props) {
-        def useInlineId = (props?.id || props?.id == "0") && props?.action != "index"
-        def paramsWithoutId = props?.params?.findAll { k,v-> ! (useInlineId && k == "id") && k != "instance" }
-        def hasParams = paramsWithoutId?.size()
-        return "${props?.controller}" +
-            (props?.action == "index" ? "" : "/${props?.action}") +
-            (useInlineId ? "/${props?.id}" : "") +
-            (!hasParams ? "" : "?" + paramsWithoutId.entrySet().collect { "${it.key}=${it.value}" }.join("&"))
+    static String toFragment(Map props) {
+        String result = ""
+        if (props) {
+            def id = props.params?.id
+            def useInlineId = (id || id == "0") && props.action != "index"
+            def paramsWithoutId = props.params?.findAll { k,v-> ! (useInlineId && k == "id") && k != "instance" }
+            def hasParams = paramsWithoutId?.size()
+            result = "${props.controller}" +
+                (props.action == "index" ? "" : "/${props.action}") +
+                (useInlineId ? "/${id}" : "") +
+                (!hasParams ? "" : "?" + paramsWithoutId.entrySet().collect { "${it.key}=${it.value}" }.join("&"))
+        }
+        return result
     }
     
     /**
@@ -282,7 +311,7 @@ class VaadinRequest {
      * 
      * @param fragment The URI fragment to convert into request props
      */
-    protected static Map fromFragment(String fragment) {
+    static Map fromFragment(String fragment) {
         def result = [params:[:]]
         if (fragment) {
             def m = fragment =~ $/#?/?(\w+)(?:/(\w+)(?:/(\d+))?)?(?:\?(.*))?/$
@@ -305,14 +334,14 @@ class VaadinRequest {
      * Returns null if the view is a Gsp content string, or a Vaadin Component.
      * <p>
      * Note that if the view name starts with "/" then it is resolved
-     * using the root views directory. Otherwise "/{controllerName}-vaadin/"
+     * using the root views directory. Otherwise "/vaadin/{controllerName}/"
      * is prepended to the name.
      * 
      * @return Uri of view, or null if the view is a Gsp content string, or a Vaadin Component.
      */
     public String getViewFullName() {
         if (this.viewIsName) {
-            return this.view?.startsWith('/') ? this.view : "/${controller}-vaadin/${view}"
+            return this.view?.startsWith('/') ? this.view : "/vaadin/${controller}/${view}"
         } else {
             return null
         }
@@ -328,34 +357,23 @@ class VaadinRequest {
      * the same as the 'controller' of the current active request, if it is not
      * explicitly overridden in the request parameters.
      * 
-     * @param activeRequest The current active request
-     * @param defaults The default parameters, if any required params are missing
+     * @param activeRequest The current active request (if any)
+     * @param currentController The default controller to use if neither this nor the active request have one
+     * @param defaultPage The default page to use if no controller is found in this request or the active request
      */
-    protected void startRequest(VaadinRequest activeRequest, Map defaults) {
+    protected void startRequest(VaadinRequest activeRequest, String currentController, String defaultPage) {
         // Ensure we have a controller
-        if (! this.controller) { this.controller = activeRequest.controller ?: defaults?.controller }
+        if (! this.controller) { this.controller = activeRequest?.controller ?: currentController  }
         if (! this.controller) {
-            throw new IllegalArgumentException("No controller specified for request ${this}")
+            this.properties = fromFragment(defaultPage)
         }
-        
-        // Convert controller to its logical name if necessary
-        if (this.controller.metaClass.getMetaMethod("getVaadinClass")) {
-            this.controller = this.controller.metaClass.getMetaMethod("getVaadinClass").invoke(this.controller).logicalPropertyName
-        } else {
-            this.controller = this.controller.toString()
-        }
-        
-        // Ensure we have an action (note we do not inherit action from active request)
-        this.action = this.action ?: defaults?.action
-        if (! this.action) {
-            throw new IllegalArgumentException("No action specified for request ${this}")
-        } 
         
         // Set all other props
+        this.action = this.action ?: "index"
         this.view = this.action
         this.viewIsName = true
         this.params = this.params ?: [:]
-        this.model = [:]
+        this.model = [:] // Reset model between redirects
         this.flash = this.flash ?: [:] // Maintain flash between redirects
         this.dispatched = false
         this.redirected = false
@@ -434,8 +452,6 @@ class VaadinRequest {
         if (props.flash) {
             props.flash = Utils.toString(props.flash)
         }
-        return "${cid()} ${props}"
+        return "${uid} ${props}"
     }
 }
-
-

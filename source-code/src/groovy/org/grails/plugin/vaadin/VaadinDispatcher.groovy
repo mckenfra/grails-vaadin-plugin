@@ -37,17 +37,25 @@ class VaadinDispatcher implements Serializable {
     def log = LogFactory.getLog(this.class)
     
     /**
-     * The default request to use if no controller and action specified
-     */
-    static Map defaultRequest = [controller:"home", action:"index"]
-    /**
      * Vaadin Application for this dispatcher
      */
     Application vaadinApplication
     /**
+     * The default page to use if no controller and action specified
+     */
+    static String defaultPage = "home"
+    /**
+     * The default controller to use if no controller specified
+     */
+    static String defaultController = "home"
+    /**
      * Most recent browser page
      */
-    protected String page
+    protected String currentPage
+    /**
+     * Controller of most recent browser page
+     */
+    protected String currentController
     /**
      * If true, the dispatcher is stopped and will not send requests to controllers
      */
@@ -121,11 +129,11 @@ class VaadinDispatcher implements Serializable {
             });
             this.fragmentListenerStarted = true
         }
-        if (!page && !stopped) {
+        if (!currentPage && !stopped) {
             if (log.isDebugEnabled()) {
-                log.debug("DEFAULT: Home controller")
+                log.debug("DEFAULT: ${defaultPage}")
             }
-            this.dispatch([:]) // Goes home
+            this.dispatchWithFragment(defaultPage)
         }
     }
 
@@ -143,11 +151,7 @@ class VaadinDispatcher implements Serializable {
      * Dispatches the active page request again, or goes to home page if no active page
      */
     def refresh() {
-        if (page) {
-            dispatchWithFragment(page)
-        } else {
-            dispatch([:])
-        }
+        dispatchWithFragment(currentPage ?: defaultPage)
     }
     
     /**
@@ -178,21 +182,14 @@ class VaadinDispatcher implements Serializable {
      */
     protected dispatch(VaadinRequest request) {
         // Execute the request to build the view component
-        Component newView = this.request(request)
+        Component newView = this.request(request, true)
         
         // Update page request
-        this.page = request.fragment
+        this.currentPage = request.fragment
+        this.currentController = request.controller
         
         // Update browser
         getOrCreateFragmentUtility().setFragment(request.fragment, false)
-        
-        // Attach Gsp to Window
-        def oldView = vaadinApplication.mainWindow.componentIterator.find { ! (it instanceof UriFragmentUtility) }
-        if (oldView) {
-            vaadinApplication.mainWindow.replaceComponent(oldView, newView)
-        } else {
-            vaadinApplication.mainWindow.addComponent(newView)
-        }
     }
 
     /**
@@ -210,8 +207,9 @@ class VaadinDispatcher implements Serializable {
      * view Vaadin Component.
      * 
      * @param request The 'request' containing e.g. the 'controller' etc.
+     * @param attach If true, the component will be attached to the application's mainWindow before being returned
      */
-    protected Component request(VaadinRequest request) {
+    protected Component request(VaadinRequest request, boolean attach = false) {
         Component result
         
         // Get the transaction manager for wrapping the request in a transaction
@@ -233,7 +231,7 @@ class VaadinDispatcher implements Serializable {
             }
             
             // Execute the controller and view in a transaction
-            result = vaadinTransactionManager.wrapInTransaction({executeRequest(request, grailsApplication)})
+            result = vaadinTransactionManager.wrapInTransaction({executeRequest(request, grailsApplication, attach)})
             
             // Quit if we're not redirecting
             if(!request.redirected) break
@@ -251,14 +249,14 @@ class VaadinDispatcher implements Serializable {
      * 
      * @param request The request to execute
      * @param grailsApplication The grailsApplication that holds the controllers
+     * @param attach If true, the component will be attached to the application's mainWindow before being returned
      */
-    protected Component executeRequest(VaadinRequest request, GrailsApplication grailsApplication) {
+    protected Component executeRequest(VaadinRequest request, GrailsApplication grailsApplication, boolean attach = false) {
         // Returns generated view, or null if redirected
         Component view
         
         // Initialise request based on active request, clear model
-        VaadinRequest activeRequest = VaadinRequestContextHolder.requestAttributes ?: new VaadinRequest(vaadinApplication, page)
-        request.startRequest(activeRequest, defaultRequest)
+        request.startRequest(VaadinRequestContextHolder.requestAttributes, currentController ?: defaultController, defaultPage)
 
         // Log
         if (log.isDebugEnabled()) {
@@ -309,6 +307,16 @@ class VaadinDispatcher implements Serializable {
                     view = request.view
                 } else {
                     view = new GspLayout(vaadinApplication, {"${request.view}"}, request.type == VaadinRequest.Type.PAGE)
+                }
+                
+                // Attach if necessary
+                if (attach) {
+                    def oldView = vaadinApplication.mainWindow.componentIterator.find { ! (it instanceof UriFragmentUtility) }
+                    if (oldView) {
+                        vaadinApplication.mainWindow.replaceComponent(oldView, view)
+                    } else {
+                        vaadinApplication.mainWindow.addComponent(view)
+                    }
                 }
             }
         } finally {
