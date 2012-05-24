@@ -11,6 +11,6 @@ package org.grails.plugin.vaadin
  */
 class HomeVaadinController {
     def index() {
-        render view:"/vaadin"
+        render view:"/vaadin/index"
     }
 }

@@ -1,4 +1,4 @@
-<v:layout name="vaadin">
+<v:layout name="main">
 <v:location name="body">
 	<style type="text/css" media="screen">
 		#status {
@@ -108,7 +108,7 @@
 			<ul>
 				<g:each var="c" in="${grailsApplication.controllerClasses.sort { it.fullName } }">
 					<li class="controller">
-					<g:if test="${c.fullName.endsWith('VaadinController')}">
+					<g:if test="${c.logicalPropertyName.endsWith('Vaadin')}">
 						<v:link controller="${c}" class="link">${c.fullName}</v:link>
 					</g:if>
 					<g:else>

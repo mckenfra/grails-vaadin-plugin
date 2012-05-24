@@ -25,7 +25,7 @@ class GspTemplateLayout extends CustomLayout {
      * The layout name or URI of the Gsp to use as layout.
      * <p>
      * If starts with '/' then is resolved relative to 'views' dir. Otherwise,
-     * is resolved relative to 'views/layouts'
+     * is resolved relative to 'views/vaadin/layouts'
      */
     String name
 
@@ -116,6 +116,6 @@ class GspTemplateLayout extends CustomLayout {
      * is resolved relative to 'views/layouts'
      */
     protected String toLayoutName(String name) {
-        return name?.startsWith('/') ? name : "/layouts/${name}"
+        return name?.startsWith('/') ? name : "/vaadin/layouts/${name}"
     }
 }

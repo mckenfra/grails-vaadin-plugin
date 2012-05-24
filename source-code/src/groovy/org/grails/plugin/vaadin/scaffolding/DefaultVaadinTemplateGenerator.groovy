@@ -86,13 +86,13 @@ class DefaultVaadinTemplateGenerator extends DefaultGrailsTemplateGenerator {
     }
 
     /**
-     * Copied from superclass, as we need to add '-vaadin' to the output view directory
+     * Copied from superclass, as we need to prepend '/vaadin/' to the output view directory
      */
     @Override
     void generateViews(GrailsDomainClass domainClass, String destdir) {
         Assert.hasText destdir, "Argument [destdir] not specified"
 
-        def viewsDir = new File("${destdir}/grails-app/views/${domainClass.propertyName}-vaadin")
+        def viewsDir = new File("${destdir}/grails-app/views/vaadin/${domainClass.propertyName}")
         if (!viewsDir.exists()) {
             viewsDir.mkdirs()
         }
