@@ -69,9 +69,10 @@ public class VaadinArtefactHandler extends ArtefactHandlerAdapter {
         // packages start with 'com.vaadin', so
         // any UI subclasses would be discovered).
         Class<?> testClass = clazz;
-        boolean result = testClass.getName().endsWith(VaadinArtefactHandler.VAADIN_CONTROLLER_DISCOVERY_TOKEN);
+        boolean result = testClass.getSimpleName().endsWith(VAADIN_CONTROLLER_DISCOVERY_TOKEN) &&
+            !testClass.getSimpleName().equals(VAADIN_CONTROLLER_DISCOVERY_TOKEN);
         while (!result && (testClass != null) && !testClass.equals(GroovyObject.class) && !testClass.equals(Object.class)) {
-            if (testClass.getName().contains(VaadinArtefactHandler.VAADIN_COMPONENT_DISCOVERY_TOKEN)) {
+            if (testClass.getName().contains(VAADIN_COMPONENT_DISCOVERY_TOKEN)) {
                 result = true;
                 break;
             }
