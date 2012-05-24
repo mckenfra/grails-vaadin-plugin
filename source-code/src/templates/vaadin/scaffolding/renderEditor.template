@@ -100,12 +100,21 @@
 
     def renderManyToOne() {
         if (property.association) {
-            def attrs = [:]
-            attrs.itemEquals = "id"
-            attrs.from = "\${${property.type.name}.list()}"
-            attrs."class" = "many-to-one"
-            addNoSelection(attrs)
-            renderEditor("select", attrs)
+            if (!readOnly) {
+                def attrs = [:]
+                attrs.itemEquals = "id"
+                attrs.from = "\${${property.type.name}.list()}"
+                attrs."class" = "many-to-one"
+                addNoSelection(attrs)
+                renderEditor("select", attrs)
+            } else {
+                out << """\
+					<g:if test="\${${fullDomainInstanceName}?.${property.name}}">
+					<v:customField name="${fullPropertyName}" caption="\${message(code:'${domainClass.propertyName}.${fullPropertyName}.label', default:'${property.naturalName}')}">
+						<v:link class="link" controller="${property.referencedDomainClass.propertyName}" action="show" id="\${${fullDomainInstanceName}?.${property.name}.id}">\${${fullDomainInstanceName}?.${property.name}?.encodeAsHTML()}</v:link>
+					</v:customField>
+					</g:if>"""
+            }
         }
     }
 
