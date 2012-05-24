@@ -344,3 +344,18 @@ a.skip {
 	position: absolute;
 	left: -9999px;
 }
+.v-button.transparent, .v-button.transparent .v-icon {
+	padding:0;
+	border:0;
+	margin:0;
+}
+.v-button.transparent .v-button-wrap {
+	background: transparent none;
+	background-position:0 0;
+	border:0;
+	margin:0;
+	padding:0;
+	display:inline;
+	-webkit-box-shadow:none;
+	-moz-box-shadow:none;
+}
