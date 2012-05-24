@@ -21,12 +21,18 @@ class VaadinTransactionManager {
      * @return The result of executing the closure
      */
     def wrapInTransaction(Closure wrapped) {
-        persistenceInterceptor.init()
-        try {
+        // Wrap in transaction
+        if (!persistenceInterceptor.open) {
+            persistenceInterceptor.init()
+            try {
+                return wrapped()
+            } finally {
+                persistenceInterceptor.flush()
+                persistenceInterceptor.destroy()
+            }
+        // Already in a transaction - just execute
+        } else {
             return wrapped()
-        } finally {
-            persistenceInterceptor.flush()
-            persistenceInterceptor.destroy()
         }
     }
 }

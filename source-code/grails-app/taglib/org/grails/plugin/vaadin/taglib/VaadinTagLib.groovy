@@ -21,6 +21,8 @@ import org.grails.plugin.vaadin.ui.GrailsButton;
 import org.grails.plugin.vaadin.utils.ByteArrayPropertyConverter;
 import org.grails.plugin.vaadin.utils.CalendarPropertyConverter;
 import org.grails.plugin.vaadin.utils.DefaultValuePropertyConverter;
+import org.grails.plugin.vaadin.utils.DomainProxy;
+import org.grails.plugin.vaadin.utils.DomainProxyPropertyConverter;
 import org.grails.plugin.vaadin.utils.PropertyConverter;
 import org.grails.plugin.vaadin.utils.Utils;
 
@@ -32,7 +34,6 @@ import com.vaadin.data.Property.ReadOnlyStatusChangeListener;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.AbstractBeanContainer.BeanIdResolver;
-import com.vaadin.data.util.AbstractBeanContainer.PropertyBasedBeanIdResolver;
 import com.vaadin.data.util.BeanContainer;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
@@ -868,7 +869,7 @@ class VaadinTagLib {
         if (textChange) { field.addListener(toTextChangeListener(textChange)) }
         if (valueChange) { field.addListener(toValueChangeListener(valueChange)) }
         if (readOnlyStatusChange) { field.addListener(toReadOnlyStatusChangeListener(readOnlyStatusChange)) }
-        if (defaultValue != null) { field.propertyDataSource = new DefaultValuePropertyConverter(defaultValue) }
+        if (defaultValue != null) { field.propertyDataSource = new DefaultValuePropertyConverter(field.propertyDataSource, defaultValue) }
 
         // Remaining props
         defaultConfigurer(props, field)
@@ -891,7 +892,7 @@ class VaadinTagLib {
      */
     protected Closure dateConfigurer = { Map props, DateField date ->
         // Allow calendar properties to be used with DateField
-        date.propertyDataSource = new CalendarPropertyConverter()
+        date.propertyDataSource = new CalendarPropertyConverter(date.propertyDataSource)
 
         // Remaining props
         fieldConfigurer(props, date)
@@ -904,43 +905,44 @@ class VaadinTagLib {
     protected Closure selectConfigurer = { Map props, AbstractSelect select ->
         // Remove specific properties
         def from = Utils.removeCaseInsensitive(props, 'from')
-        def keys = Utils.removeCaseInsensitive(props, 'keys')
-        def optionKey = Utils.removeCaseInsensitive(props, 'optionKey')
-        def optionValue = Utils.removeCaseInsensitive(props, 'optionValue')
-        def optionIcon = Utils.removeCaseInsensitive(props, 'optionIcon')
+        def itemIds = Utils.removeCaseInsensitive(props, 'itemIds')
+        def itemId = Utils.removeCaseInsensitive(props, 'itemId')
+        def itemCaption = Utils.removeCaseInsensitive(props, 'itemCaption')
+        def itemCaptionMessagePrefix = Utils.removeCaseInsensitive(props, 'itemCaptionMessagePrefix')
+        def itemIcon = Utils.removeCaseInsensitive(props, 'itemIcon')
+        def itemEquals = Utils.removeCaseInsensitive(props, 'itemEquals')
         def noSelection = Utils.removeCaseInsensitive(props, 'noSelection')
-        def valueMessagePrefix = Utils.removeCaseInsensitive(props, 'valueMessagePrefix')
         def filteringMode = Utils.removeCaseInsensitive(props, 'filteringMode')
         def rows = Utils.removeCaseInsensitive(props, 'rows')
         def columns = Utils.removeCaseInsensitive(props, 'columns')
         
         // Process specific properties
         if (filteringMode) { select.filteringMode = toFilteringMode(filteringMode) }
-        if (from) { select.containerDataSource = toContainer(from, keys, optionKey, noSelection) }
+        if (itemEquals) { select.propertyDataSource = new DomainProxyPropertyConverter(select.propertyDataSource, itemEquals.toString()) }
+        if (from) { select.containerDataSource = toContainer(from, itemIds, itemId, itemEquals, noSelection) }
         if (noSelection != null) {
             // Use first item as noSelection
-            def itemId = select.itemIds?.iterator()?.next()
-            if (itemId != null) {
+            def id = select.itemIds?.iterator()?.next()
+            if (id != null) {
                 select.itemCaptionMode = AbstractSelect.ITEM_CAPTION_MODE_EXPLICIT_DEFAULTS_ID
-                select.nullSelectionItemId = itemId
+                select.nullSelectionItemId = id
                 select.nullSelectionAllowed = true
-                select.setItemCaption(itemId, noSelection)
+                select.setItemCaption(id, noSelection)
             }
         }
-        if (optionValue || valueMessagePrefix) {
-            select.itemCaptionMode = AbstractSelect.ITEM_CAPTION_MODE_EXPLICIT_DEFAULTS_ID
+        // Always expicitly set the captions, to avoid no-hibernate-session errors on rendering
+        select.itemCaptionMode = AbstractSelect.ITEM_CAPTION_MODE_EXPLICIT_DEFAULTS_ID
+        select.itemIds.each { id ->
+            if (id != select.nullSelectionItemId) {
+                def item = select.getItem(id)
+                if (item) { select.setItemCaption(id, toItemCaption(item, itemCaption, itemCaptionMessagePrefix)) }
+            }
+        }
+        if (itemIcon) {
             select.itemIds.each {
                 if (it != select.nullSelectionItemId) {
                     def item = select.getItem(it)
-                    if (item) { select.setItemCaption(it, toItemCaption(item, optionValue, valueMessagePrefix)) }
-                }
-            }
-        }
-        if (optionIcon) {
-            select.itemIds.each {
-                if (it != select.nullSelectionItemId) {
-                    def item = select.getItem(it)
-                    if (item) { select.setItemIcon(it, toItemIcon(item, optionIcon)) }
+                    if (item) { select.setItemIcon(it, toItemIcon(item, itemIcon)) }
                 }
             }
         }
@@ -961,7 +963,7 @@ class VaadinTagLib {
         props.nullSelectionAllowed = Utils.removeCaseInsensitive(props, 'nullSelectionAllowed') ?: false
         props.filteringMode = Utils.removeCaseInsensitive(props, 'filteringMode') ?: "contains"
         def date = new Date()
-        props.optionValue = Utils.removeCaseInsensitive(props, 'optionValue') ?: {
+        props.itemCaption = Utils.removeCaseInsensitive(props, 'itemCaption') ?: {
             def shortName = it.getDisplayName(it.inDaylightTime(date), TimeZone.SHORT)
             def longName = it.getDisplayName(it.inDaylightTime(date), TimeZone.LONG)
 
@@ -985,7 +987,7 @@ class VaadinTagLib {
         props.from = toLocales(Utils.removeCaseInsensitive(props, 'from') ?: vaadinTagDataService.defaultLocales)
         props.default = toLocale(Utils.removeCaseInsensitive(props, 'default') ?: RCU.getLocale(request))
         props.nullSelectionAllowed = Utils.removeCaseInsensitive(props, 'nullSelectionAllowed') ?: false
-        props.optionValue = Utils.removeCaseInsensitive(props, 'optionValue') ?: 'displayName'
+        props.itemCaption = Utils.removeCaseInsensitive(props, 'itemCaption') ?: 'displayName'
 
         // Configure as select
         selectConfigurer(props, select)
@@ -999,7 +1001,7 @@ class VaadinTagLib {
         props.from = toCurrencies(Utils.removeCaseInsensitive(props, 'from') ?: vaadinTagDataService.defaultCurrencies)
         props.default = toCurrency(Utils.removeCaseInsensitive(props, 'default') ?: Currency.getInstance(RCU.getLocale(request)))
         props.nullSelectionAllowed = Utils.removeCaseInsensitive(props, 'nullSelectionAllowed') ?: false
-        props.optionValue = {
+        props.itemCaption = {
             def symbol = vaadinTagDataService.getSymbol(it)
             return symbol ? "${it.currencyCode} - ${symbol}" : it.currencyCode
         }
@@ -1060,7 +1062,7 @@ class VaadinTagLib {
         upload.addStyleName("v-file")
 
         // Ensure field works with Byte[] array types, not just byte[]
-        if (UploadField.FieldType.BYTE_ARRAY) upload.propertyDataSource = new ByteArrayPropertyConverter()
+        if (UploadField.FieldType.BYTE_ARRAY) upload.propertyDataSource = new ByteArrayPropertyConverter(upload.propertyDataSource)
         
         // Remaining props
         fieldConfigurer(props, upload)
@@ -1210,14 +1212,19 @@ class VaadinTagLib {
      *
      * @param value If a collection, converted to a BeanContainer. Otherwise, the String representation is
      * treated as a comma-separated list of values and converted to an IndexedContainer.
-     * @param keys List of keys to use for items in container, overriding both idProperty param, and the default id
-     * @param idProperty If is a closure, is called with bean as parameter to generate key. Otherwise,
+     * @param itemIds List of itemIds to use for items in container, overriding both itemId param, and the default id
+     * @param itemId If is a closure, is called with bean as parameter to generate key. Otherwise,
      * is treated as name of property of each bean that should be used as id.
+     * @param itemEquals The name of a property to use to inject an equals method into each item,
+     * using a proxy.
      * @param noSelection Caption to use for item that will represent a null selection. This will
      * always be added as first item in list.
      */
-    protected Container toContainer(value, keys = null, idProperty = null, noSelection = null) {
+    protected Container toContainer(value, itemIds = null, itemId = null, itemEquals = null, noSelection = null) {
         Container result
+        
+        // Already a container
+        if (value instanceof Container) return value
         
         // Must have a value
         if (value == null) {
@@ -1234,27 +1241,30 @@ class VaadinTagLib {
             // Repeat first item as null item
             if (noSelection != null && value) { result.addItem("null", value[0]) }
 
-            // Add beans to container with explicit list of keys
-            if (keys) {
+            // Add beans to container with explicit list of itemIds
+            if (itemIds) {
                 value.eachWithIndex { v, i ->
-                    result.addItem(keys[i], v)
+                    result.addItem(itemIds[i], v)
                 }
                 
-            // Add beans to container with keys generated from closure
-            } else if (idProperty instanceof Closure) {
+            // Add beans to container with itemIds generated from closure
+            } else if (itemId instanceof Closure) {
                 value.each { v ->
-                    result.addItem(idProperty(v), v)
+                    result.addItem(itemId(v), v)
                 }
                 
             // Add beans to container with specific bean property as id
-            } else if (idProperty) {
-                result.beanIdResolver = new PropertyBasedBeanIdResolver(idProperty.toString())
+            } else if (itemId) {
+                result.beanIdResolver = new BeanIdResolver<Object,Object>() {
+                    public Object getIdForBean(Object bean) { return bean."${itemId}" }
+                }
                 result.addAll(value)
                 
             // Add beans to container with bean as id
             } else {
+                // Add items
                 value.each {
-                     result.addItem(it, it)   
+                    result.addItem(itemEquals ? new DomainProxy(itemEquals.toString()).wrap(it) : it, it)
                 }
             }
             
@@ -1267,20 +1277,20 @@ class VaadinTagLib {
     }
     
     /**
-     * Generates a caption for a single item using the optionValue
-     * and valueMessagePrefix params.
+     * Generates a caption for a single item using the itemCaption
+     * and itemCaptionMessagePrefix params.
      *  
      * @param item The item for which the caption will be generated
      * @param value An item property name or closure that accepts the item (or wrapped bean)
      * and returns the caption. If not specified, the item's toString() method is used
      * to generate the caption
-     * @param valueMessagePrefix A value that will be prepended to the generated caption
+     * @param itemCaptionMessagePrefix A value that will be prepended to the generated caption
      * and the result is then used as an message code in a i18n lookup. If this returns null
      * then the original generated caption is returned.
      *   
      * @return The generated item caption 
      */
-    protected String toItemCaption(Item item, value, valueMessagePrefix) {
+    protected String toItemCaption(Item item, value, itemCaptionMessagePrefix) {
         def result = value
         if (value && value instanceof Closure) {
             def param = item instanceof BeanItem ? item.bean : item
@@ -1290,8 +1300,8 @@ class VaadinTagLib {
         } else {
             result = item instanceof BeanItem ? item.bean.toString() : item.toString()
         }
-        if (valueMessagePrefix) {
-            def msgCode = valueMessagePrefix + "." + result
+        if (itemCaptionMessagePrefix) {
+            def msgCode = itemCaptionMessagePrefix + "." + result
             def msg = message(code:msgCode)
             // Not sure why msg sometimes gets wrapped in square brackets...
             if (msg && msg != msgCode && "[${msgCode}]" != msg) { result = msg }
@@ -1311,17 +1321,18 @@ class VaadinTagLib {
      */
     protected Resource toItemIcon(Item item, value) {
         def result = value
-        if (!value instanceof Resource) {
-            def iconName
+        if (! (value instanceof Resource)) {
             if (value instanceof Closure) {
                 def param = item instanceof BeanItem ? item.bean : item
-                iconName = value(param)
+                result = value(param)
             } else if (value) {
-                iconName = item.getItemProperty(value)?.toString()
+                result = item.getItemProperty(value)?.toString()
             } else {
-                iconName = item.toString()
+                result = item.toString()
             }
-            if (iconName) { result = new ThemeResource(iconName) }
+            if (result && ! (result instanceof Resource)) {
+                result = new ThemeResource(result.toString())
+            }
         }
         return result
     }
@@ -1668,9 +1679,9 @@ class VaadinTagLib {
         if (!message) {
             throw new IllegalArgumentException("Method ${namespace}.confirm() must have 'message' attribute")
         }
-        return { dispatch->
+        return { button ->
             createConfirmPopup(request.vaadinApplication.mainWindow, message, {
-                dispatch()
+                button.dispatch()
             })
             return false
         }
@@ -1693,14 +1704,28 @@ class VaadinTagLib {
         if (!form) {
             throw new IllegalArgumentException("Method ${namespace}.commit() must have 'form' attribute")
         }
-        return {dispatch->
+        final application = request.vaadinApplication
+        return {
             try {
-                form.commit()
+                withTransaction(application, {form.commit()})
                 return true
             } catch(err) {
                 return false
             }
         }
+    }
+    
+    /**
+     * Helper method that excutes the specified closure in a persistence transaction.
+     *
+     * @attr toBeExecuted REQUIRED The closure to be executed in a transaction.
+     */
+    Closure withTransaction = { vaadinApplication, toBeExecuted ->
+        final vaadinTransactionManager = vaadinApplication.getBean("vaadinTransactionManager")
+        if (! vaadinTransactionManager) {
+            throw new NullPointerException("Unable to retrieve spring bean 'vaadinTransactionManager'")
+        }
+        return vaadinTransactionManager.wrapInTransaction(toBeExecuted) 
     }
 
     /**

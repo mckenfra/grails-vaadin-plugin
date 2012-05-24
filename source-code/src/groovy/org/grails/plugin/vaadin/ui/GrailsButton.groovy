@@ -85,20 +85,15 @@ class GrailsButton extends Button {
      */
     @Override
     public void attach() {
-        // For following the link
-        final Application application = getApplication()
-        def dispatch = args ?
-            { application.dispatcher.dispatch(args) } :
-            { application.dispatcher.dispatchWithFragment(fragment) }
-        
-        // But we need to catch a cancel
+        // Catch a cancel
+        final thiz = this
         final cancellableClick = {
             try {
-                if (onclick && onclick(dispatch) == false) {
+                if (onclick && onclick(thiz) == false) {
                     // Cancelled
                 } else {
                     // Not cancelled
-                    dispatch()
+                    thiz.dispatch()
                 }
             } finally {
                 this.enabled = true
@@ -108,12 +103,36 @@ class GrailsButton extends Button {
         // Always disable on click
         this.disableOnClick = true
 
+        // Always wrap in a transaction
+        final vaadinTransactionManager = application.getBean("vaadinTransactionManager")
+        if (! vaadinTransactionManager) {
+            throw new NullPointerException("Unable to retrieve spring bean 'vaadinTransactionManager'")
+        }
+
         // Put it all together by adding the full listener
         this.addListener(new Button.ClickListener() {
             public void buttonClick(Button.ClickEvent event) {
-                cancellableClick()
+                vaadinTransactionManager.wrapInTransaction(cancellableClick)
             }
         })
+    }
+    
+    /**
+     * Dispatches the request to the specified controller/action/fragment, without executing
+     * the onclick method.
+     * <p>
+     * If no controller/action/fragment is specified, then this silently does nothing.
+     * <p>
+     * Note that the button must be attached before this method is called.
+     */
+    public void dispatch() {
+        if (args || fragment) {
+            if (! application) {
+                throw new RuntimeException("Cannot dispatch until button is attached")
+            }
+            if (args) application.dispatcher.dispatch(args)
+            else if (fragment) application.dispatcher.dispatchWithFragment(fragment)
+        }
     }
 
     /**
@@ -159,9 +178,9 @@ class GrailsButton extends Button {
     /**
      * Get the onclick closure of the link.
      */
-    Closure getOnclick() { args.onclick }
+    Closure getOnclick() { onclick }
     /**
      * Set the onclick closure of the link.
      */
-    void setOnclick(Closure onclick) { args.onclick = onclick } 
+    void setOnclick(Closure onclick) { this.onclick = onclick } 
 }

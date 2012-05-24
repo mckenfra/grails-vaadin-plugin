@@ -33,10 +33,11 @@
 
     def renderEditor(String tagType = null, Map attrs = [:]) {
         tagType = tagType ?: "field"
+        def name = attrs?.remove('name') ?: fullPropertyName
         String attrsText = attrs ? " " + attrs.findAll {k,v->k&&v!=null}.collect { "${it.key}=\"${it.value}\"" }.join(" ") : ""
         if (!readOnly) {
             out << """\
-					<v:${tagType} name="${fullPropertyName}"${attrsText}
+					<v:${tagType} name="${name}"${attrsText}
 						readOnly="${readOnly}" required="${isRequired()}" requiredError="Please enter a ${property.naturalName}" invalidCommitted="true"
 						componentError="\${${domainInstance}?.errors?.hasFieldErrors('${fullPropertyName}') ? message(error:${domainInstance}?.errors?.getFieldError('${fullPropertyName}'), args:[${domainInstance}]) : null}">
 						<g:message code="${domainClass.propertyName}.${fullPropertyName}.label" default="${property.naturalName}"/>
@@ -44,7 +45,7 @@
         } else {
             out << """\
 					<g:if test="\${${fullDomainInstanceName}?.${property.name}}">
-					<v:${tagType} name="${fullPropertyName}" readOnly="${readOnly}"${attrsText}>
+					<v:${tagType} name="${name}" readOnly="${readOnly}"${attrsText}>
 						<g:message code="${domainClass.propertyName}.${fullPropertyName}.label" default="${property.naturalName}"/>
 					</v:${tagType}>
 					</g:if>"""
@@ -69,7 +70,7 @@
                 tagType = "textArea"
             } else if (cp.inList) {
                 attrs.from = "\${${fullDomainInstanceName}?.constraints?.${property.name}.inList}"
-                attrs.valueMessagePrefix = "${domainClass.propertyName}.${fullPropertyName}"
+                attrs.itemCaptionMessagePrefix = "${domainClass.propertyName}.${fullPropertyName}"
                 addNoSelection(attrs)
                 tagType = "select"
             } else {
@@ -100,6 +101,7 @@
     def renderManyToOne() {
         if (property.association) {
             def attrs = [:]
+            attrs.itemEquals = "id"
             attrs.from = "\${${property.type.name}.list()}"
             attrs."class" = "many-to-one"
             addNoSelection(attrs)
@@ -118,6 +120,7 @@
         if (cls) {
             if (!readOnly && property.isOwningSide()) {
                 def attrs = [:]
+                attrs.itemEquals = "id"
                 attrs.from = "\${${cls.name}.list()}"
                 attrs.multiSelect = true
                 attrs.rows = 5
@@ -125,7 +128,8 @@
                 renderEditor("listSelect", attrs)
             } else {
                 if (readOnly) out << """\
-					<g:if test="\${${fullDomainInstanceName}?.${property.name}}">"""
+					<g:if test="\${${fullDomainInstanceName}?.${property.name}}">
+"""
                 out << """\
 					<v:customField name="${fullPropertyName}" caption="\${message(code:'${domainClass.propertyName}.${fullPropertyName}.label', default:'${property.naturalName}')}">
 						<v:verticalLayout>
@@ -135,6 +139,7 @@
 						</v:verticalLayout>
 					</v:customField>"""
                 if (readOnly) out << """\
+
 					</g:if>"""
             }
         }
@@ -186,7 +191,7 @@
             } else if (cp.inList) {
                 def attrs = [:]
                 attrs.from = "\${${fullDomainInstanceName}?.constraints?.${property.name}.inList}"
-                attrs.valueMessagePrefix = "${domainClass.propertyName}.${fullPropertyName}"
+                attrs.itemCaptionMessagePrefix = "${domainClass.propertyName}.${fullPropertyName}"
                 addNoSelection(attrs)
                 renderEditor("select", attrs)
             } else {
