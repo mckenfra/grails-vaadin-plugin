@@ -34,13 +34,16 @@ function addJsClass(el) {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/3.%20Concepts%20and%20Usage.html"><strong>3</strong><span>Concepts and Usage</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/4.%20Configuration.html"><strong>4</strong><span>Configuration</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Roadmap.html"><strong>5</strong><span>Roadmap</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Known%20Issues%20and%20Limitations.html"><strong>5</strong><span>Known Issues and Limitations</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/6.%20Version%20History.html"><strong>6</strong><span>Version History</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/6.%20Roadmap.html"><strong>6</strong><span>Roadmap</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/7.%20Version%20History.html"><strong>7</strong><span>Version History</span></a>
                     </div>
                     
                 </div>
@@ -70,10 +73,10 @@ function addJsClass(el) {
 
                 <h1>generate-vaadin-views</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Generates Vaadin GSP views for the given domain class<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/><div class="code"><pre>grails generate&#45;vaadin&#45;views
 grails generate&#45;vaadin&#45;views org.bookstore.Book</pre></div><p class="paragraph"/><h2>Description</h2><p class="paragraph"/>Generates the Vaadin CRUD GSP views in the <code>grails-app/views</code> dir for the specified domain class.<p class="paragraph"/>Note that this command is identical to Grails's <a href="http://grails.org/doc/latest/ref/Command%20Line/generate-views.html" target="blank">generate-views</a>
-except that it uses different templates - located at <code>src/templates/vaadin/scaffolding/*.gsp</code>.<p class="paragraph"/>The <code>generate-vaadin-views</code> command generates just the GSP views that implement CRUD for the given domain class. The argument is optional, but if you don't include it the command will ask you for the name of the domain class to scaffold. So for a domain class <code>org.bookstore.Book</code>, the command will generate the appropriate 'list', 'show', 'create' and 'edit' views in <code>grails-app/views/book-vaadin</code>.<p class="paragraph"/><blockquote class="note">
-Note that unlike the Grails's <code>generate-views</code> command, an additional <code>-vaadin</code> suffix is added
-to the 'domain' directory name. For example, the views for the <code>Book</code> domain will be created in
-<code>grails-app/views/book-vaadin</code>.<p class="paragraph"/>The benefit is that you can generate regular Grails views
+except that it uses different templates - located at <code>src/templates/vaadin/scaffolding/*.gsp</code>.<p class="paragraph"/>The <code>generate-vaadin-views</code> command generates just the GSP views that implement CRUD for the given domain class. The argument is optional, but if you don't include it the command will ask you for the name of the domain class to scaffold. So for a domain class <code>org.bookstore.Book</code>, the command will generate the appropriate 'list', 'show', 'create' and 'edit' views in <code>grails-app/views/vaadin/book</code>.<p class="paragraph"/><blockquote class="note">
+Note that unlike the Grails's <code>generate-views</code> command, an additional <code>/vaadin</code> prefix is prepended
+before the 'domain' directory name. For example, the views for the <code>Book</code> domain will be created in
+<code>grails-app/views/vaadin/book</code>.<p class="paragraph"/>The benefit is that you can generate regular Grails views
 and Vaadin views in the same app.
 </blockquote><p class="paragraph"/>Usage:<p class="paragraph"/><div class="code"><pre>grails generate&#45;vaadin&#45;views &#91;domain class name&#93;</pre></div>
 
@@ -93,6 +96,9 @@ and Vaadin views in the same app.
                             
                             
                             <div class="menu-item"><a href="../../ref/Command%20Line/create-vaadin-controller.html">create-vaadin-controller</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/create-vaadin-embedded.html">create-vaadin-embedded</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-all.html">generate-vaadin-all</a>

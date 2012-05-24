@@ -34,13 +34,16 @@ function addJsClass(el) {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/3.%20Concepts%20and%20Usage.html"><strong>3</strong><span>Concepts and Usage</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/4.%20Configuration.html"><strong>4</strong><span>Configuration</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Roadmap.html"><strong>5</strong><span>Roadmap</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Known%20Issues%20and%20Limitations.html"><strong>5</strong><span>Known Issues and Limitations</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/6.%20Version%20History.html"><strong>6</strong><span>Version History</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/6.%20Roadmap.html"><strong>6</strong><span>Roadmap</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/7.%20Version%20History.html"><strong>7</strong><span>Version History</span></a>
                     </div>
                     
                 </div>
@@ -69,7 +72,7 @@ function addJsClass(el) {
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
                 <h1>select</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Adds a <a href="http://vaadin.com/api/com/vaadin/ui/Select.html" target="blank">Select</a> field to the parent container.<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/><div class="code"><pre>// Within a form
-&#60;v:form itemDataSource=<span class="java&#45;quote">"$&#123;<span class="java&#45;keyword">new</span> BeanItem&#60;Zoo&#62;(zooInstance)&#125;"</span>&#62;
+&#60;v:form bean=<span class="java&#45;quote">"$&#123;zooInstance&#125;"</span>&#62;
   &#60;v:select name=<span class="java&#45;quote">"animal"</span> from=<span class="java&#45;quote">"$&#123;&#91;'Lion', 'Tiger', 'Snake'&#93;&#125;"</span>&#62;Animal&#60;/v:select&#62;
 &#60;/v:form&#62;<p class="paragraph"/>// Standalone
 &#60;v:select from=<span class="java&#45;quote">"$&#123;&#91;'Lion', 'Tiger', 'Snake'&#93;&#125;"</span>&#62;My Select Field&#60;/v:select&#62;</pre></div><p class="paragraph"/><h2>Description</h2><p class="paragraph"/>The select tag is a special type of <a href="../../ref/Tags/field.html" class="Tags">field</a> tag, where the field component
@@ -78,11 +81,16 @@ is a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Select.html" target="bl
 <li>Contains the caption for the field</li>
 </ul><p class="paragraph"/><h4>Attributes</h4><p class="paragraph"/><h5>Specific</h5>
 <ul class="star">
-<li><code>name</code> (required) The property name of the field</li>
+<li><code>name</code> (optional) The property name of the field</li>
 <li><code>caption</code> (optional) The caption of the field. Overrides the body content.</li>
-<li><code>from</code> (optional) Either a comma-separated String or a collection of items to set as the containerDataSource for the select.</li>
-<li><code>containerDataSource</code> (optional) A <a href="http://vaadin.com/api/com/vaadin/data/Container.html" target="blank">Container</a> to set as the containerDataSource for the select.</li>
-<li><code>onValueChange</code> (optional) Either a <a href="http://vaadin.com/api/com/vaadin/data/Property.ValueChangeListener.html" target="blank">ValueChangeListener</a> or a Closure that expects a <a href="http://vaadin.com/api/com/vaadin/data/Property.ValueChangeEvent.html" target="blank">ValueChangeEvent</a> parameter</li>
+<li><code>from</code> (optional) The data to use as <a href="https://vaadin.com/api/com/vaadin/ui/AbstractSelect.html#setContainerDataSource(com.vaadin.data.Container)" target="blank">containerDataSource</a>. Either a comma-separated String, a collection of objects or a Vaadin <a href="http://vaadin.com/api/com/vaadin/data/Container.html" target="blank">Container</a>.</li>
+<li><code>itemIds</code> (optional) Override the default itemIds. Either a comma-separated String or a collection of objects.</li>
+<li><code>itemId</code> (optional) Override the default itemId for each item. Either a closure that takes an <a href="http://vaadin.com/api/com/vaadin/data/Item.html" target="blank">Item</a> parameter and returns an id, or the name of a property of the underlying bean.</li>
+<li><code>itemCaption</code> (optional) Override the default itemCaption for each item. Either a closure that takes an <a href="http://vaadin.com/api/com/vaadin/data/Item.html" target="blank">Item</a> parameter and returns a caption, or the name of a property of the underlying bean.</li>
+<li><code>itemCaptionMessagePrefix</code> (optional) Obtain the itemCaption using i18n. Mimics Grails's <a href="http://grails.org/doc/latest/ref/Tags/select.html" target="blank">valueMessagePrefix</a> attribute. The specified value will be prepended (plus a dot <code>'.'</code>) to the itemCaption, and the resulting string will be used for an i18n lookup. If this fails, the itemCaption is left unchanged.</li>
+<li><code>itemIcon</code> (optional) Display an icon for each item. Either a closure that takes an <a href="http://vaadin.com/api/com/vaadin/data/Item.html" target="blank">Item</a> parameter and returns an icon, or the name of a property of the underlying bean.<br/>The resulting value should be a Vaadin <a href="http://vaadin.com/api/com/vaadin/terminal/Resource.html" target="blank">Resource</a>, or a String path to the resource. If the path starts with <code>/</code> or contains <code>://</code>, it is treated as a URL; otherwise, it is treated as a path relative to the directory of the Vaadin application's active theme.</li>
+<li><code>itemEquals</code> (optional) Special case for handling Grails <code>domain</code> objects as item ids. Grails <code>domain</code> classes do not by default implement <code>equals()</code>, therefore cannot be used reliably as property types for Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/AbstractSelect.html" target="blank">Select</a> components. This attribute allows you to specify the property name that uniquely identifies both an item id and the underlying dataSource's value. Typically, you will use <code>itemEquals="id"</code>.</li>
+<li><code>onValueChange</code> (optional) Either a <a href="http://vaadin.com/api/com/vaadin/data/Property.ValueChangeListener.html" target="blank">ValueChangeListener</a> or a Closure that takes a <a href="http://vaadin.com/api/com/vaadin/data/Property.ValueChangeEvent.html" target="blank">ValueChangeEvent</a> parameter.</li>
 </ul><p class="paragraph"/><blockquote class="note">
 Remember to set <code>immediate="true"</code> if you want the <code>ValueChangeEvent</code> to fire immediately when the user selects a new value.
 </blockquote><p class="paragraph"/><h5>General</h5>
@@ -111,6 +119,9 @@ See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Select.html" target="bla
                             
                             
                             <div class="menu-item"><a href="../../ref/Command%20Line/create-vaadin-controller.html">create-vaadin-controller</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/create-vaadin-embedded.html">create-vaadin-embedded</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-all.html">generate-vaadin-all</a>

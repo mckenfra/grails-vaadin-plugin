@@ -33,13 +33,16 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/3.%20Concepts%20and%20Usage.html"><strong>3</strong><span>Concepts and Usage</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/4.%20Configuration.html"><strong>4</strong><span>Configuration</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Roadmap.html"><strong>5</strong><span>Roadmap</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Known%20Issues%20and%20Limitations.html"><strong>5</strong><span>Known Issues and Limitations</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/6.%20Version%20History.html"><strong>6</strong><span>Version History</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/6.%20Roadmap.html"><strong>6</strong><span>Roadmap</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/7.%20Version%20History.html"><strong>7</strong><span>Version History</span></a>
                     </div>
                     
                 </div>
@@ -72,7 +75,7 @@ function addJsClass() {
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
                 
-                    <div class="toc-item next-right"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span> >></a></div>
+                    <div class="toc-item next-right"><a href="../../guide/4.%20Configuration.html"><strong>4</strong><span>Configuration</span> >></a></div>
                 
 
 
@@ -101,7 +104,7 @@ functionality may work as expected in Vaadin controllers. Some key differences t
 of are described in the following sections.<p class="paragraph"/><h3>URIs and Fragments</h3><p class="paragraph"/>As previously discussed, Vaadin Controllers are accessed in the browser by placing
 the controller name at the start of the browser <strong class="bold">fragment</strong>, rather than in the URI. So:<p class="paragraph"/><div class="code"><pre>// Regular Grails Controller
 http://localhost:8080/grailsapp/book/list<p class="paragraph"/>// Vaadin Controller
-http://localhost:8080/grailsapp/vaadinapp&#35;book/list</pre></div><p class="paragraph"/><h3>Controller API</h3><p class="paragraph"/>Note that <a href="http://grails.org/doc/latest/ref/Controllers/render.html" target="blank">render</a>,
+http://localhost:8080/grailsapp/vaadin&#35;book/list</pre></div><p class="paragraph"/><h3>Controller API</h3><p class="paragraph"/>Note that <a href="http://grails.org/doc/latest/ref/Controllers/render.html" target="blank">render</a>,
 <a href="http://grails.org/doc/latest/ref/Controllers/redirect.html" target="blank">redirect</a>,
 <a href="http://grails.org/doc/latest/ref/Controllers/params.html" target="blank">params</a>,
 <a href="http://grails.org/doc/latest/ref/Controllers/flash.html" target="blank">flash</a> are specifically overridden
@@ -132,7 +135,7 @@ into its persistence session before using it. For example:<p class="paragraph"/>
                 
                     <div class="toc-item prev-left"><a href="../../guide/2.%20Installation.html">&lt;&lt; <strong>2</strong><span>Installation</span></a></div>
                 
-                    <div class="toc-item next-right"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span> >></a></div>
+                    <div class="toc-item next-right"><a href="../../guide/4.%20Configuration.html"><strong>4</strong><span>Configuration</span> >></a></div>
                 
                 <div style="clear:both"></div>
             </div>
@@ -149,6 +152,9 @@ into its persistence session before using it. For example:<p class="paragraph"/>
                         
                             
                             <div class="menu-item"><a href="../../ref/Command%20Line/create-vaadin-controller.html">create-vaadin-controller</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/create-vaadin-embedded.html">create-vaadin-embedded</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-all.html">generate-vaadin-all</a>

@@ -2,12 +2,12 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>Vaadin Grails Plugin 1.6.2.1-SNAPSHOT</title>
+    <title>3.8 Embedding Vaadin 1.6.2.1-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link rel="stylesheet" href="../../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
-    <link rel="stylesheet" href="../../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
     <script type="text/javascript">
-function addJsClass(el) {
+function addJsClass() {
     var classes = document.body.className.split(" ");
     classes.push("js");
     document.body.className = classes.join(" ");
@@ -16,14 +16,13 @@ function addJsClass(el) {
 </head>
 
 <body class="body" onload="addJsClass();">
-
 <div id="navigation">
     <ul>
         <li>
             <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
                 <a href="../../guide/index.html" class="button">Table of contents</a>
 
-                <div id="nav-summary-childs">
+                <div id="nav-summary-childs" style="display:none;">
                     
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/1.%20Overview.html"><strong>1</strong><span>Overview</span></a>
                     </div>
@@ -67,42 +66,50 @@ function addJsClass(el) {
 <table id="colset" border="0" cellpadding="0" cellspacing="0">
     <tr>
         <td id="col1">
-            <div id="main" class="reference corner-all">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../../guide/2.%20Installation.html">&lt;&lt; <strong>2</strong><span>Installation</span></a></div>
+                
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
-                <h1>field</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Adds a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/AbstractField.html" target="blank">Field</a> to the parent container.<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/><div class="code"><pre>// Within a form
-&#60;v:form bean=<span class="java&#45;quote">"$&#123;bookInstance&#125;"</span> writeThrough=<span class="java&#45;quote">"<span class="java&#45;keyword">false</span>"</span>&#62;
-  &#60;v:field name=<span class="java&#45;quote">"title"</span> readOnly=<span class="java&#45;quote">"<span class="java&#45;keyword">false</span>"</span> required=<span class="java&#45;quote">"<span class="java&#45;keyword">true</span>"</span> requiredError=<span class="java&#45;quote">"Please enter a Title"</span>&#62;
-    Title
-  &#60;/v:field&#62;
-  &#60;v:field name=<span class="java&#45;quote">"author"</span> readOnly=<span class="java&#45;quote">"<span class="java&#45;keyword">false</span>"</span> required=<span class="java&#45;quote">"<span class="java&#45;keyword">true</span>"</span> requiredError=<span class="java&#45;quote">"Please enter an Author"</span>&#62;
-    Author
-  &#60;/v:field&#62;
-  &#60;v:field name=<span class="java&#45;quote">"description"</span> readOnly=<span class="java&#45;quote">"<span class="java&#45;keyword">false</span>"</span> required=<span class="java&#45;quote">"<span class="java&#45;keyword">false</span>"</span>/&#62;
-    Description
-  &#60;/v:field&#62;
-&#60;/v:form&#62;<p class="paragraph"/>// Standalone
-&#60;v:field&#62;My Field&#60;/v:field&#62;</pre></div><p class="paragraph"/><h2>Description</h2><p class="paragraph"/>A field can be created within a <code>Form</code>, or standalone.<p class="paragraph"/>Unless the <code>type</code> attribute is explicitly specified, the type of component that is created
-for the field is automatically selected based on the type of the underlying property in the
-form data source.<p class="paragraph"/><h4>Body</h4>
-<ul class="star">
-<li>Contains the caption for the field</li>
-</ul><p class="paragraph"/><h4>Attributes</h4><p class="paragraph"/><h5>Specific</h5>
-<ul class="star">
-<li><code>name</code> (optional) The property name of the field</li>
-<li><code>caption</code> (optional) The caption of the field. Overrides the body content.</li>
-<li><code>type</code> (optional) The class (or its fully-qualified name) of the Vaadin Component to use for the field, or a recognised short type-name: <code>date</code>, <code>checkBox</code>, <code>comboBox</code>, <code>listSelect</code>, <code>optionGroup</code>, <code>password</code>, <code>select</code>, <code>text</code>, <code>textArea</code>, <code>upload</code>, <code>file</code>, <code>customField</code></li>
-<li><code>onValueChange</code> (optional) Either a <a href="http://vaadin.com/api/com/vaadin/data/Property.ValueChangeListener.html" target="blank">ValueChangeListener</a> or a Closure that takes a <a href="http://vaadin.com/api/com/vaadin/data/Property.ValueChangeEvent.html" target="blank">ValueChangeEvent</a> parameter</li>
-</ul><p class="paragraph"/><h5>General</h5>
-<ul class="star">
-<li><code>var</code> (optional) Uses Grails's <a href="http://grails.org/doc/latest/ref/Tags/set.html" target="blank">set</a> tag to set the value of the specified variable to be this component.</li>
-<li><code>class</code> (optional) The CSS class name to add to the component using the addStyleName() method</li>
-<li><code>sizeUndefined</code> (optional) Calls setSizeUndefined() on the component. (Attribute value is ignored)</li>
-<li><code>sizeFull</code> (optional) Calls setSizeFull() on the component. (Attribute value is ignored)</li>
-</ul><p class="paragraph"/><blockquote class="note">
-See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/AbstractField.html" target="blank">Field</a> API docs for full list of allowed attributes.
-</blockquote> 
+                
+                    <div class="toc-item next-right"><a href="../../guide/4.%20Configuration.html"><strong>4</strong><span>Configuration</span> >></a></div>
+                
+
+
+                <div class="project">
+                    <h1>3.8 Embedding Vaadin - Reference Documentation</h1>
+
+                    <p><strong>Authors:</strong> Ondrej Kvasnovsky, Francis McKenzie</p>
+
+                    <p><strong>Version:</strong> 1.6.2.1-SNAPSHOT</p>
+
+                    
+                </div>
+
+                
+
+                
+
+<h2 id="3.8 Embedding Vaadin">3.8 Embedding Vaadin</h2>
+The plugin provides the <a href="../ref/Command Line/create-vaadin-embedded.html" class="Command Line">create-vaadin-embedded</a> command which allows you
+to easily <a href="https://vaadin.com/book/-/page/application.embedding.html" target="blank">embed</a>
+your Vaadin application in a Grails page.<p class="paragraph"/>The benefit of this approach is that your Vaadin Application is then hosted inside
+a <code>&#60;div&#62;</code> in a regular Grails view. You can then customize the 'host' view like any
+other Grails view - e.g use Sitemesh, or include other javascript and CSS resources
+using the <code>&#60;r:resource&#62;</code> tag. The Vaadin Application then just becomes one section of
+the page.
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../../guide/2.%20Installation.html">&lt;&lt; <strong>2</strong><span>Installation</span></a></div>
+                
+                    <div class="toc-item next-right"><a href="../../guide/4.%20Configuration.html"><strong>4</strong><span>Configuration</span> >></a></div>
+                
+                <div style="clear:both"></div>
             </div>
         </td>
         <td id="col2">
@@ -113,10 +120,8 @@ See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/AbstractField.html" targ
                 </div>
                 <div class="menu">
                     
-                    <div class="menu-block">
-                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Command Line</h1>
-                        <div class="menu-sub">
-                            
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Command Line</h1><div class="menu-sub">
+                        
                             
                             <div class="menu-item"><a href="../../ref/Command%20Line/create-vaadin-controller.html">create-vaadin-controller</a>
                             </div>
@@ -139,13 +144,11 @@ See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/AbstractField.html" targ
                             <div class="menu-item"><a href="../../ref/Command%20Line/install-vaadin-templates.html">install-vaadin-templates</a>
                             </div>
                             
-                        </div>
+                            </div>
                     </div>
                     
-                    <div class="menu-block">
-                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Tags</h1>
-                        <div class="menu-sub selected">
-                            
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Tags</h1><div class="menu-sub">
+                        
                             
                             <div class="menu-item"><a href="../../ref/Tags/accordion.html">accordion</a>
                             </div>
@@ -240,7 +243,7 @@ See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/AbstractField.html" targ
                             <div class="menu-item"><a href="../../ref/Tags/warning.html">warning</a>
                             </div>
                             
-                        </div>
+                            </div>
                     </div>
                     
                 </div>
@@ -254,8 +257,7 @@ See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/AbstractField.html" targ
     
 </div>
 
-
-<script type="text/javascript" src="../../js/docs.js"></script>
+<script type="text/javascript" src="../js/docs.js"></script>
 
 </body>
 </html>

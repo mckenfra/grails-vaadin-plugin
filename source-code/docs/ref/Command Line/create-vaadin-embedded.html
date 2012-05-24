@@ -71,38 +71,14 @@ function addJsClass(el) {
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
-                <h1>field</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Adds a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/AbstractField.html" target="blank">Field</a> to the parent container.<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/><div class="code"><pre>// Within a form
-&#60;v:form bean=<span class="java&#45;quote">"$&#123;bookInstance&#125;"</span> writeThrough=<span class="java&#45;quote">"<span class="java&#45;keyword">false</span>"</span>&#62;
-  &#60;v:field name=<span class="java&#45;quote">"title"</span> readOnly=<span class="java&#45;quote">"<span class="java&#45;keyword">false</span>"</span> required=<span class="java&#45;quote">"<span class="java&#45;keyword">true</span>"</span> requiredError=<span class="java&#45;quote">"Please enter a Title"</span>&#62;
-    Title
-  &#60;/v:field&#62;
-  &#60;v:field name=<span class="java&#45;quote">"author"</span> readOnly=<span class="java&#45;quote">"<span class="java&#45;keyword">false</span>"</span> required=<span class="java&#45;quote">"<span class="java&#45;keyword">true</span>"</span> requiredError=<span class="java&#45;quote">"Please enter an Author"</span>&#62;
-    Author
-  &#60;/v:field&#62;
-  &#60;v:field name=<span class="java&#45;quote">"description"</span> readOnly=<span class="java&#45;quote">"<span class="java&#45;keyword">false</span>"</span> required=<span class="java&#45;quote">"<span class="java&#45;keyword">false</span>"</span>/&#62;
-    Description
-  &#60;/v:field&#62;
-&#60;/v:form&#62;<p class="paragraph"/>// Standalone
-&#60;v:field&#62;My Field&#60;/v:field&#62;</pre></div><p class="paragraph"/><h2>Description</h2><p class="paragraph"/>A field can be created within a <code>Form</code>, or standalone.<p class="paragraph"/>Unless the <code>type</code> attribute is explicitly specified, the type of component that is created
-for the field is automatically selected based on the type of the underlying property in the
-form data source.<p class="paragraph"/><h4>Body</h4>
-<ul class="star">
-<li>Contains the caption for the field</li>
-</ul><p class="paragraph"/><h4>Attributes</h4><p class="paragraph"/><h5>Specific</h5>
-<ul class="star">
-<li><code>name</code> (optional) The property name of the field</li>
-<li><code>caption</code> (optional) The caption of the field. Overrides the body content.</li>
-<li><code>type</code> (optional) The class (or its fully-qualified name) of the Vaadin Component to use for the field, or a recognised short type-name: <code>date</code>, <code>checkBox</code>, <code>comboBox</code>, <code>listSelect</code>, <code>optionGroup</code>, <code>password</code>, <code>select</code>, <code>text</code>, <code>textArea</code>, <code>upload</code>, <code>file</code>, <code>customField</code></li>
-<li><code>onValueChange</code> (optional) Either a <a href="http://vaadin.com/api/com/vaadin/data/Property.ValueChangeListener.html" target="blank">ValueChangeListener</a> or a Closure that takes a <a href="http://vaadin.com/api/com/vaadin/data/Property.ValueChangeEvent.html" target="blank">ValueChangeEvent</a> parameter</li>
-</ul><p class="paragraph"/><h5>General</h5>
-<ul class="star">
-<li><code>var</code> (optional) Uses Grails's <a href="http://grails.org/doc/latest/ref/Tags/set.html" target="blank">set</a> tag to set the value of the specified variable to be this component.</li>
-<li><code>class</code> (optional) The CSS class name to add to the component using the addStyleName() method</li>
-<li><code>sizeUndefined</code> (optional) Calls setSizeUndefined() on the component. (Attribute value is ignored)</li>
-<li><code>sizeFull</code> (optional) Calls setSizeFull() on the component. (Attribute value is ignored)</li>
-</ul><p class="paragraph"/><blockquote class="note">
-See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/AbstractField.html" target="blank">Field</a> API docs for full list of allowed attributes.
-</blockquote> 
+                <h1>create-vaadin-embedded</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Creates a Grails controller and view that host an <a href="https://vaadin.com/book/-/page/application.embedding.html" target="blank">embedded</a> Vaadin application.<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/><div class="code"><pre>grails create&#45;vaadin&#45;embedded
+grails create&#45;vaadin&#45;embedded org.bookstore.MyVaadin</pre></div><p class="paragraph"/><h2>Description</h2><p class="paragraph"/>Creates a regular Grails Controller in the <code>grails-app/controllers</code> dir, together with an
+<code>index.gsp</code> view in <code>grails-app/views/{controllername}</code>
+containing the code to embed the default Vaadin application.<p class="paragraph"/>The benefit of this approach is that your Vaadin Application is then hosted inside
+a <code>&#60;div&#62;</code> in a regular Grails view. You can then customize the 'host' view like any
+other Grails view - e.g use Sitemesh, or include other javascript and CSS resources
+using the <code>&#60;r:resource&#62;</code> tag. The Vaadin Application then just becomes one section of
+the page.
             </div>
         </td>
         <td id="col2">
@@ -115,7 +91,7 @@ See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/AbstractField.html" targ
                     
                     <div class="menu-block">
                         <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Command Line</h1>
-                        <div class="menu-sub">
+                        <div class="menu-sub selected">
                             
                             
                             <div class="menu-item"><a href="../../ref/Command%20Line/create-vaadin-controller.html">create-vaadin-controller</a>
@@ -144,7 +120,7 @@ See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/AbstractField.html" targ
                     
                     <div class="menu-block">
                         <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Tags</h1>
-                        <div class="menu-sub selected">
+                        <div class="menu-sub">
                             
                             
                             <div class="menu-item"><a href="../../ref/Tags/accordion.html">accordion</a>

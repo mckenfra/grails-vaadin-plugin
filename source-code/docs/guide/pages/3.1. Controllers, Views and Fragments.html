@@ -33,13 +33,16 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/3.%20Concepts%20and%20Usage.html"><strong>3</strong><span>Concepts and Usage</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/4.%20Configuration.html"><strong>4</strong><span>Configuration</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Roadmap.html"><strong>5</strong><span>Roadmap</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Known%20Issues%20and%20Limitations.html"><strong>5</strong><span>Known Issues and Limitations</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/6.%20Version%20History.html"><strong>6</strong><span>Version History</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/6.%20Roadmap.html"><strong>6</strong><span>Roadmap</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/7.%20Version%20History.html"><strong>7</strong><span>Version History</span></a>
                     </div>
                     
                 </div>
@@ -72,7 +75,7 @@ function addJsClass() {
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
                 
-                    <div class="toc-item next-right"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span> >></a></div>
+                    <div class="toc-item next-right"><a href="../../guide/4.%20Configuration.html"><strong>4</strong><span>Configuration</span> >></a></div>
                 
 
 
@@ -97,13 +100,12 @@ rather than a conventional Request-Response framework, we do not map
 <strong class="bold">URLs</strong> to controllers but instead map <strong class="bold">Fragments</strong> to controllers.<p class="paragraph"/>As an example, say we want to create a screen for displaying a list of books.
 In Grails, we would create a <code>BookController.groovy</code> file containing a <code>list()</code> method,
 and a <code>book/list.gsp</code> file. This would then be accessible from a browser via
-<code>http://localhost:8080/myapp/book/list</code><p class="paragraph"/>With the Vaadin plugin, we do exactly the same thing. We create a <code>BookVaadinController.groovy</code>
-file containing a <code>list()</code> method, and a <code>book-vaadin/list.gsp</code> file. This is then accessible
-from a browser via <code>http://localhost:8080/myapp#book/list</code>. Note the <code>'#'</code> in the URL to denote
+<code>http://localhost:8080/myapp/book/list</code><p class="paragraph"/>With the Vaadin plugin, we do something very similar. We create a <code>BookVaadinController.groovy</code>
+file containing a <code>list()</code> method, and a <code>vaadin/book/list.gsp</code> file. This is then accessible
+from a browser via <code>http://localhost:8080/myapp/vaadin#book/list</code>. Note the <code>'#'</code> in the URL to denote
 the fragment!<p class="paragraph"/><blockquote class="note">
-The naming convention for Vaadin controllers is important - the class name
-must end with <code>VaadinController</code>.<p class="paragraph"/>Note that this method of identifying artefacts through the use of standard naming
-conventions is very common in Grails!
+The context path for a vaadin app defaults to <code>/vaadin</code>. This can be changed in the
+<a href="../guide/single.html#4.%20Configuration" class="guide">Configuration</a>
 </blockquote><p class="paragraph"/>
 
 
@@ -111,7 +113,7 @@ conventions is very common in Grails!
                 
                     <div class="toc-item prev-left"><a href="../../guide/2.%20Installation.html">&lt;&lt; <strong>2</strong><span>Installation</span></a></div>
                 
-                    <div class="toc-item next-right"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span> >></a></div>
+                    <div class="toc-item next-right"><a href="../../guide/4.%20Configuration.html"><strong>4</strong><span>Configuration</span> >></a></div>
                 
                 <div style="clear:both"></div>
             </div>
@@ -128,6 +130,9 @@ conventions is very common in Grails!
                         
                             
                             <div class="menu-item"><a href="../../ref/Command%20Line/create-vaadin-controller.html">create-vaadin-controller</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/create-vaadin-embedded.html">create-vaadin-embedded</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-all.html">generate-vaadin-all</a>

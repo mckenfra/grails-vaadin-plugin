@@ -34,13 +34,16 @@ function addJsClass(el) {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/3.%20Concepts%20and%20Usage.html"><strong>3</strong><span>Concepts and Usage</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/4.%20Configuration.html"><strong>4</strong><span>Configuration</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Roadmap.html"><strong>5</strong><span>Roadmap</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Known%20Issues%20and%20Limitations.html"><strong>5</strong><span>Known Issues and Limitations</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/6.%20Version%20History.html"><strong>6</strong><span>Version History</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/6.%20Roadmap.html"><strong>6</strong><span>Roadmap</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/7.%20Version%20History.html"><strong>7</strong><span>Version History</span></a>
                     </div>
                     
                 </div>
@@ -69,7 +72,7 @@ function addJsClass(el) {
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
                 <h1>textArea</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Adds a <a href="http://vaadin.com/api/com/vaadin/ui/TextArea.html" target="blank">TextArea</a> field to the parent container.<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/><div class="code"><pre>// Within a form
-&#60;v:form itemDataSource=<span class="java&#45;quote">"$&#123;<span class="java&#45;keyword">new</span> BeanItem&#60;Book&#62;(bookInstance)&#125;"</span>&#62;
+&#60;v:form bean=<span class="java&#45;quote">"$&#123;bookInstance&#125;"</span>&#62;
   &#60;v:textArea name=<span class="java&#45;quote">"introduction"</span> rows=<span class="java&#45;quote">"10"</span> columns=<span class="java&#45;quote">"50"</span>&#62;Introduction&#60;/v:textArea&#62;
 &#60;/v:form&#62;<p class="paragraph"/>// Standalone
 &#60;v:textArea&#62;My Text Area&#60;/v:textArea&#62;</pre></div><p class="paragraph"/><h2>Description</h2><p class="paragraph"/>The textArea tag is a special type of <a href="../../ref/Tags/field.html" class="Tags">field</a> tag, where the field component
@@ -82,7 +85,8 @@ is a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/TextArea.html" target="
 <li><code>caption</code> (optional) The caption of the field. Overrides the body content.</li>
 <li><code>rows</code> (optional) The number of rows to display.</li>
 <li><code>columns</code> (optional) The number of columns to display.</li>
-<li><code>onTextChange</code> (optional) Either a <a href="http://vaadin.com/api/com/vaadin/event/FieldEvents.TextChangeListener.html" target="blank">TextChangeListener</a> or a Closure that expects a <a href="http://vaadin.com/api/com/vaadin/event/FieldEvents.TextChangeEvent.html" target="blank">TextChangeEvent</a> parameter</li>
+<li><code>onTextChange</code> (optional) Either a <a href="http://vaadin.com/api/com/vaadin/event/FieldEvents.TextChangeListener.html" target="blank">TextChangeListener</a> or a Closure that takes a <a href="http://vaadin.com/api/com/vaadin/event/FieldEvents.TextChangeEvent.html" target="blank">TextChangeEvent</a> parameter.</li>
+<li><code>onValueChange</code> (optional) Either a <a href="http://vaadin.com/api/com/vaadin/data/Property.ValueChangeListener.html" target="blank">ValueChangeListener</a> or a Closure that takes a <a href="http://vaadin.com/api/com/vaadin/data/Property.ValueChangeEvent.html" target="blank">ValueChangeEvent</a> parameter.</li>
 </ul><p class="paragraph"/><h5>General</h5>
 <ul class="star">
 <li><code>var</code> (optional) Uses Grails's <a href="http://grails.org/doc/latest/ref/Tags/set.html" target="blank">set</a> tag to set the value of the specified variable to be this component.</li>
@@ -109,6 +113,9 @@ See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/TextArea.html" target="b
                             
                             
                             <div class="menu-item"><a href="../../ref/Command%20Line/create-vaadin-controller.html">create-vaadin-controller</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/create-vaadin-embedded.html">create-vaadin-embedded</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-all.html">generate-vaadin-all</a>

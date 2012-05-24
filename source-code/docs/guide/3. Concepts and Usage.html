@@ -33,13 +33,16 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../guide/3.%20Concepts%20and%20Usage.html"><strong>3</strong><span>Concepts and Usage</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/4.%20Configuration.html"><strong>4</strong><span>Configuration</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/5.%20Roadmap.html"><strong>5</strong><span>Roadmap</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/5.%20Known%20Issues%20and%20Limitations.html"><strong>5</strong><span>Known Issues and Limitations</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/6.%20Version%20History.html"><strong>6</strong><span>Version History</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/6.%20Roadmap.html"><strong>6</strong><span>Roadmap</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/7.%20Version%20History.html"><strong>7</strong><span>Version History</span></a>
                     </div>
                     
                 </div>
@@ -72,7 +75,7 @@ function addJsClass() {
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
                 
-                    <div class="toc-item next-right"><a href="../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span> >></a></div>
+                    <div class="toc-item next-right"><a href="../guide/4.%20Configuration.html"><strong>4</strong><span>Configuration</span> >></a></div>
                 
 
 
@@ -111,6 +114,9 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0px"><a href="#3.7%20Vaadin%20API"><strong>3.7</strong><span>Vaadin API</span></a>
                     </div>
                     
+                    <div class="toc-item" style="margin-left:0px"><a href="#3.8%20Embedding%20Vaadin"><strong>3.8</strong><span>Embedding Vaadin</span></a>
+                    </div>
+                    
                 </div>
                 
 
@@ -127,13 +133,12 @@ rather than a conventional Request-Response framework, we do not map
 <strong class="bold">URLs</strong> to controllers but instead map <strong class="bold">Fragments</strong> to controllers.<p class="paragraph"/>As an example, say we want to create a screen for displaying a list of books.
 In Grails, we would create a <code>BookController.groovy</code> file containing a <code>list()</code> method,
 and a <code>book/list.gsp</code> file. This would then be accessible from a browser via
-<code>http://localhost:8080/myapp/book/list</code><p class="paragraph"/>With the Vaadin plugin, we do exactly the same thing. We create a <code>BookVaadinController.groovy</code>
-file containing a <code>list()</code> method, and a <code>book-vaadin/list.gsp</code> file. This is then accessible
-from a browser via <code>http://localhost:8080/myapp#book/list</code>. Note the <code>'#'</code> in the URL to denote
+<code>http://localhost:8080/myapp/book/list</code><p class="paragraph"/>With the Vaadin plugin, we do something very similar. We create a <code>BookVaadinController.groovy</code>
+file containing a <code>list()</code> method, and a <code>vaadin/book/list.gsp</code> file. This is then accessible
+from a browser via <code>http://localhost:8080/myapp/vaadin#book/list</code>. Note the <code>'#'</code> in the URL to denote
 the fragment!<p class="paragraph"/><blockquote class="note">
-The naming convention for Vaadin controllers is important - the class name
-must end with <code>VaadinController</code>.<p class="paragraph"/>Note that this method of identifying artefacts through the use of standard naming
-conventions is very common in Grails!
+The context path for a vaadin app defaults to <code>/vaadin</code>. This can be changed in the
+<a href="../guide/single.html#4.%20Configuration" class="guide">Configuration</a>
 </blockquote><p class="paragraph"/>
 
 
@@ -145,19 +150,19 @@ section of the <a href="http://grails.org/doc/latest/guide" target="blank">Grail
 <a href="../guide/single.html#2.%20Installation" class="guide">Installation</a> section. Now follow these steps:<p class="paragraph"/><h4>1. Create the Controller</h4><p class="paragraph"/>Create a VaadinController by entering the following at the command line:<p class="paragraph"/><div class="code"><pre>grails create&#45;vaadin&#45;controller myapp.Hello</pre></div><p class="paragraph"/>This simply creates an empty groovy class under the <code>grails-app/controllers</code> folder. Note that
 <code>VaadinController</code> is automatically appended to the class name.<p class="paragraph"/><h4>2. Add an Action</h4><p class="paragraph"/>In the HelloVaadinController class, add a <code>greetings</code> method as follows:<p class="paragraph"/><div class="code"><pre>class HelloVaadinController &#123;
 	def greetings() &#123;&#125;
-&#125;</pre></div><p class="paragraph"/><h4>3. Create the View</h4><p class="paragraph"/>Create file <code>grails-app/views/hello-vaadin/greetings.gsp</code> with the following contents:<p class="paragraph"/><div class="code"><pre>&#60;div&#62;
+&#125;</pre></div><p class="paragraph"/><h4>3. Create the View</h4><p class="paragraph"/>Create file <code>grails-app/views/vaadin/hello/greetings.gsp</code> with the following contents:<p class="paragraph"/><div class="code"><pre>&#60;div&#62;
   &#60;v:label&#62;Hello world!&#60;/v:label&#62;
 &#60;/div&#62;</pre></div><p class="paragraph"/><h4>4. Run the App</h4><p class="paragraph"/>Finally, run the application using <code>grails run-app</code> and then browse to
-<code>http://localhost:8080/myapp#hello/greetings</code>. You should see the
+<code>http://localhost:8080/myapp/vaadin#hello/greetings</code>. You should see the
 "Hello World!" message displayed.<p class="paragraph"/>(Note that you will need to replace <code>'myapp'</code> in the above URL with the name of your
 grails project.)<p class="paragraph"/><h4>5. Use the Grails Theme</h4><p class="paragraph"/>Let's improve the appearance of our new page. Change the text in file
-<code>grails-app/views/hello-vaadin/greetings.gsp</code> to the following:<p class="paragraph"/><div class="code"><pre>&#60;v:layout name=<span class="java&#45;quote">"vaadin"</span>&#62;
+<code>grails-app/views/vaadin/hello/greetings.gsp</code> to the following:<p class="paragraph"/><div class="code"><pre>&#60;v:layout name=<span class="java&#45;quote">"main"</span>&#62;
   &#60;v:label location=<span class="java&#45;quote">"body"</span>&#62;Hello world!&#60;/v:label&#62;
 &#60;/v:layout&#62;</pre></div><p class="paragraph"/>Now refresh your browser page - you should see your "Hello World!" message again,
 but this time within the familiar Grails theme.<p class="paragraph"/><blockquote class="note">
-Notice we used the special tag <code>&#60;v:layout name="vaadin"&#62;</code> in the final step. This
-<a href="../ref/Tags/layout.html" class="Tags">layout</a> tag looks for a <code>.gsp</code> file with the specified name in <code>grails-app/views/layouts</code>.
-Take a look at <code>vaadin.gsp</code> in this directory in your app!
+Notice we used the special tag <code>&#60;v:layout name="main"&#62;</code> in the final step. This
+<a href="../ref/Tags/layout.html" class="Tags">layout</a> tag looks for a <code>.gsp</code> file with the specified name in <code>grails-app/views/vaadin/layouts</code>.
+Take a look at <code>main.gsp</code> in this directory in your app!
 </blockquote> 
 
 
@@ -170,7 +175,7 @@ Grails, this can be done by running the
 <a href="http://grails.org/doc/latest/ref/Command%20Line/generate-all.html" target="blank">generate-all</a> commands.<p class="paragraph"/>The Vaadin plugin provides the exact equivalent of the standard grails scaffolding
 scripts, as follows:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Command</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td><a href="../ref/Command Line/generate-vaadin-controller.html" class="Command Line">generate-vaadin-controller</a></td><td>Generates a new VaadinController in the <code>grails-app/controllers</code> dir<br/>for the specified domain class.</td></tr><tr class="table-even"><td><a href="../ref/Command Line/generate-vaadin-views.html" class="Command Line">generate-vaadin-views</a></td><td>Generates the Vaadin CRUD GSP views in the <code>grails-app/views</code> dir<br/>for the specified domain class.</td></tr><tr class="table-odd"><td><a href="../ref/Command Line/generate-vaadin-all.html" class="Command Line">generate-vaadin-all</a></td><td>Generates the Controller and Views for the specified domain class.</td></tr><tr class="table-even"><td><a href="../ref/Command Line/create-vaadin-controller.html" class="Command Line">create-vaadin-controller</a></td><td>Creates an empty VaadinController in the <code>grails-app/controllers</code> dir</td></tr><tr class="table-odd"><td><a href="../ref/Command Line/install-vaadin-templates.html" class="Command Line">install-vaadin-templates</a></td><td>Installs the templates used for the above scaffolding commands into<br/><code>src/templates/vaadin</code></td></tr></table><p class="paragraph"/>For example, if you have a Domain Class called
 <code>com.somepackage.Author</code>, you should run the following at the command line to
-scaffold a CRUD interface:<p class="paragraph"/><div class="code"><pre>grails generate&#45;vaadin&#45;all com.somepackage.Author</pre></div><p class="paragraph"/>You can then browse the CRUD interface by visiting <code>http://localhost:8080/myapp#author</code>.<p class="paragraph"/>Some of the benefits of Vaadin should now become apparent! Notice the
+scaffold a CRUD interface:<p class="paragraph"/><div class="code"><pre>grails generate&#45;vaadin&#45;all com.somepackage.Author</pre></div><p class="paragraph"/>You can then browse the CRUD interface by visiting <code>http://localhost:8080/myapp/vaadin#author</code>.<p class="paragraph"/>Some of the benefits of Vaadin should now become apparent! Notice the
 lazy-loading, infinitely scrollable table on the list screen. Also, for any Date fields
 in your domain class, notice the Date Picker that gets automatically inserted. If that
 is not enough, you should definitely visit the <a href="http://demo.vaadin.com/sampler" target="blank">Vaadin Sampler</a>
@@ -188,23 +193,15 @@ Sitemesh layout tags are currently not supported. Please use the Vaadin <a href=
 
 
 <h2 id="3.5 Mixing Vaadin and Grails">3.5 Mixing Vaadin and Grails</h2>
-The default configuration is for  Vaadin to be served from the root context path, i.e. <code>'/'</code>.
-However, this means that Vaadin will prevent any requests from reaching 'regular'
-Grails controllers.<p class="paragraph"/>If you want to mix Vaadin controllers with Grails controllers in the same app,
-you should change the <code>contextRelativePath</code> setting in <code>grails-app/conf/VaadinConfig.groovy</code>
-to be something other than <code>'/'</code>.<p class="paragraph"/><h3>Example</h3><p class="paragraph"/>The following is set in <code>grails-app/conf/VaadinConfig.groovy</code>:<p class="paragraph"/><div class="code"><pre>vaadin &#123;
-  // Other settings
-  // ....<p class="paragraph"/>  contextRelativePath = <span class="java&#45;quote">"/myvaadinapp"</span>
-&#125;</pre></div><p class="paragraph"/>The application contains a regular Grails controller <code>grails-app/controllers/BookController.groovy</code>:<p class="paragraph"/><div class="code"><pre>class BookController &#123;
-  def index() &#123;&#125;
-&#125;</pre></div><p class="paragraph"/>The Vaadin application is then accessible via <code>http://localhost:8080/myapp/myvaadinapp</code>,
-while the regular Grails controller is accessible via
-<code>http://localhost:8080/myapp/book</code><p class="paragraph"/><blockquote class="note">
 For any Domain class, you can easily create a regular-Grails CRUD interface and a Vaadin
 CRUD interface for it in the same app.<p class="paragraph"/>For example, for Domain class <code>mypackage.Book</code>, use <code>generate-all mypackage.Book</code> to scaffold
 the Grails controller and views, and <code>generate-vaadin-all mypackage.Book</code> to scaffold the
-Vaadin controller and views.<p class="paragraph"/>You could then access each as follows:<p class="paragraph"/><strong class="bold">Grails</strong>: <code>http://localhost:8080/myapp/book</code><p class="paragraph"/><strong class="bold">Vaadin</strong>: <code>http://localhost:8080/myapp/myvaadinapp#book</code> 
+Vaadin controller and views.<p class="paragraph"/>You could then access each as follows:<p class="paragraph"/><strong class="bold">Grails</strong>: <code>http://localhost:8080/myapp/book</code><p class="paragraph"/><strong class="bold">Vaadin</strong>: <code>http://localhost:8080/myapp/vaadin#book</code><p class="paragraph"/><blockquote class="note">
+The default configuration is for Vaadin to be served from path <code>/vaadin</code> - 
+see the <code>contextRelativePath</code> setting in the <a href="../guide/single.html#4.%20Configuration" class="guide">Configuration</a>.<p class="paragraph"/>Note that if you change this to <code>'/'</code> it will prevent any requests from reaching 'regular'
+Grails controllers.
 </blockquote>
+
 
 
 <h2 id="3.6 Vaadin Controllers">3.6 Vaadin Controllers</h2>
@@ -218,7 +215,7 @@ functionality may work as expected in Vaadin controllers. Some key differences t
 of are described in the following sections.<p class="paragraph"/><h3>URIs and Fragments</h3><p class="paragraph"/>As previously discussed, Vaadin Controllers are accessed in the browser by placing
 the controller name at the start of the browser <strong class="bold">fragment</strong>, rather than in the URI. So:<p class="paragraph"/><div class="code"><pre>// Regular Grails Controller
 http://localhost:8080/grailsapp/book/list<p class="paragraph"/>// Vaadin Controller
-http://localhost:8080/grailsapp/vaadinapp&#35;book/list</pre></div><p class="paragraph"/><h3>Controller API</h3><p class="paragraph"/>Note that <a href="http://grails.org/doc/latest/ref/Controllers/render.html" target="blank">render</a>,
+http://localhost:8080/grailsapp/vaadin&#35;book/list</pre></div><p class="paragraph"/><h3>Controller API</h3><p class="paragraph"/>Note that <a href="http://grails.org/doc/latest/ref/Controllers/render.html" target="blank">render</a>,
 <a href="http://grails.org/doc/latest/ref/Controllers/redirect.html" target="blank">redirect</a>,
 <a href="http://grails.org/doc/latest/ref/Controllers/params.html" target="blank">params</a>,
 <a href="http://grails.org/doc/latest/ref/Controllers/flash.html" target="blank">flash</a> are specifically overridden
@@ -264,11 +261,21 @@ can be obtained through the <code>vaadinApplication</code> variable.<p class="pa
 &#125;</pre></div>
 
 
+<h2 id="3.8 Embedding Vaadin">3.8 Embedding Vaadin</h2>
+The plugin provides the <a href="../ref/Command Line/create-vaadin-embedded.html" class="Command Line">create-vaadin-embedded</a> command which allows you
+to easily <a href="https://vaadin.com/book/-/page/application.embedding.html" target="blank">embed</a>
+your Vaadin application in a Grails page.<p class="paragraph"/>The benefit of this approach is that your Vaadin Application is then hosted inside
+a <code>&#60;div&#62;</code> in a regular Grails view. You can then customize the 'host' view like any
+other Grails view - e.g use Sitemesh, or include other javascript and CSS resources
+using the <code>&#60;r:resource&#62;</code> tag. The Vaadin Application then just becomes one section of
+the page.
+
+
                 <div style="clear:both;margin-top:15px;"></div>
                 
                     <div class="toc-item prev-left"><a href="../guide/2.%20Installation.html">&lt;&lt; <strong>2</strong><span>Installation</span></a></div>
                 
-                    <div class="toc-item next-right"><a href="../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span> >></a></div>
+                    <div class="toc-item next-right"><a href="../guide/4.%20Configuration.html"><strong>4</strong><span>Configuration</span> >></a></div>
                 
                 <div style="clear:both"></div>
             </div>
@@ -285,6 +292,9 @@ can be obtained through the <code>vaadinApplication</code> variable.<p class="pa
                         
                             
                             <div class="menu-item"><a href="../ref/Command%20Line/create-vaadin-controller.html">create-vaadin-controller</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Command%20Line/create-vaadin-embedded.html">create-vaadin-embedded</a>
                             </div>
                             
                             <div class="menu-item"><a href="../ref/Command%20Line/generate-vaadin-all.html">generate-vaadin-all</a>

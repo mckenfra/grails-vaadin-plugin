@@ -33,13 +33,16 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/3.%20Concepts%20and%20Usage.html"><strong>3</strong><span>Concepts and Usage</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/4.%20Configuration.html"><strong>4</strong><span>Configuration</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Roadmap.html"><strong>5</strong><span>Roadmap</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Known%20Issues%20and%20Limitations.html"><strong>5</strong><span>Known Issues and Limitations</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/6.%20Version%20History.html"><strong>6</strong><span>Version History</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/6.%20Roadmap.html"><strong>6</strong><span>Roadmap</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/7.%20Version%20History.html"><strong>7</strong><span>Version History</span></a>
                     </div>
                     
                 </div>
@@ -72,7 +75,7 @@ function addJsClass() {
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
                 
-                    <div class="toc-item next-right"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span> >></a></div>
+                    <div class="toc-item next-right"><a href="../../guide/4.%20Configuration.html"><strong>4</strong><span>Configuration</span> >></a></div>
                 
 
 
@@ -99,7 +102,7 @@ Grails, this can be done by running the
 <a href="http://grails.org/doc/latest/ref/Command%20Line/generate-all.html" target="blank">generate-all</a> commands.<p class="paragraph"/>The Vaadin plugin provides the exact equivalent of the standard grails scaffolding
 scripts, as follows:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Command</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td><a href="../ref/Command Line/generate-vaadin-controller.html" class="Command Line">generate-vaadin-controller</a></td><td>Generates a new VaadinController in the <code>grails-app/controllers</code> dir<br/>for the specified domain class.</td></tr><tr class="table-even"><td><a href="../ref/Command Line/generate-vaadin-views.html" class="Command Line">generate-vaadin-views</a></td><td>Generates the Vaadin CRUD GSP views in the <code>grails-app/views</code> dir<br/>for the specified domain class.</td></tr><tr class="table-odd"><td><a href="../ref/Command Line/generate-vaadin-all.html" class="Command Line">generate-vaadin-all</a></td><td>Generates the Controller and Views for the specified domain class.</td></tr><tr class="table-even"><td><a href="../ref/Command Line/create-vaadin-controller.html" class="Command Line">create-vaadin-controller</a></td><td>Creates an empty VaadinController in the <code>grails-app/controllers</code> dir</td></tr><tr class="table-odd"><td><a href="../ref/Command Line/install-vaadin-templates.html" class="Command Line">install-vaadin-templates</a></td><td>Installs the templates used for the above scaffolding commands into<br/><code>src/templates/vaadin</code></td></tr></table><p class="paragraph"/>For example, if you have a Domain Class called
 <code>com.somepackage.Author</code>, you should run the following at the command line to
-scaffold a CRUD interface:<p class="paragraph"/><div class="code"><pre>grails generate&#45;vaadin&#45;all com.somepackage.Author</pre></div><p class="paragraph"/>You can then browse the CRUD interface by visiting <code>http://localhost:8080/myapp#author</code>.<p class="paragraph"/>Some of the benefits of Vaadin should now become apparent! Notice the
+scaffold a CRUD interface:<p class="paragraph"/><div class="code"><pre>grails generate&#45;vaadin&#45;all com.somepackage.Author</pre></div><p class="paragraph"/>You can then browse the CRUD interface by visiting <code>http://localhost:8080/myapp/vaadin#author</code>.<p class="paragraph"/>Some of the benefits of Vaadin should now become apparent! Notice the
 lazy-loading, infinitely scrollable table on the list screen. Also, for any Date fields
 in your domain class, notice the Date Picker that gets automatically inserted. If that
 is not enough, you should definitely visit the <a href="http://demo.vaadin.com/sampler" target="blank">Vaadin Sampler</a>
@@ -111,7 +114,7 @@ page and check out all the other ways you can spruce up your user interface!
                 
                     <div class="toc-item prev-left"><a href="../../guide/2.%20Installation.html">&lt;&lt; <strong>2</strong><span>Installation</span></a></div>
                 
-                    <div class="toc-item next-right"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span> >></a></div>
+                    <div class="toc-item next-right"><a href="../../guide/4.%20Configuration.html"><strong>4</strong><span>Configuration</span> >></a></div>
                 
                 <div style="clear:both"></div>
             </div>
@@ -128,6 +131,9 @@ page and check out all the other ways you can spruce up your user interface!
                         
                             
                             <div class="menu-item"><a href="../../ref/Command%20Line/create-vaadin-controller.html">create-vaadin-controller</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/create-vaadin-embedded.html">create-vaadin-embedded</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-all.html">generate-vaadin-all</a>

@@ -34,13 +34,16 @@ function addJsClass(el) {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/3.%20Concepts%20and%20Usage.html"><strong>3</strong><span>Concepts and Usage</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/4.%20Configuration.html"><strong>4</strong><span>Configuration</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Roadmap.html"><strong>5</strong><span>Roadmap</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Known%20Issues%20and%20Limitations.html"><strong>5</strong><span>Known Issues and Limitations</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/6.%20Version%20History.html"><strong>6</strong><span>Version History</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/6.%20Roadmap.html"><strong>6</strong><span>Roadmap</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/7.%20Version%20History.html"><strong>7</strong><span>Version History</span></a>
                     </div>
                     
                 </div>
@@ -79,9 +82,11 @@ function addJsClass(el) {
 &#125;</pre></div><p class="paragraph"/>Example usages for above controller:<p class="paragraph"/><div class="code"><pre>&#60;v:link action=<span class="java&#45;quote">"show"</span> id=<span class="java&#45;quote">"1"</span>&#62;Book 1&#60;/v:link&#62;<p class="paragraph"/>&#60;v:link action=<span class="java&#45;quote">"show"</span> id=<span class="java&#45;quote">"$&#123;currentBook.id&#125;"</span>&#62;$&#123;currentBook.name&#125;&#60;/v:link&#62;<p class="paragraph"/>&#60;v:link action=<span class="java&#45;quote">"edit"</span> instance=<span class="java&#45;quote">"$&#123;currentBook&#125;"</span>&#62;$&#123;currentBook.name&#125;&#60;/v:link&#62;<p class="paragraph"/>&#60;v:link controller=<span class="java&#45;quote">"book"</span>&#62;Book Home&#60;/v:link&#62;<p class="paragraph"/>&#60;v:link controller=<span class="java&#45;quote">"book"</span> action=<span class="java&#45;quote">"list"</span>&#62;Book List&#60;/v:link&#62;<p class="paragraph"/>&#60;v:link action=<span class="java&#45;quote">"list"</span> params=<span class="java&#45;quote">"&#91;sort: 'title', order: 'asc',
                                author: currentBook.author&#93;"</span>&#62;
      Book List
-&#60;/v:link&#62;<p class="paragraph"/>&#60;v:link fragment=<span class="java&#45;quote">"&#35;book/list"</span>&#62;Book List&#60;/v:link&#62;<p class="paragraph"/>// ICON IMAGES<p class="paragraph"/>// In web&#45;app/images
-&#60;v:link icon=<span class="java&#45;quote">"$&#123;resource(file:'images/grails_logo.png')&#125;"</span>/&#62;<p class="paragraph"/>// In web&#45;app/VAADIN/themes/&#91;activetheme&#93;/images
-&#60;v:link icon=<span class="java&#45;quote">"images/myvaadinthemeimage.png"</span>/&#62;</pre></div><p class="paragraph"/>When calling this tag as a GSP method, use the <code>createLink</code> method as follows:<p class="paragraph"/><div class="code"><pre>$&#123;v.createLink(action:'list',controller:'book',caption:'Book List')&#125;</pre></div><p class="paragraph"/><h2>Description</h2><p class="paragraph"/><h4>Body</h4>
+&#60;/v:link&#62;<p class="paragraph"/>&#60;v:link fragment=<span class="java&#45;quote">"&#35;book/list"</span>&#62;Book List&#60;/v:link&#62;<p class="paragraph"/>/&#42; ONCLICK &#42;/<p class="paragraph"/>&#60;v:link onclick=<span class="java&#45;quote">"$&#123;&#123;it.caption = <span class="java&#45;keyword">new</span> Date()&#125;&#125;"</span>&#62;Click Here!&#60;/v:link&#62;<p class="paragraph"/>/&#42;&#42; ICON &#42;/<p class="paragraph"/>// In web&#45;app/images
+&#60;v:link icon=<span class="java&#45;quote">"$&#123;resource(file:'images/spinner.gif')&#125;"</span>&#62;Loading&#60;/v:link&#62;<p class="paragraph"/>// In web&#45;app/VAADIN/themes/&#91;activetheme&#93;/images
+&#60;v:link icon=<span class="java&#45;quote">"images/spinner.gif"</span>&#62;Loading&#60;/v:link&#62;<p class="paragraph"/>/&#42;&#42; STYLING &#42;/<p class="paragraph"/>// Use image as button (i.e. no button styling)
+&#60;v:link class=<span class="java&#45;quote">"transparent"</span> icon=<span class="java&#45;quote">"images/spinner.gif"</span>/&#62;<p class="paragraph"/>// Make button look like HTML anchor
+&#60;v:link class=<span class="java&#45;quote">"link"</span>&#62;Hello World!&#60;/v:link&#62;</pre></div><p class="paragraph"/>When calling this tag as a GSP method, use the <code>createLink</code> method as follows:<p class="paragraph"/><div class="code"><pre>$&#123;v.createLink(action:'list',controller:'book',caption:'Book List')&#125;</pre></div><p class="paragraph"/><h2>Description</h2><p class="paragraph"/><h4>Body</h4>
 <ul class="star">
 <li>Used as the <code>caption</code> of the button, unless overridden by the <code>caption</code> attribute.</li>
 </ul><p class="paragraph"/><h4>Attributes</h4><p class="paragraph"/><h5>Specific </h5>
@@ -94,7 +99,7 @@ function addJsClass(el) {
 <li><code>id</code> (optional) The id parameter to use in the link.</li>
 <li><code>instance</code> (optional) The domain class instance parameter to use in the link.</li>
 <li><code>fragment</code> (optional) The fragment to link to, for example <code>#book/list</code></li>
-<li><code>onclick</code> (optional) Similar to the HTML onclick attribute. Here, the attribute expects a closure that takes a <code>dispatch</code> parameter. If the closure does not return false, the link is followed. If the closure returns false, the link is not followed, but the closure can subsequently cause the link to be followed by executing the dispatch() parameter.</li>
+<li><code>onclick</code> (optional) Similar to the HTML onclick attribute. Here, the attribute takes a closure, in which <code>it</code> is the enclosing button component. If the closure returns false, the link is not followed. The closure can trigger the link to be followed later with <code>it.dispatch()</code>.</li>
 </ul><p class="paragraph"/><h5>General </h5>
 <ul class="star">
 <li><code>var</code> (optional) Uses Grails's <a href="http://grails.org/doc/latest/ref/Tags/set.html" target="blank">set</a> tag to set the value of the specified variable to be this component.</li>
@@ -105,7 +110,11 @@ function addJsClass(el) {
 <li><code>wrapperClass</code>, <code>wrapperStyle</code> (optional) Special <a href="../../ref/Tags/styling.html" class="Tags">styling</a> for wrapper <code>&#60;div&#62;</code>.</li>
 </ul><p class="paragraph"/><blockquote class="note">
 See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Button.html" target="blank">Button</a> API docs for full list of allowed attributes for a button.
-</blockquote><p class="paragraph"/><h2>Special Use Cases</h2><p class="paragraph"/><h4>Confirm on Delete</h4><p class="paragraph"/>A tag method <code>v.confirm</code> is available for use in the <code>onclick</code> attribute. This displays a popup
+</blockquote><p class="paragraph"/><h4>CSS Styles</h4>
+<ul class="star">
+<li><code>link</code> Style the button like an HTML anchor tag</li>
+<li><code>transparent</code> Style the button without any border, background or padding.</li>
+</ul><p class="paragraph"/><h2>Special Use Cases</h2><p class="paragraph"/><h4>Confirm on Delete</h4><p class="paragraph"/>A tag method <code>v.confirm</code> is available for use in the <code>onclick</code> attribute. This displays a popup
 window with OK and Cancel buttons. Typically, it is used to prompt the user to confirm before
 deleting a record. It is intended to mimic Javascript's <code>confirm()</code> function.<p class="paragraph"/><div class="code"><pre>&#60;v:link action=<span class="java&#45;quote">"delete"</span> id=<span class="java&#45;quote">"1"</span> onclick=<span class="java&#45;quote">"$&#123;v.confirm(message:message(
     code:'<span class="java&#45;keyword">default</span>.button.delete.confirm.message', <span class="java&#45;keyword">default</span>:'Are you sure?'))&#125;"</span>&#62;
@@ -135,6 +144,9 @@ through to the domain class instance, before that instance is then written to th
                             
                             
                             <div class="menu-item"><a href="../../ref/Command%20Line/create-vaadin-controller.html">create-vaadin-controller</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/create-vaadin-embedded.html">create-vaadin-embedded</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-all.html">generate-vaadin-all</a>

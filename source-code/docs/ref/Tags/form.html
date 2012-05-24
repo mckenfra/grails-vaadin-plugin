@@ -34,13 +34,16 @@ function addJsClass(el) {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/3.%20Concepts%20and%20Usage.html"><strong>3</strong><span>Concepts and Usage</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/4.%20Known%20Issues%20and%20Limitations.html"><strong>4</strong><span>Known Issues and Limitations</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/4.%20Configuration.html"><strong>4</strong><span>Configuration</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Roadmap.html"><strong>5</strong><span>Roadmap</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Known%20Issues%20and%20Limitations.html"><strong>5</strong><span>Known Issues and Limitations</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/6.%20Version%20History.html"><strong>6</strong><span>Version History</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/6.%20Roadmap.html"><strong>6</strong><span>Roadmap</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/7.%20Version%20History.html"><strong>7</strong><span>Version History</span></a>
                     </div>
                     
                 </div>
@@ -68,24 +71,30 @@ function addJsClass(el) {
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
-                <h1>form</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Adds a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Form.html" target="blank">Form</a> component to the parent container.<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/><div class="code"><pre>&#60;v:form itemDataSource=<span class="java&#45;quote">"$&#123;<span class="java&#45;keyword">new</span> BeanItem&#60;Book&#62;(bookInstance)&#125;"</span> writeThrough=<span class="java&#45;quote">"<span class="java&#45;keyword">false</span>"</span>&#62;
+                <h1>form</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Adds a Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Form.html" target="blank">Form</a> component to the parent container.<p class="paragraph"/><h2>Examples</h2><p class="paragraph"/><div class="code"><pre>&#60;v:form bean=<span class="java&#45;quote">"$&#123;bookInstance&#125;"</span> writeThrough=<span class="java&#45;quote">"<span class="java&#45;keyword">false</span>"</span>&#62;
   &#60;v:field name=<span class="java&#45;quote">"title"</span> readOnly=<span class="java&#45;quote">"<span class="java&#45;keyword">false</span>"</span> required=<span class="java&#45;quote">"<span class="java&#45;keyword">true</span>"</span> requiredError=<span class="java&#45;quote">"Please enter a Title"</span>&#62;
     Title
   &#60;/v:field&#62;
-  &#60;v:field name=<span class="java&#45;quote">"author"</span> readOnly=<span class="java&#45;quote">"<span class="java&#45;keyword">false</span>"</span> required=<span class="java&#45;quote">"<span class="java&#45;keyword">true</span>"</span> requiredError=<span class="java&#45;quote">"Please enter an Author"</span>&#62;
+  &#60;v:text name=<span class="java&#45;quote">"author"</span> readOnly=<span class="java&#45;quote">"<span class="java&#45;keyword">false</span>"</span> required=<span class="java&#45;quote">"<span class="java&#45;keyword">true</span>"</span> requiredError=<span class="java&#45;quote">"Please enter an Author"</span>&#62;
     Author
-  &#60;/v:field&#62;
-  &#60;v:field name=<span class="java&#45;quote">"description"</span> readOnly=<span class="java&#45;quote">"<span class="java&#45;keyword">false</span>"</span> required=<span class="java&#45;quote">"<span class="java&#45;keyword">false</span>"</span>/&#62;
+  &#60;/v:text&#62;
+  &#60;v:date name=<span class="java&#45;quote">"datePublished"</span> readOnly=<span class="java&#45;quote">"<span class="java&#45;keyword">false</span>"</span> required=<span class="java&#45;quote">"<span class="java&#45;keyword">false</span>"</span>&#62;
+    Date Published
+  &#60;/v:date&#62;
+  &#60;v:textArea name=<span class="java&#45;quote">"description"</span> readOnly=<span class="java&#45;quote">"<span class="java&#45;keyword">false</span>"</span> required=<span class="java&#45;quote">"<span class="java&#45;keyword">false</span>"</span>/&#62;
     Description
-  &#60;/v:field&#62;
+  &#60;/v:textArea&#62;
 &#60;/v:form&#62;</pre></div><p class="paragraph"/><h2>Description</h2><p class="paragraph"/>The Form component is configured using nested <a href="../../ref/Tags/field.html" class="Tags">field</a> tags. These are used to configure the
 <code>formFieldFactory</code> and set the <code>visibleItemProperties</code> properties of the form component.<p class="paragraph"/><h4>Body</h4>
 <ul class="star">
 <li><a href="../../ref/Tags/field.html" class="Tags">field</a> tags should be specified in the body. Any HTML is ignored.</li>
 </ul><p class="paragraph"/><h4>Attributes</h4><p class="paragraph"/><h5>Specific</h5>
 <ul class="star">
+<li><code>bean</code> (optional) The bean (e.g. domain instance) to use to provide the underlying form data.</li>
 <li><code>itemDataSource</code> (optional) The <a href="http://vaadin.com/api/com/vaadin/data/Item.html" target="blank">Item</a> object to use to provide the underlying form data.</li>
-</ul><p class="paragraph"/><h5>General</h5>
+</ul><p class="paragraph"/><blockquote class="note">
+Vaadin's <a href="http://vaadin.com/api/com/vaadin/data/util/BeanItem.html" target="blank">BeanItem</a> class cannot handle embedded or nested properties.<p class="paragraph"/>This plugin provides a <a href="../../gapi/org/grails/plugin/vaadin/data/DomainItem.html" class="api">DomainItem</a> class that supports embedded and nested properties. The <code>bean</code> attribute automatically uses this class.
+</blockquote><p class="paragraph"/><h5>General</h5>
 <ul class="star">
 <li><code>var</code> (optional) Uses Grails's <a href="http://grails.org/doc/latest/ref/Tags/set.html" target="blank">set</a> tag to set the value of the specified variable to be this component.</li>
 <li><code>class</code> (optional) The CSS class name to add to the component using the addStyleName() method</li>
@@ -112,6 +121,9 @@ See Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Form.html" target="blank
                             
                             
                             <div class="menu-item"><a href="../../ref/Command%20Line/create-vaadin-controller.html">create-vaadin-controller</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/create-vaadin-embedded.html">create-vaadin-embedded</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-all.html">generate-vaadin-all</a>
