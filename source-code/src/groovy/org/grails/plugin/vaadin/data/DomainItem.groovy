@@ -96,7 +96,8 @@ class DomainItem extends PropertysetItem {
         if (result == null && !this.itemPropertyIds.contains("${id}")) {
             // Try to create a new property
             def pd = new DomainPropertyDescriptor(domainClass, "${id}")
-            addItemProperty(pd.name, pd.createProperty(domainInstance, changedProperties))
+            result = pd.createProperty(domainInstance, changedProperties)
+            addItemProperty(pd.name, result)
         }
         return result
     }
