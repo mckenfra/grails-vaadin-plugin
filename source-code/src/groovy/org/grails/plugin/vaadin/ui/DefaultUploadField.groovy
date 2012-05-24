@@ -95,11 +95,21 @@ class DefaultUploadField extends UploadField {
     }
     
     /**
+     * Always update the display when we attach
+     */
+    public void attach() {
+        updateDisplay()
+    }
+    
+    /**
      * Overrides superclass to provide link to file that was uploaded,
      * and delete button
      */
     @Override
     protected void updateDisplay() {
+        // Don't do anything if we're not attached
+        if (! this.parent) return
+        
         // Always remove existing display
         removeUploadedFileLink()
         
