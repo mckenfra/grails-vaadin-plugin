@@ -12,6 +12,8 @@ import com.vaadin.data.util.AbstractProperty;
  * allowing any type to be converted to any type.
  * <p>
  * In fact, PropertyFormatter could easily be rewritten to subclass this class.
+ * <p>
+ * Also, this class allows chaining of property converters, whereas PropertyFormatter does not.
  * 
  * @author Francis McKenzie
  */
@@ -41,8 +43,9 @@ public abstract class PropertyConverter<ORIGINAL,CONVERTED> extends AbstractProp
      *            to connect this property to.
      */
     public PropertyConverter(Property propertyDataSource) {
-
-        setPropertyDataSource(propertyDataSource);
+        if (propertyDataSource != null) {
+            setPropertyDataSource(propertyDataSource);
+        }
     }
 
     /**
@@ -84,15 +87,19 @@ public abstract class PropertyConverter<ORIGINAL,CONVERTED> extends AbstractProp
             prevValue = getValue();
         }
 
-        dataSource = newDataSource;
+        if (dataSource instanceof Property.Viewer) {
+            ((Property.Viewer) dataSource).setPropertyDataSource(newDataSource);
+        } else {
+            dataSource = newDataSource;
+        }
 
-        if (dataSource != null) {
-            if (dataSource instanceof Property.ValueChangeNotifier) {
-                ((Property.ValueChangeNotifier) dataSource)
+        if (newDataSource != null) {
+            if (newDataSource instanceof Property.ValueChangeNotifier) {
+                ((Property.ValueChangeNotifier) newDataSource)
                         .addListener((Property.ValueChangeListener) this);
             }
-            if (dataSource instanceof Property.ReadOnlyStatusChangeListener) {
-                ((Property.ReadOnlyStatusChangeNotifier) dataSource)
+            if (newDataSource instanceof Property.ReadOnlyStatusChangeListener) {
+                ((Property.ReadOnlyStatusChangeNotifier) newDataSource)
                         .addListener((Property.ReadOnlyStatusChangeListener) this);
             }
         }
