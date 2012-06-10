@@ -1,7 +1,7 @@
 @artifact.package@import com.vaadin.ui.Window
-import org.grails.plugin.vaadin.VaadinApplication
+import org.grails.plugin.vaadin.GrailsVaadinApplication
 
-class @artifact.name@ extends VaadinApplication {
+class @artifact.name@ extends GrailsVaadinApplication {
     /**
      * Entry point for application
      */
