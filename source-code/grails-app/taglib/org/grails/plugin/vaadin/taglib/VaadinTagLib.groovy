@@ -15,38 +15,17 @@ import org.grails.plugin.vaadin.gsp.GspContext;
 import org.grails.plugin.vaadin.ui.DefaultCustomField;
 import org.grails.plugin.vaadin.ui.DefaultUploadField;
 import org.grails.plugin.vaadin.ui.GrailsIncludeLayout;
+import org.grails.plugin.vaadin.ui.GspBodyLayout;
 import org.grails.plugin.vaadin.ui.GspTemplateLayout;
-import org.grails.plugin.vaadin.ui.GspLayout;
 import org.grails.plugin.vaadin.ui.GrailsButton;
 import org.grails.plugin.vaadin.utils.ByteArrayPropertyConverter;
 import org.grails.plugin.vaadin.utils.CalendarPropertyConverter;
 import org.grails.plugin.vaadin.utils.DefaultValuePropertyConverter;
-import org.grails.plugin.vaadin.utils.DomainProxy;
 import org.grails.plugin.vaadin.utils.DomainProxyPropertyConverter;
-import org.grails.plugin.vaadin.utils.PropertyConverter;
 import org.grails.plugin.vaadin.utils.Utils;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ReadOnlyStatusChangeEvent;
-import com.vaadin.data.Property.ReadOnlyStatusChangeListener;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.AbstractBeanContainer.BeanIdResolver;
-import com.vaadin.data.util.BeanContainer;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.RegexpValidator;
-import com.vaadin.event.FieldEvents.TextChangeEvent;
-import com.vaadin.event.FieldEvents.TextChangeListener;
-import com.vaadin.terminal.ErrorMessage;
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.terminal.Paintable;
-import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.ThemeResource;
-import com.vaadin.terminal.UserError;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Accordion;
@@ -68,16 +47,12 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Upload;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Window.Notification;
 
 import org.vaadin.addon.customfield.CustomField;
-import org.vaadin.easyuploads.FileBuffer;
-import org.vaadin.easyuploads.FileFactory;
-import org.vaadin.easyuploads.MultiFileUpload;
 import org.vaadin.easyuploads.UploadField;
 import org.vaadin.easyuploads.UploadField.FieldType;
 import org.vaadin.easyuploads.UploadField.StorageMode;
@@ -183,13 +158,8 @@ class VaadinTagLib {
      * @attr name REQUIRED The name of the layout view
      */
     Closure createLayout = { attrs, body ->
-        // Ensure have layout name
-        def name = Utils.removeCaseInsensitive(attrs, 'name')
-        if (!name) {
-            throw new IllegalArgumentException("Tag <${namespace}:createLayout> must have 'name' attribute")
-        }
-        
-        return applyAttrsAndBodyToComponent(attrs, null, new GspTemplateLayout(request.vaadinApplication, name, body, params, null, flash, controllerName))
+        attrs.body = body
+        return applyAttrsAndBodyToComponent(attrs, null, new GspTemplateLayout(), layoutConfigurer)
     }
     
     /**
@@ -209,12 +179,12 @@ class VaadinTagLib {
     }
 
     /**
-     * Returns a new {@link org.grails.plugin.vaadin.ui.GspLayout} using the body
+     * Returns a new {@link org.grails.plugin.vaadin.ui.GspBodyLayout} using the body
      * 
      * @attr name REQUIRED The name of the layout view
      */
     Closure createLocation = { attrs, body ->
-        return applyAttrsAndBodyToComponent(attrs, null, new GspLayout(request.vaadinApplication, body))
+        return applyAttrsAndBodyToComponent(attrs, null, new GspBodyLayout(body))
     }
     
     /**
@@ -233,7 +203,7 @@ class VaadinTagLib {
     }
     
     /**
-     * Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/HorizontalLayout.html">HorizontalLayout</a> tag
+     * Vaadin {@link com.vaadin.ui.HorizontalLayout} tag
      * <p>
      * Components to be added to the layout should be specified as nested elements.
      */
@@ -243,14 +213,14 @@ class VaadinTagLib {
     }
 
     /**
-     * Returns a new Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/HorizontalLayout.html">HorizontalLayout</a>
+     * Returns a new Vaadin {@link com.vaadin.ui.HorizontalLayout}
      */
     Closure createHorizontalLayout = { attrs, body ->
         return applyAttrsAndBodyToComponent(attrs, body, new HorizontalLayout())
     }
 
     /**
-     * Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/VerticalLayout.html">VerticalLayout</a> tag
+     * Vaadin {@link com.vaadin.ui.VerticalLayout} tag
      * <p>
      * Components to be added to the layout should be specified as nested elements.
      */
@@ -260,14 +230,14 @@ class VaadinTagLib {
     }
     
     /**
-     * Returns a new Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/VerticalLayout.html">VerticalLayout</a>
+     * Returns a new Vaadin {@link com.vaadin.ui.VerticalLayout}
      */
     Closure createVerticalLayout = { attrs, body ->
         return applyAttrsAndBodyToComponent(attrs, body, new VerticalLayout())
     }
 
     /**
-     * Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/TabSheet.html">TabSheet</a> tag
+     * Vaadin {@link com.vaadin.ui.TabSheet} tag
      * <p>
      * Tabs to be added to the TabSheet should be specified as nested &lt;v:tab&gt; elements.
      */
@@ -277,7 +247,7 @@ class VaadinTagLib {
     }
  
     /**
-     * Returns a new Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/TabSheet.html">TabSheet</a>
+     * Returns a new Vaadin {@link com.vaadin.ui.TabSheet}
      */
     Closure createTabs = { attrs, body ->
         return applyAttrsAndBodyToComponent(attrs, body, new TabSheet(), tabsConfigurer, null, "tabs")
@@ -285,17 +255,17 @@ class VaadinTagLib {
 
     /**
      * Configuration tag for describing a tab in a Vaadin
-     * <a href="http://vaadin.com/api/com/vaadin/ui/TabSheet.html">TabSheet</a>
+     * {@link com.vaadin.ui.TabSheet}
      * <p>
      * The tab contents should be specified in the body of the tag.
      */
     Closure tab = { attrs, body ->
-        attrs.body = new GspLayout(request.vaadinApplication, body)
+        attrs.body = new GspBodyLayout(body)
         attachConfig(attrs, null, TabSheet.class, "tab")
     }
 
     /**
-     * Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Accordion.html">Accordion</a> tag
+     * Vaadin {@link com.vaadin.ui.Accordion} tag
      * <p>
      * Tabs to be added to the Accordion should be specified as nested &lt;v:tab&gt; elements.
      */
@@ -305,14 +275,14 @@ class VaadinTagLib {
     }
  
     /**
-     * Returns a new Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Accordion.html">Accordion</a>
+     * Returns a new Vaadin {@link com.vaadin.ui.Accordion}
      */
     Closure createAccordion = { attrs, body ->
         return applyAttrsAndBodyToComponent(attrs, body, new Accordion(), tabsConfigurer, null, "tabs")
     }
  
     /**
-     * Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Window.Notification.html">Window Notification</a> with Warning type
+     * Vaadin {@link com.vaadin.ui.Window.Notification} with Warning type
      * <p>
      * The message should be specified in the body of the tag.
      */
@@ -322,7 +292,7 @@ class VaadinTagLib {
     }
 
     /**
-     * Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Window.Notification.html">Window Notification</a> with Error type
+     * Vaadin {@link com.vaadin.ui.Window.Notification} with Error type
      * <p>
      * The message should be specified in the body of the tag.
      */
@@ -332,7 +302,7 @@ class VaadinTagLib {
     }
 
     /**
-     * Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Table.html">Table</a> tag
+     * Vaadin {@link com.vaadin.ui.Table} tag
      * <p>
      * Columns should be configured using nested &lt;v:column&gt; tags
      */
@@ -342,7 +312,7 @@ class VaadinTagLib {
     }
     
     /**
-     * Returns a new Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Table.html">Table</a>
+     * Returns a new Vaadin {@link com.vaadin.ui.Table}
      */
     Closure createTable = { attrs, body ->
         return applyAttrsAndBodyToComponent(attrs, body, new Table(), tableConfigurer, null, "columns")
@@ -350,13 +320,13 @@ class VaadinTagLib {
     
     /**
      * Configuration tag for describing a column in a Vaadin
-     * <a href="http://vaadin.com/api/com/vaadin/ui/Table.html">Table</a>
+     * {@link com.vaadin.ui.Table}
      * <p>
      * The column header should be specified as the body of the tag.
      * <p>
      * A column generator can be specified using the 'generator' attribute,
      * which expects a Closure accepting an
-     * <a href="http://vaadin.com/api/com/vaadin/data/Item.html">Item</a> parameter.
+     * {@link com.vaadin.data.Item} parameter.
      * The item is the underlying data of a row in the table.
      */
     Closure column = { attrs, body ->
@@ -364,7 +334,7 @@ class VaadinTagLib {
     }
 
     /**
-     * Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Form.html">Form</a> tag
+     * Vaadin {@link com.vaadin.ui.Form} tag
      * <p>
      * Fields should be configured using nested &lt;v:form&gt; tags
      */
@@ -374,7 +344,7 @@ class VaadinTagLib {
     }
     
     /**
-     * Returns a new Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Form.html">Form</a>
+     * Returns a new Vaadin {@link com.vaadin.ui.Form}
      */
     Closure createForm = { attrs, body ->
         return applyAttrsAndBodyToComponent(attrs, body, new Form(), formConfigurer, null, "fields")
@@ -382,7 +352,7 @@ class VaadinTagLib {
     
     /**
      * Configuration tag for describing a field in a Vaadin
-     * <a href="http://vaadin.com/api/com/vaadin/ui/Form.html">Form</a>
+     * {@link com.vaadin.ui.Form}
      * <p>
      * The field caption should be specified as the body of the tag.
      */
@@ -403,16 +373,16 @@ class VaadinTagLib {
     }
         
     /**
-     * Returns a new Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Field.html">Field</a>
+     * Returns a new Vaadin {@link com.vaadin.ui.Field}
      * of the type specified in the attrs.
      */
     Closure createField = { attrs, body ->
-        def fieldDef = toFieldDef(attrs)
+        def fieldDef = Converter.toFieldDef(attrs, toConfigurer)
         return applyAttrsAndBodyToComponent(attrs, body, fieldDef.type?.newInstance(), fieldDef.configurer, "caption")
     }
     
     /**
-     * <a href="http://vaadin.com/api/com/vaadin/ui/CheckBox.html">CheckBox</a> field
+     * {@link com.vaadin.ui.CheckBox} field
      */
     Closure checkBox = { attrs, body ->
         attrs.type = 'checkBox'
@@ -420,12 +390,12 @@ class VaadinTagLib {
     }
     
     /**
-     * <a href="http://vaadin.com/api/com/vaadin/ui/CheckBox.html">CheckBox</a> field
+     * {@link com.vaadin.ui.CheckBox} field
      */
     Closure checkbox = checkBox
     
     /**
-     * <a href="http://vaadin.com/api/com/vaadin/ui/ComboBox.html">ComboBox</a> field
+     * {@link com.vaadin.ui.ComboBox} field
      */
     Closure comboBox = { attrs, body ->
         attrs.type = 'comboBox'
@@ -433,12 +403,12 @@ class VaadinTagLib {
     }
     
     /**
-     * <a href="http://vaadin.com/api/com/vaadin/ui/ComboBox.html">ComboBox</a> field
+     * {@link com.vaadin.ui.ComboBox} field
      */
     Closure combobox = comboBox
     
     /**
-     * <a href="http://vaadin.com/api/com/vaadin/ui/DateField.html">DateField</a> field
+     * {@link com.vaadin.ui.DateField} field
      */
     Closure date = { attrs, body ->
         attrs.type = 'dateField'
@@ -446,7 +416,7 @@ class VaadinTagLib {
     }
     
     /**
-     * <a href="http://vaadin.com/api/com/vaadin/ui/ListSelect.html">ListSelect</a> field
+     * {@link com.vaadin.ui.ListSelect} field
      */
     Closure listSelect = { attrs, body ->
         attrs.type = 'listSelect'
@@ -454,12 +424,12 @@ class VaadinTagLib {
     }
     
     /**
-     * <a href="http://vaadin.com/api/com/vaadin/ui/ListSelect.html">ListSelect</a> field
+     * {@link com.vaadin.ui.ListSelect} field
      */
     Closure listselect = listSelect
     
     /**
-     * <a href="http://vaadin.com/api/com/vaadin/ui/OptionGroup.html">OptionGroup</a> field
+     * {@link com.vaadin.ui.OptionGroup} field
      */
     Closure optionGroup = { attrs, body ->
         attrs.type = 'optionGroup'
@@ -467,12 +437,12 @@ class VaadinTagLib {
     }
     
     /**
-     * <a href="http://vaadin.com/api/com/vaadin/ui/OptionGroup.html">OptionGroup</a> field
+     * {@link com.vaadin.ui.OptionGroup} field
      */
     Closure optiongroup = optionGroup
     
     /**
-     * <a href="http://vaadin.com/api/com/vaadin/ui/PasswordField.html">PasswordField</a> field
+     * {@link com.vaadin.ui.PasswordField} field
      */
     Closure password = { attrs, body ->
         attrs.type = 'password'
@@ -480,7 +450,7 @@ class VaadinTagLib {
     }
     
     /**
-     * <a href="http://vaadin.com/api/com/vaadin/ui/Select.html">Select</a> field
+     * {@link com.vaadin.ui.Select} field
      */
     Closure select = { attrs, body ->
         attrs.type = 'select'
@@ -488,7 +458,7 @@ class VaadinTagLib {
     }
     
     /**
-     * <a href="http://vaadin.com/api/com/vaadin/ui/TextField.html">TextField</a> field
+     * {@link com.vaadin.ui.TextField} field
      */
     Closure text = { attrs, body ->
         attrs.type = 'text'
@@ -496,7 +466,7 @@ class VaadinTagLib {
     }
 
     /**
-     * <a href="http://vaadin.com/api/com/vaadin/ui/TextArea.html">TextArea</a> field
+     * {@link com.vaadin.ui.TextArea} field
      */
     Closure textArea = { attrs, body ->
         attrs.type = 'textArea'
@@ -504,13 +474,13 @@ class VaadinTagLib {
     }
 
     /**
-     * <a href="http://vaadin.com/api/com/vaadin/ui/TextArea.html">TextArea</a> field
+     * {@link com.vaadin.ui.TextArea} field
      */
     Closure textarea = textArea
 
     /**
      * TimeZone-populated
-     * <a href="http://vaadin.com/api/com/vaadin/ui/ComboBox.html">ComboBox</a> field
+     * {@link com.vaadin.ui.ComboBox} field
      */
     Closure timeZoneSelect = { attrs, body ->
         attrs.type = Utils.removeCaseInsensitive(attrs, 'type') ?: 'comboBox'
@@ -520,13 +490,13 @@ class VaadinTagLib {
     
     /**
      * TimeZone-populated
-     * <a href="http://vaadin.com/api/com/vaadin/ui/ComboBox.html">ComboBox</a> field
+     * {@link com.vaadin.ui.ComboBox} field
      */
     Closure timezoneSelect = timeZoneSelect
     
     /**
      * Locale-populated
-     * <a href="http://vaadin.com/api/com/vaadin/ui/ComboBox.html">ComboBox</a> field
+     * {@link com.vaadin.ui.ComboBox} field
      */
     Closure localeSelect = { attrs, body ->
         attrs.type = Utils.removeCaseInsensitive(attrs, 'type') ?: 'comboBox'
@@ -536,7 +506,7 @@ class VaadinTagLib {
     
     /**
      * Currency-populated
-     * <a href="http://vaadin.com/api/com/vaadin/ui/ComboBox.html">ComboBox</a> field
+     * {@link com.vaadin.ui.ComboBox} field
      */
     Closure currencySelect = { attrs, body ->
         attrs.type = Utils.removeCaseInsensitive(attrs, 'type') ?: 'comboBox'
@@ -549,7 +519,7 @@ class VaadinTagLib {
      */
     Closure customField = { attrs, body ->
         attrs.type = 'customField'
-        attrs.compositionRoot = new GspLayout(request.vaadinApplication, body)
+        attrs.compositionRoot = new GspBodyLayout(body)
         attachConfig(attrs, null, Form.class, "field")
     }
     
@@ -559,7 +529,7 @@ class VaadinTagLib {
     Closure customfield = customField
 
     /**
-     * Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Label.html">Label</a> tag
+     * Vaadin {@link com.vaadin.ui.Label} tag
      * <p>
      * The label message should be specified in the tag body.
      */
@@ -569,14 +539,14 @@ class VaadinTagLib {
     }
     
     /**
-     * Returns a new Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Label.html">Label</a>
+     * Returns a new Vaadin {@link com.vaadin.ui.Label}
      */
     Closure createLabel = { attrs, body ->
         return applyAttrsAndBodyToComponent(attrs, body, new Label(), labelConfigurer, "value")
     }
 
     /**
-     * Custom {@link org.grails.plugin.vaadin.ui.RequestButton} tag
+     * Custom {@link org.grails.plugin.vaadin.ui.GrailsButton} tag
      * <p>
      * The button caption should be specified in the tag body.
      * 
@@ -590,7 +560,7 @@ class VaadinTagLib {
     }
     
     /**
-     * Returns a new custom {@link org.grails.plugin.vaadin.ui.RequestButton}
+     * Returns a new custom {@link org.grails.plugin.vaadin.ui.GrailsButton}
      */
     Closure createLink = { attrs, body ->
         return applyAttrsAndBodyToComponent(attrs, body, new GrailsButton(), linkConfigurer, "caption")
@@ -602,6 +572,14 @@ class VaadinTagLib {
     Closure file = { attrs, body ->
         attrs.type = 'file'
         fieldTag(attrs, body)
+    }
+    
+    /**
+     * Configures the Vaadin application's main
+     * {@link com.vaadin.ui.Window}
+     */
+    Closure mainWindow = { attrs, body ->
+        windowConfigurer(attrs, request.vaadinApplication.mainWindow)
     }
     
     /**
@@ -715,6 +693,27 @@ class VaadinTagLib {
         result.role = Utils.removeCaseInsensitive(attrs, 'role')
         return result
     }
+    
+    /**
+     * Applies the specified properties to a
+     * Vaadin {@link com.vaadin.ui.Window}
+     */
+    protected Closure windowConfigurer = { Map props, Window window ->
+        // Remove specific properties
+        def onblur = Utils.removeAllCaseInsensitive(props, 'onblur')
+        def onfocus = Utils.removeAllCaseInsensitive(props, 'onfocus')
+        def onclose = Utils.removeAllCaseInsensitive(props, 'onclose')
+        def onresize = Utils.removeAllCaseInsensitive(props, 'onresize')
+        
+        // Process specific properties
+        if (onblur) window.addListener(Converter.toBlurListener(onblur))
+        if (onfocus) window.addListener(Converter.toFocusListener(onfocus))
+        if (onclose) window.addListener(Converter.toCloseListener(onclose))
+        if (onresize) window.addListener(Converter.toResizeListener(onresize))
+ 
+        // Remaining props
+        defaultConfigurer(props, window)
+    }
 
     /**
      * Applies the specified properties to a
@@ -735,7 +734,26 @@ class VaadinTagLib {
 
     /**
      * Applies the specified properties to a
-     * Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/TabSheet.html">TabSheet</a>
+     * Vaadin {@link org.grails.plugin.vaadin.ui.GrailsIncludeLayout} component
+     */
+    protected Closure layoutConfigurer = { Map props, GspTemplateLayout layout ->
+        // Remove specific properties
+        def name = Utils.removeCaseInsensitive(props, 'name')
+        def body = Utils.removeCaseInsensitive(props, 'body')
+        
+        // Process specific properties
+        if (!name) throw new IllegalArgumentException("Tag <${namespace}:layout> must have 'name' attribute")
+        layout.name = name
+        layout.body = body
+        layout.context = [params:params, flash:flash, controllerName:controllerName]
+
+        // Remaining props
+        defaultConfigurer(props, layout)
+    }
+
+    /**
+     * Applies the specified properties to a
+     * Vaadin {@link com.vaadin.ui.TabSheet}
      */
     protected Closure tabsConfigurer = { Map props, TabSheet tabSheet ->
         // Remove specific properties
@@ -757,7 +775,7 @@ class VaadinTagLib {
                     tab = tabSheet.addTab(body)
                 }
                 if (tab) {
-                    if (icon != null) tab.icon = toResource(icon)
+                    if (icon != null) tab.icon = Converter.toResource(icon)
                     if (var) set(var:var, value:tab)
                     if (selected) tabSheet.selectedTab = tab.component 
                     // All remaining props
@@ -767,7 +785,7 @@ class VaadinTagLib {
                 }
             }
         }
-        if (ontab) { tabSheet.addListener(toSelectedTabChangeListener(ontab)) }
+        if (ontab) { tabSheet.addListener(Converter.toSelectedTabChangeListener(ontab)) }
         
         // Remaining props
         defaultConfigurer(props, tabSheet)
@@ -775,7 +793,7 @@ class VaadinTagLib {
 
     /**
      * Applies the specified properties to a
-     * Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Table.html">Table</a>
+     * Vaadin {@link com.vaadin.ui.Table}
      */
     protected Closure tableConfigurer = { Map props, Table table ->
         // Remove specific properties
@@ -790,7 +808,7 @@ class VaadinTagLib {
             def columnDefs = []
             columns.each {
                 if (it.type == "column") {
-                    def column = toColumnDef(it.props)
+                    def column = Converter.toColumnDef(it.props)
                     if (column) columnDefs << column
                 }
             }
@@ -807,7 +825,7 @@ class VaadinTagLib {
     
     /**
      * Applies the specified properties to a
-     * Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Form.html">Form</a>
+     * Vaadin {@link com.vaadin.ui.Form}
      */
     protected Closure formConfigurer = { Map props, Form form ->
         // Remove specific properties
@@ -829,7 +847,7 @@ class VaadinTagLib {
             def fieldDefs = []
             fields.each {
                 if (it.type == "field") {
-                    def field = toFieldDef(it.props)
+                    def field = Converter.toFieldDef(it.props, toConfigurer)
                     if (field && field.name) fieldDefs << field
                 }
             }
@@ -850,11 +868,12 @@ class VaadinTagLib {
    
     /**
      * Applies the specified properties to a
-     * Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/AbstractField.html">Field</a>
+     * Vaadin {@link com.vaadin.ui.AbstractField}
      */
     protected Closure fieldConfigurer = { Map props, Field field ->
         // Remove specific properties
         def name = Utils.removeCaseInsensitive(props, 'name')
+        def type = Utils.removeCaseInsensitive(props, 'type')
         def instance = Utils.removeCaseInsensitive(props, 'instance')
         def pattern = Utils.removeCaseInsensitive(props, 'pattern')
         def resolution = Utils.removeCaseInsensitive(props, 'resolution')
@@ -865,10 +884,10 @@ class VaadinTagLib {
 
         // Process specific properties
         if (pattern) { field.addValidator(new RegexpValidator(pattern, "Invalid Value")) }
-        if (resolution) { field.resolution = toDateResolution(resolution) }
-        if (textChange) { field.addListener(toTextChangeListener(textChange)) }
-        if (valueChange) { field.addListener(toValueChangeListener(valueChange)) }
-        if (readOnlyStatusChange) { field.addListener(toReadOnlyStatusChangeListener(readOnlyStatusChange)) }
+        if (resolution) { field.resolution = Converter.toDateResolution(resolution) }
+        if (textChange) { field.addListener(Converter.toTextChangeListener(textChange)) }
+        if (valueChange) { field.addListener(Converter.toValueChangeListener(valueChange)) }
+        if (readOnlyStatusChange) { field.addListener(Converter.toReadOnlyStatusChangeListener(readOnlyStatusChange)) }
         if (defaultValue != null) { field.propertyDataSource = new DefaultValuePropertyConverter(field.propertyDataSource, defaultValue) }
 
         // Remaining props
@@ -888,7 +907,7 @@ class VaadinTagLib {
     
     /**
      * Applies the specified properties to a Vaadin
-     * <a href="http://vaadin.com/api/com/vaadin/ui/DateField.html">DateField</a>
+     * {@link com.vaadin.ui.DateField}
      */
     protected Closure dateConfigurer = { Map props, DateField date ->
         // Allow calendar properties to be used with DateField
@@ -900,7 +919,7 @@ class VaadinTagLib {
     
     /**
      * Applies the specified properties to a
-     * Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/AbstractSelect.html">AbstractSelect</a>
+     * Vaadin {@link com.vaadin.ui.AbstractSelect}
      */
     protected Closure selectConfigurer = { Map props, AbstractSelect select ->
         // Remove specific properties
@@ -917,9 +936,9 @@ class VaadinTagLib {
         def columns = Utils.removeCaseInsensitive(props, 'columns')
         
         // Process specific properties
-        if (filteringMode) { select.filteringMode = toFilteringMode(filteringMode) }
+        if (filteringMode) { select.filteringMode = Converter.toFilteringMode(filteringMode) }
         if (itemEquals) { select.propertyDataSource = new DomainProxyPropertyConverter(select.propertyDataSource, itemEquals.toString()) }
-        if (from) { select.containerDataSource = toContainer(from, itemIds, itemId, itemEquals, noSelection) }
+        if (from) { select.containerDataSource = Converter.toContainer(from, itemIds, itemId, itemEquals, noSelection) }
         if (noSelection != null) {
             // Use first item as noSelection
             def id = select.itemIds?.iterator()?.next()
@@ -935,14 +954,14 @@ class VaadinTagLib {
         select.itemIds.each { id ->
             if (id != select.nullSelectionItemId) {
                 def item = select.getItem(id)
-                if (item) { select.setItemCaption(id, toItemCaption(item, itemCaption, itemCaptionMessagePrefix)) }
+                if (item) { select.setItemCaption(id, Converter.toItemCaption(item, itemCaption, itemCaptionMessagePrefix, message)) }
             }
         }
         if (itemIcon) {
             select.itemIds.each {
                 if (it != select.nullSelectionItemId) {
                     def item = select.getItem(it)
-                    if (item) { select.setItemIcon(it, toItemIcon(item, itemIcon)) }
+                    if (item) { select.setItemIcon(it, Converter.toItemIcon(item, itemIcon)) }
                 }
             }
         }
@@ -955,11 +974,11 @@ class VaadinTagLib {
 
     /**
      * Applies the specified properties to a timeZone-type 
-     * Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/AbstractSelect.html">AbstractSelect</a>
+     * Vaadin {@link com.vaadin.ui.AbstractSelect}
      */
     protected Closure timeZoneSelectConfigurer = { Map props, AbstractField select ->
-        props.from = toTimeZones(Utils.removeCaseInsensitive(props, 'from') ?: vaadinTagDataService.defaultTimeZones)
-        props.default = toTimeZone(Utils.removeCaseInsensitive(props, 'default') ?: TimeZone.default)
+        props.from = Converter.toTimeZones(Utils.removeCaseInsensitive(props, 'from') ?: vaadinTagDataService.defaultTimeZones)
+        props.default = Converter.toTimeZone(Utils.removeCaseInsensitive(props, 'default') ?: TimeZone.default)
         props.nullSelectionAllowed = Utils.removeCaseInsensitive(props, 'nullSelectionAllowed') ?: false
         props.filteringMode = Utils.removeCaseInsensitive(props, 'filteringMode') ?: "contains"
         def date = new Date()
@@ -981,11 +1000,11 @@ class VaadinTagLib {
     
     /**
      * Applies the specified properties to a locale-type 
-     * Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/AbstractSelect.html">AbstractSelect</a>
+     * Vaadin {@link com.vaadin.ui.AbstractSelect}
      */
     protected Closure localeSelectConfigurer = { Map props, AbstractSelect select ->
-        props.from = toLocales(Utils.removeCaseInsensitive(props, 'from') ?: vaadinTagDataService.defaultLocales)
-        props.default = toLocale(Utils.removeCaseInsensitive(props, 'default') ?: RCU.getLocale(request))
+        props.from = Converter.toLocales(Utils.removeCaseInsensitive(props, 'from') ?: vaadinTagDataService.defaultLocales)
+        props.default = Converter.toLocale(Utils.removeCaseInsensitive(props, 'default') ?: RCU.getLocale(request))
         props.nullSelectionAllowed = Utils.removeCaseInsensitive(props, 'nullSelectionAllowed') ?: false
         props.itemCaption = Utils.removeCaseInsensitive(props, 'itemCaption') ?: 'displayName'
 
@@ -995,11 +1014,11 @@ class VaadinTagLib {
     
     /**
      * Applies the specified properties to a currency-type 
-     * Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/AbstractSelect.html">AbstractSelect</a>
+     * Vaadin {@link com.vaadin.ui.AbstractSelect}
      */
     protected Closure currencySelectConfigurer = { Map props, AbstractSelect select ->
-        props.from = toCurrencies(Utils.removeCaseInsensitive(props, 'from') ?: vaadinTagDataService.defaultCurrencies)
-        props.default = toCurrency(Utils.removeCaseInsensitive(props, 'default') ?: Currency.getInstance(RCU.getLocale(request)))
+        props.from = Converter.toCurrencies(Utils.removeCaseInsensitive(props, 'from') ?: vaadinTagDataService.defaultCurrencies)
+        props.default = Converter.toCurrency(Utils.removeCaseInsensitive(props, 'default') ?: Currency.getInstance(RCU.getLocale(request)))
         props.nullSelectionAllowed = Utils.removeCaseInsensitive(props, 'nullSelectionAllowed') ?: false
         props.itemCaption = {
             def symbol = vaadinTagDataService.getSymbol(it)
@@ -1012,14 +1031,14 @@ class VaadinTagLib {
     
     /**
      * Applies the specified properties to a
-     * Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Label.html">Label</a>
+     * Vaadin {@link com.vaadin.ui.Label}
      */
     protected Closure labelConfigurer = { Map props, Label label ->
         // Remove specific properties
         def contentMode = Utils.removeCaseInsensitive(props, 'contentMode')
         
         // Process specific properties
-        if (contentMode != null) { label.contentMode = toLabelContentMode(contentMode) }
+        if (contentMode != null) { label.contentMode = Converter.toLabelContentMode(contentMode) }
 
         // Remaining props
         defaultConfigurer(props, label)
@@ -1027,7 +1046,7 @@ class VaadinTagLib {
     
     /**
      * Applies the specified properties to a
-     * Vaadin {@link org.grails.plugin.vaadin.ui.RequestButton}
+     * Vaadin {@link org.grails.plugin.vaadin.ui.GrailsButton}
      */
     protected Closure linkConfigurer = { Map props, GrailsButton link ->
         // Remove specific properties
@@ -1035,8 +1054,8 @@ class VaadinTagLib {
         def onclick = Utils.removeCaseInsensitive(props, 'onclick')
         
         // Process specific properties
-        if (icon) { link.icon = toResource(icon) }
-        if (onclick) { link.onclick = toClosure(onclick) }
+        if (icon) { link.icon = Converter.toResource(icon) }
+        if (onclick) { link.onclick = Converter.toClosure(onclick) }
 
         // Remaining props
         defaultConfigurer(props, link)
@@ -1053,10 +1072,10 @@ class VaadinTagLib {
         def onupload = Utils.removeCaseInsensitive(props, 'onupload')
         
         // Process specific properties
-        upload.fieldType = fieldType ? toUploadFieldType(fieldType) : UploadField.FieldType.BYTE_ARRAY
-        upload.storageMode = storageMode ? toUploadStorageMode(storageMode) : UploadField.StorageMode.MEMORY
+        upload.fieldType = fieldType ? Converter.toUploadFieldType(fieldType) : UploadField.FieldType.BYTE_ARRAY
+        upload.storageMode = storageMode ? Converter.toUploadStorageMode(storageMode) : UploadField.StorageMode.MEMORY
         upload.setSizeFull()
-        if (onupload) { upload.uploadComponent.addListener(toUploadSucceededListener(onupload)) }
+        if (onupload) { upload.uploadComponent.addListener(Converter.toUploadSucceededListener(onupload)) }
         
         // Add fixed style
         upload.addStyleName("v-file")
@@ -1078,7 +1097,7 @@ class VaadinTagLib {
    
     /**
      * Applies the specified properties to a
-     * Vaadin <a href="http://vaadin.com/api/com/vaadin/ui/Component.html">Component</a>
+     * Vaadin {@link com.vaadin.ui.Component}
      * <p>
      * Note: this method will attempt to apply ALL entries in the map to the component,
      * so may throw errors if an entry cannot be applied to a Vaadin Component.
@@ -1092,101 +1111,15 @@ class VaadinTagLib {
                 case "style": throw new IllegalArgumentException("CSS 'style' is not supported by Vaadin components"); break;
                 case "sizeundefined": component.setSizeUndefined(); break;
                 case "sizefull": component.setSizeFull(); break;
-                case "oncomponentevent": if (v) component.addListener(toComponentListener(v)); break;
-                case "onrepaintrequest": if (v) component.addListener(toRepaintRequestListener(v)); break;
+                case "oncomponentevent": if (v) component.addListener(Converter.toComponentListener(v)); break;
+                case "onrepaintrequest": if (v) component.addListener(Converter.toRepaintRequestListener(v)); break;
                 case "width": if (v) component.setWidth(v.toString()); break;
                 case "height": if (v) component.setHeight(v.toString()); break;
-                case "componenterror": if (v) component.componentError = toComponentError(v); break;
+                case "componenterror": if (v) component.componentError = Converter.toComponentError(v); break;
+				case "configurer": break; // Ignore
                 default: component."${k}" = (v == "false" ? false : (v == "true" ? true : v))
             }
         }
-    }
-    
-    /**
-     * Converts the properties to a ColumnDef
-     */
-    protected ColumnDef toColumnDef(props) {
-        // Remove specific properties
-        def name = Utils.removeCaseInsensitive(props, 'name')
-        def header = Utils.removeCaseInsensitive(props, 'header')
-        def generator = Utils.removeCaseInsensitive(props, 'generator')
-        
-        // Process specific properties
-        if (generator instanceof Closure) {
-            def generatorClosure = generator
-            generator = new Table.ColumnGenerator() {
-                public Component generateCell(Table source, Object itemId, Object columnId) {
-                    def item = source.getItem(itemId)
-                    return generatorClosure(item)
-                }
-            }
-        }
-        
-        // Return ColumnDef
-        return new DefaultColumnDef(name, header, generator)
-    }
-    
-    /**
-     * Converts the properties to a FieldDef
-     */
-    protected FieldDef toFieldDef(props) {
-        // Remove specific properties
-        def name = Utils.removeCaseInsensitive(props, 'name')
-        def type = Utils.removeCaseInsensitive(props, 'type')
-        def configurer = Utils.removeCaseInsensitive(props, 'configurer')
-        
-        // Create type and configurer
-        if (! (type?.class == Class.class) ) { type = toFieldClass(type) }
-        if (! (configurer instanceof Closure) ) { configurer = toConfigurer(type) }
-        
-        // Return FieldDef
-        return new DefaultFieldDef(name, type, configurer, props)
-    }
-
-    /**
-     * Converts the value to a Field Class
-     * <p>
-     * Note that a list of aliases for Vaadin Component classes will be used
-     * for the conversion. E.g. a value of 'date' will translate to a DateField class. 
-     */
-    protected Class toFieldClass(value) {
-        Class result = TextField.class
-        if (value) {
-            // If value is a class, we're done
-            if (value.class == Class.class) {
-                result = value
-            } else {
-                // Type may be a shortcut name
-                switch (value.toString().toLowerCase()) {
-                    case 'date': // Fall through
-                    case 'datefield': // Fall through
-                    case 'datepicker': result = DateField; break;
-                    case 'checkbox': result = CheckBox; break;
-                    case 'combobox': result = ComboBox; break;
-                    case 'listselect': result = ListSelect; break;
-                    case 'option': // Fall through
-                    case 'optiongroup': result = OptionGroup; break;
-                    case 'passwordfield': // Fall through
-                    case 'password': result = PasswordField; break;
-                    case 'select': result = Select; break;
-                    case 'text': result = TextField; break;
-                    case 'textarea': result = TextArea; break;
-                    case 'upload': // Fall through
-                    case 'file': result = DefaultUploadField; break;
-                    case 'customfield': result = DefaultCustomField; break;
-                }
-                
-                // No result - assume value is class name
-                if (!result) {
-                    try {
-                        result = Class.forName(value)
-                    } catch (err) {
-                        throw new IllegalArgumentException("Field value not recognised '${value}'")
-                    }
-                }
-            }
-        }
-        return result
     }
     
     /**
@@ -1208,466 +1141,8 @@ class VaadinTagLib {
     }
     
     /**
-     * Converts the value to a <a href="http://vaadin.com/api/com/vaadin/data/Container.html">Container</a>.
-     *
-     * @param value If a collection, converted to a BeanContainer. Otherwise, the String representation is
-     * treated as a comma-separated list of values and converted to an IndexedContainer.
-     * @param itemIds List of itemIds to use for items in container, overriding both itemId param, and the default id
-     * @param itemId If is a closure, is called with bean as parameter to generate key. Otherwise,
-     * is treated as name of property of each bean that should be used as id.
-     * @param itemEquals The name of a property to use to inject an equals method into each item,
-     * using a proxy.
-     * @param noSelection Caption to use for item that will represent a null selection. This will
-     * always be added as first item in list.
-     */
-    protected Container toContainer(value, itemIds = null, itemId = null, itemEquals = null, noSelection = null) {
-        Container result
-        
-        // Already a container
-        if (value instanceof Container) return value
-        
-        // Must have a value
-        if (value == null) {
-            throw new IllegalArgumentException("Cannot convert '${value}' to Container!")
-        }
-        
-        // Convert arrays to collection
-        if (value.class.array || value.class.enum) value = value as List
-        
-        // Collection of beans
-        if (value instanceof Collection) {
-            result = new BeanContainer(Utils.getCommonSuperclass(value))
-            
-            // Repeat first item as null item
-            if (noSelection != null && value) { result.addItem("null", value[0]) }
-
-            // Add beans to container with explicit list of itemIds
-            if (itemIds) {
-                value.eachWithIndex { v, i ->
-                    result.addItem(itemIds[i], v)
-                }
-                
-            // Add beans to container with itemIds generated from closure
-            } else if (itemId instanceof Closure) {
-                value.each { v ->
-                    result.addItem(itemId(v), v)
-                }
-                
-            // Add beans to container with specific bean property as id
-            } else if (itemId) {
-                result.beanIdResolver = new BeanIdResolver<Object,Object>() {
-                    public Object getIdForBean(Object bean) { return bean."${itemId}" }
-                }
-                result.addAll(value)
-                
-            // Add beans to container with bean as id
-            } else {
-                // Add items
-                value.each {
-                    result.addItem(itemEquals ? new DomainProxy(itemEquals.toString()).wrap(it) : it, it)
-                }
-            }
-            
-        // Default to a comma-separated string
-        } else {
-             result = new IndexedContainer(value.toString().split(",") as List)
-        }
-
-        return result
-    }
-    
-    /**
-     * Generates a caption for a single item using the itemCaption
-     * and itemCaptionMessagePrefix params.
-     *  
-     * @param item The item for which the caption will be generated
-     * @param value An item property name or closure that accepts the item (or wrapped bean)
-     * and returns the caption. If not specified, the item's toString() method is used
-     * to generate the caption
-     * @param itemCaptionMessagePrefix A value that will be prepended to the generated caption
-     * and the result is then used as an message code in a i18n lookup. If this returns null
-     * then the original generated caption is returned.
-     *   
-     * @return The generated item caption 
-     */
-    protected String toItemCaption(Item item, value, itemCaptionMessagePrefix) {
-        def result = value
-        if (value && value instanceof Closure) {
-            def param = item instanceof BeanItem ? item.bean : item
-            result = value(param)
-        } else if (value) {
-            result = item.getItemProperty(value)?.toString()
-        } else {
-            result = item instanceof BeanItem ? item.bean.toString() : item.toString()
-        }
-        if (itemCaptionMessagePrefix) {
-            def msgCode = itemCaptionMessagePrefix + "." + result
-            def msg = message(code:msgCode)
-            // Not sure why msg sometimes gets wrapped in square brackets...
-            if (msg && msg != msgCode && "[${msgCode}]" != msg) { result = msg }
-        }
-        return result
-    }
-
-    /**
-     * Generates an icon for a single item using the value, which may be a property id
-     * or a closure that accepts the item (or wrapped bean) and returns the icon name
-     *  
-     * @param item The item for which the icon will be generated
-     * @param value An item property name or closure that accepts the item (or wrapped bean)
-     * and returns the icon name.
-     * 
-     * @return The resource for the generated icon name
-     */
-    protected Resource toItemIcon(Item item, value) {
-        def result = value
-        if (! (value instanceof Resource)) {
-            if (value instanceof Closure) {
-                def param = item instanceof BeanItem ? item.bean : item
-                result = value(param)
-            } else if (value) {
-                result = item.getItemProperty(value)?.toString()
-            } else {
-                result = item.toString()
-            }
-            if (result && ! (result instanceof Resource)) {
-                result = new ThemeResource(result.toString())
-            }
-        }
-        return result
-    }
-
-    /**
-     * Converts the value to a <a href="http://vaadin.com/api/com/vaadin/terminal/ErrorMessage.html">ErrorMessage</a>
-     * if not already.
-     */
-    protected ErrorMessage toComponentError(value) {
-        return value instanceof ErrorMessage ? value : new UserError(value?.toString())
-    }
-    
-    /**
-     * Converts the value to a <a href="http://vaadin.com/api/com/vaadin/data/Property.ReadOnlyStatusChangeListener.html">ReadOnlyStatusChangeListener</a>
-     * if not already.
-     */
-    protected ReadOnlyStatusChangeListener toReadOnlyStatusChangeListener(value) {
-        if (value instanceof ReadOnlyStatusChangeListener) {
-            return value
-        } else if (value instanceof Closure) {
-            return new ReadOnlyStatusChangeListener() { void readOnlyStatusChange(ReadOnlyStatusChangeEvent event) { value(event) } }
-        } else {
-            throw new IllegalArgumentException("Cannot convert '${value}' to ReadOnlyStatusChangeListener")
-        }
-    }
-    
-    /**
-     * Converts the value to a <a href="http://vaadin.com/api/com/vaadin/data/Property.TextChangeListener.html">TextChangeListener</a>
-     * if not already.
-     */
-    protected TextChangeListener toTextChangeListener(value) {
-        if (value instanceof TextChangeListener) {
-            return value
-        } else if (value instanceof Closure) {
-            return new TextChangeListener() { void textChange(TextChangeEvent event) { value(event) } }
-        } else {
-            throw new IllegalArgumentException("Cannot convert '${value}' to TextChangeListener")
-        }
-    }
-
-    /**
-     * Converts the value to a <a href="http://vaadin.com/api/com/vaadin/data/Property.ValueChangeListener.html">ValueChangeListener</a>
-     * if not already.
-     */
-    protected ValueChangeListener toValueChangeListener(value) {
-        if (value instanceof ValueChangeListener) {
-            return value
-        } else if (value instanceof Closure) {
-            return new ValueChangeListener() { void valueChange(ValueChangeEvent event) { value(event) } }
-        } else {
-            throw new IllegalArgumentException("Cannot convert '${value}' to ValueChangeListener")
-        }
-    }
-    
-    /**
-     * Converts the value to a <a href="http://vaadin.com/api/com/vaadin/ui/Component.Listener.html">Component.Listener</a>
-     * if not already.
-     */
-    protected Component.Listener toComponentListener(value) {
-        if (value instanceof Component.Listener) {
-            return value
-        } else if (value instanceof Closure) {
-            return new Component.Listener() { void componentEvent(Component.Event event) { value(event) } }
-        } else {
-            throw new IllegalArgumentException("Cannot convert '${value}' to Component.Listener")
-        }
-    }
-    
-    /**
-     * Converts the value to a <a href="http://vaadin.com/api/com/vaadin/terminal/Paintable.RepaintRequestListener.html">RepaintRequestListener</a>
-     * if not already.
-     */
-    protected Paintable.RepaintRequestListener toRepaintRequestListener(value) {
-        if (value instanceof Paintable.RepaintRequestListener) {
-            return value
-        } else if (value instanceof Closure) {
-            return new Paintable.RepaintRequestListener() { void repaintRequested(Paintable.RepaintRequestEvent event) { value(event) } }
-        } else {
-            throw new IllegalArgumentException("Cannot convert '${value}' to Paintable.RepaintRequestListener")
-        }
-    }
-
-    /**
-     * Converts the value to a <a href="http://vaadin.com/api/com/vaadin/ui/Upload.SucceededListener.html">Upload.SucceededListener</a>
-     * if not already.
-     */
-    protected Upload.SucceededListener toUploadSucceededListener(value) {
-        if (value instanceof Upload.SucceededListener) {
-            return value
-        } else if (value instanceof Closure) {
-            return new Upload.SucceededListener() { void uploadSucceeded(Upload.SucceededEvent event) { value(event) } }
-        } else {
-            throw new IllegalArgumentException("Cannot convert '${value}' to Upload.SucceededListener")
-        }
-    }
-    
-    /**
-     * Converts the value to a <a href="http://vaadin.com/api/com/vaadin/ui/TabSheet.SelectedTabChangeListener.html">TabSheet.SelectedTabChangeListener</a>
-     * if not already.
-     */
-    protected TabSheet.SelectedTabChangeListener toSelectedTabChangeListener(value) {
-        if (value instanceof TabSheet.SelectedTabChangeListener) {
-            return value
-        } else if (value instanceof Closure) {
-            return new TabSheet.SelectedTabChangeListener() { void selectedTabChange(TabSheet.SelectedTabChangeEvent event) { value(event) } }
-        } else {
-            throw new IllegalArgumentException("Cannot convert '${value}' to TabSheet.SelectedTabChangeListener")
-        }
-    }
-
-    /**
-     * Converts specified value to list of
-     * <a href="http://docs.oracle.com/javase/6/docs/api/java/util/TimeZone.html">TimeZone</a> objects
-     */
-    protected List<TimeZone> toTimeZones(value) {
-        def result = []
-        if (value) {
-            if (value instanceof Collection || value.class.array) {
-                result = (value as List).collect { toTimeZone(it) }
-            } else {
-                result = value.toString().split(',').collect { TimeZone.getTimeZone(it.toString()) }
-            }
-        }
-        return result
-    }
-    
-    /**
-     * Converts specified value to
-     * <a href="http://docs.oracle.com/javase/6/docs/api/java/util/TimeZone.html">TimeZone</a>
-     */
-    protected TimeZone toTimeZone(value) {
-        if (value == null || value instanceof TimeZone) return value
-        else return TimeZone.getTimeZone(value.toString())
-    }
-    
-    /**
-     * Converts specified value to list of
-     * <a href="http://docs.oracle.com/javase/6/docs/api/java/util/Locale.html">Locale</a> objects
-     */
-    protected List<Locale> toLocales(value) {
-        def result = []
-        if (value) {
-            if (value instanceof Collection || value.class.array) {
-                result = (value as List).collect { toLocale(it) }
-            } else {
-                result = value.toString().split(',').collect { new Locale(it.toString()) }
-            }
-        }
-        return result
-    }
-    
-    /**
-     * Converts specified value to
-     * <a href="http://docs.oracle.com/javase/6/docs/api/java/util/Locale.html">Locale</a>
-     */
-    protected Locale toLocale(value) {
-        if (value == null || value instanceof Locale) return value
-        else return new Locale(value.toString())
-    }
-    
-    /**
-     * Converts specified value to list of
-     * <a href="http://docs.oracle.com/javase/6/docs/api/java/util/Currency.html">Currency</a> objects
-     */
-    protected List<Currency> toCurrencies(value) {
-        def result = []
-        if (value instanceof Collection || value.class.array) {
-            result = (value as List).collect { toCurrency(it) }
-        } else {
-            result = value.toString().split(',').collect { Currency.getInstance(it.toString()) }
-        }
-        return result
-    }
-    
-    /**
-     * Converts specified value to
-     * <a href="http://docs.oracle.com/javase/6/docs/api/java/util/Currency.html">Currency</a>
-     */
-    protected Currency toCurrency(value) {
-        if (value == null || value instanceof Currency) return value
-        else return Currency.getInstance(value instanceof Locale ? value : value.toString())
-    }
-    
-    /**
-     * Converts the value to a <a href="http://vaadin.com/api/com/vaadin/terminal/Resource.html">Resource</a>
-     * if not already.
-     */
-    protected Resource toResource(value) {
-        if (!value || value instanceof Resource) return value
-        String pathOrUrl = value.toString()
-        // Url
-        if (pathOrUrl.startsWith('/') || pathOrUrl.indexOf('://')) {
-            return new ExternalResource(pathOrUrl)
-        // Theme resource
-        } else {
-            return new ThemeResource(pathOrUrl)
-        }
-    }
-    
-    /**
-     * Ensures the value is a closure, otherwise throws an exception
-     */
-    protected Closure toClosure(value) {
-        if (value instanceof Closure) {
-            return value
-        } else {
-            throw new Exception("Cannot convert onclick '${value}' to Closure")
-        }
-    }
-    
-    /**
-     * Converts the value to a DateField Resolution
-     */
-    protected int toDateResolution(value) {
-        int n = DateField.RESOLUTION_DAY
-        if (value != null) {
-            if (Utils.isNumber(value)) {
-                n = value
-            } else {
-                String name = value.toString().toLowerCase()
-                switch(name) {
-                    case "day": n = DateField.RESOLUTION_DAY; break;
-                    case "hour": n = DateField.RESOLUTION_HOUR; break;
-                    case "min": // FALL THROUGH
-                    case "minute": n = DateField.RESOLUTION_MIN; break;
-                    case "month": n = DateField.RESOLUTION_MONTH; break;
-                    case "milli": // FALL THROUGH
-                    case "millis": // FALL THROUGH
-                    case "msec":  // FALL THROUGH
-                    case "millisecond": n = DateField.RESOLUTION_MSEC; break;
-                    case "sec": // FALL THROUGH
-                    case "second": n = DateField.RESOLUTION_SEC; break;
-                    case "year": n = DateField.RESOLUTION_YEAR; break;
-                    default: throw new IllegalArgumentException("Unrecognised date resolution '${value}'")
-                }
-            }
-        }
-        return n
-    }
-    
-    /**
-     * Converts the value to a Vaadin
-     * <a href="http://vaadin.com/api/com/vaadin/ui/AbstractSelect.Filtering.html">Filtering Mode</a>
-     */
-    protected int toFilteringMode(value) {
-        int n = AbstractSelect.Filtering.FILTERINGMODE_OFF
-        if (value != null) {
-            if (Utils.isNumber(value)) {
-                n = value
-            } else {
-                String name = value.toString().toLowerCase()
-                switch(name) {
-                    case "contains": n = AbstractSelect.Filtering.FILTERINGMODE_CONTAINS; break;
-                    case "off": n = AbstractSelect.Filtering.FILTERINGMODE_OFF; break;
-                    case "startswith": n = AbstractSelect.Filtering.FILTERINGMODE_STARTSWITH; break;
-                    default: throw new IllegalArgumentException("Unrecognised filtering mode '${value}'")
-                }
-            }
-        }
-        return n
-    }
-
-    /**
-     * Converts the value to a Label Content Mode
-     */
-    protected int toLabelContentMode(value) {
-        int n = Label.CONTENT_DEFAULT
-        if (value != null) {
-            if (Utils.isNumber(value)) {
-                n = value
-            } else {
-                String name = value.toString().toLowerCase()
-                switch(name) {
-                    case "preformatted": n = Label.CONTENT_PREFORMATTED; break;
-                    case "raw": n = Label.CONTENT_RAW; break;
-                    case "text": n = Label.CONTENT_TEXT; break;
-                    case "xhtml": n = Label.CONTENT_XHTML; break;
-                    case "xml": n = Label.CONTENT_XML; break;
-                    case "default": n = Label.CONTENT_DEFAULT; break;
-                    default: throw new IllegalArgumentException("Unrecognised content mode '${value}'")
-                }
-            }
-        }
-        return n
-    }
-    
-    /**
-     * Converts the value to an EasyUploads UploadField.FieldType
-     */
-    protected UploadField.FieldType toUploadFieldType(value) {
-        UploadField.FieldType result = UploadField.FieldType.BYTE_ARRAY
-        if (value != null) {
-            if (value instanceof UploadField.FieldType) {
-                result = value
-            } else {
-                String name = value.toString().toLowerCase()
-                switch(name) {
-                    case "string": // Fall through
-                    case "utf8": // Fall through
-                    case "utf8string": // Fall through
-                    case "utf8_string": result = UploadField.FieldType.UTF8_STRING; break;
-                    case "bytearray": // Fall through
-                    case "byte_array": // Fall through
-                    case "bytes": result = UploadField.FieldType.BYTE_ARRAY; break;
-                    case "file": result = UploadField.FieldType.FILE; break;
-                    default: result = UploadField.FieldType.valueOf(value.toString())
-                }
-            }
-        }
-        return result
-    }
-    
-    /**
-     * Converts the value to an EasyUploads UploadField.StorageMode
-     */
-    protected UploadField.StorageMode toUploadStorageMode(value) {
-        UploadField.StorageMode result = UploadField.StorageMode.MEMORY
-        if (value != null) {
-            if (value instanceof UploadField.StorageMode) {
-                result = value
-            } else {
-                String name = value.toString().toLowerCase()
-                switch(name) {
-                    case "memory": result = UploadField.StorageMode.MEMORY; break
-                    case "file": result = UploadField.StorageMode.FILE; break
-                    default: result = UploadField.StorageMode.valueOf(value.toString())
-                }
-            }
-        }
-        return result
-    }
-
-    /**
      * Helper method that returns a closure that can be used in the
-     * 'onclick' attribute of a {@link org.grails.plugin.vaadin.ui.RequestButton}
+     * 'onclick' attribute of a {@link org.grails.plugin.vaadin.ui.GrailsButton}
      * <p>
      * Used to trigger a confirm yes/no popup window, e.g. before deleting a domain object.
      *
@@ -1690,7 +1165,7 @@ class VaadinTagLib {
     
     /**
      * Helper method that returns a closure that can be used in the
-     * 'onclick' attribute of a {@link org.grails.plugin.vaadin.ui.RequestButton}
+     * 'onclick' attribute of a {@link org.grails.plugin.vaadin.ui.GrailsButton}
      * <p>
      * Commits the specified form object.
      *

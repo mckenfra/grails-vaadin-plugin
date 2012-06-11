@@ -38,7 +38,7 @@ class VaadinGrailsPlugin {
     private static final transient Logger log = LoggerFactory.getLogger("org.codehaus.groovy.grails.plugins.VaadinGrailsPlugin");
 
     // the plugin version
-    def version = "1.6.2.1-SNAPSHOT"
+    def version = "1.6.2.2-SNAPSHOT"
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "1.1 > *"
     // the other plugins this plugin depends on

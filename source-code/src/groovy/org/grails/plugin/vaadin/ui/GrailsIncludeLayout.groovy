@@ -32,53 +32,46 @@ class GrailsIncludeLayout extends CustomLayout {
      * parameters such as 'controller' or 'action'
      */
     String fragment
-    /**
-     * The Vaadin Application - only used if not attached.
-     */
-    protected vaadinApplication
-    /**
-     * If this component is attached, gets the Vaadin Application of the parent,
-     * else gets the Vaadin Application from this class's <code>vaadinApplication</code>
-     * field.
-     */
-    Application getVaadinApplication() {
-        return this.application ?: this.vaadinApplication
-    }
     
     /**
      * Empty constructor
      */
     public GrailsIncludeLayout() {
-        super()
+        this.templateContents = "" // Prevent NPE
     }
 
     /**
      * Creates a new instance by executing the specified fragment request.
      *
-     * @param application The current VaadinApplication
      * @param fragment The fragment to request, for example "book/list"
      */
-    public GrailsIncludeLayout(Application application, String fragment) {
-        super()
+    public GrailsIncludeLayout(String fragment) {
         this.fragment = fragment
-        this.vaadinApplication = application
-        include()
+        this.templateContents = "" // Prevent NPE
     }
     
     /**
-     * Initialise as empty view if nothing set
+     * Dispatches the include request, or renders an empty view if no
+     * request specified.
      */
-    public void attach() {
-        if (!this.templateContents) {
-            addView(new Label()) // Initialise empty
+    protected void render() {
+        if (args || fragment) {
+            def application = requireVaadinApplication()
+            def transactionManager = requireVaadinTransactionManager()
+            transactionManager.wrapInTransaction({
+                addViewComponent(application.dispatcher.request(args ?: fragment))
+            })
         }
-        super.attach()
+
+        if (!this.templateContents) {
+            addViewComponent(new Label()) // Initialise empty
+        }
     }
     
     /**
      * Adds the specified view to this container.
      */
-    protected void addView(Component view) {
+    protected void addViewComponent(Component view) {
         this.view = view
         if (!this.templateContents) {
             this.templateContents = "<div location='view'/>"
@@ -93,7 +86,9 @@ class GrailsIncludeLayout extends CustomLayout {
      * Replaces the existing Gsp in this container with the result.
      */
     public void include() {
-        addView(getVaadinApplication().dispatcher.request(args ?: fragment))
+        if (args || fragment) {
+            include(args ?: fragment)
+        }
     }
     
     /**
@@ -103,9 +98,10 @@ class GrailsIncludeLayout extends CustomLayout {
      * @param fragment The fragment for the request, for example "book/list"
      */
     public void include(String fragment) {
-        this.args = [:]
+        if (!fragment) throw new IllegalArgumentException("No fragment specified!")
         this.fragment = fragment
-        include()
+        if (this.args) this.args = [:]
+        requestRender(true)
     }
 
     /**
@@ -116,10 +112,10 @@ class GrailsIncludeLayout extends CustomLayout {
      * 'controller', 'action' etc.
      */
     public void include(Map args) {
-        this.args = [:]
-        if (args != null) { this.args.putAll(args) }
-        this.fragment = null
-        include()
+        if (!args) throw new IllegalArgumentException("No args specified!")
+        this.args = args.clone()
+        if (this.fragment) this.fragment = null
+        requestRender(true)
     }
     
     public String toString() {
@@ -127,43 +123,86 @@ class GrailsIncludeLayout extends CustomLayout {
     }
     
     /**
-    * Get the controller of the link - either a logical property name, or the class itself.
-    */
-   Object getController() { args.controller }
-   /**
-    * Set the controller of the link - either a logical property name, or the class itself.
-    */
-   void setController(Object controller) { args.controller = controller }
-   /**
-    * Get the action of the link.
-    */
-   String getAction() { args.action }
-   /**
-    * Set the action of the link.
-    */
-   void setAction(Object action) { args.action = action?.toString() }
-   /**
-    * Get the domain class id of the link.
-    */
-   String getId() { args.id }
-   /**
-    * Set the domain class id of the link.
-    */
-   void setId(Object id) { args.id = id?.toString() }
-   /**
-    * Get the domain class instance of the link.
-    */
-   Object getInstance() { args.instance }
-   /**
-    * Set the domain class instance of the link.
-    */
-   void setInstance(Object instance) { args.instance = instance }
-   /**
-    * Get the params of the link.
-    */
-   Map getParams() { args.params ?: [:] }
-   /**
-    * Set the params of the link.
-    */
-   void setParams(Map params) { args.params = params }
+     * Get the controller of the link - either a logical property name, or the class itself.
+     */
+    Object getController() { args.controller }
+    /**
+     * Set the controller of the link - either a logical property name, or the class itself.
+     */
+    void setController(Object controller) { args.controller = controller }
+    /**
+     * Get the action of the link.
+     */
+    String getAction() { args.action }
+    /**
+     * Set the action of the link.
+     */
+    void setAction(Object action) { args.action = action?.toString() }
+    /**
+     * Get the domain class id of the link.
+     */
+    String getId() { args.id }
+    /**
+     * Set the domain class id of the link.
+     */
+    void setId(Object id) { args.id = id?.toString() }
+    /**
+     * Get the domain class instance of the link.
+     */
+    Object getInstance() { args.instance }
+    /**
+     * Set the domain class instance of the link.
+     */
+    void setInstance(Object instance) { args.instance = instance }
+    /**
+     * Get the params of the link.
+     */
+    Map getParams() { args.params ?: [:] }
+    /**
+     * Set the params of the link.
+     */
+    void setParams(Map params) { args.params = params }
+    
+    /**
+     * Helper method for situations where a Vaadin Transaction Manager is required
+     */
+    protected requireVaadinTransactionManager() {
+        def result = requireVaadinApplication().getBean("vaadinTransactionManager")
+        if (!result) throw new NullPointerException("Spring bean not found: 'vaadinTransactionManager'")
+        return result
+    }
+    /**
+     * Helper method for situations where a Vaadin Application is required
+     */
+    protected requireVaadinApplication() {
+        def result = this.application
+        if (!result) throw new NullPointerException("Application not found - component must be attached")
+        return result
+    }
+    /**
+     * Prevent rendering twice
+     */
+    protected boolean rendered
+    /**
+     * Requests the render to take place if not yet done.
+     * <p>
+     * Note that rendering should only be done after the component has been attached,
+     * as the Vaadin application is required.
+     * 
+     * @param force Force the render, even if already done
+     */
+    public void requestRender(boolean force = false) {
+        if ((!rendered && application) || force) {
+            requireVaadinApplication()
+            render()
+            rendered = true
+        }
+    }
+    /**
+     * Render when attached
+     */
+    public void attach() {
+        requestRender()
+        super.attach()
+    }
 }

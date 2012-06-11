@@ -9,6 +9,7 @@
 <%= '<' + '%@ page import="com.vaadin.data.util.BeanItemContainer" %' + '>' %>
 
 <g:set var="entityName" value="\${message(code: '${domainClass.propertyName}.label', default: '${className}')}" />
+<v:mainWindow caption="\${message(code:'default.list.label', args:[entityName])}"/>
 <g:if test="\${flash.message}">
 	<v:warning>\${flash.message}</v:warning>
 </g:if>

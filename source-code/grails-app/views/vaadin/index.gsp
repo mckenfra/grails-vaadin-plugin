@@ -1,3 +1,4 @@
+<v:mainWindow caption="Welcome to Vaadin and Grails"/>
 <v:layout name="main">
 <v:location name="body">
 	<style type="text/css" media="screen">

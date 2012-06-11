@@ -51,11 +51,12 @@ class VaadinRequest {
     def log = LogFactory.getLog(this.class)
     
     /**
-     * The request can be a top-level browser page, or a frame within the page.
+     * The request can be a top-level browser page or error page, or an include
+     * within the page.
      * <p>
-     * A page-type will change the browser fragment. A frame-type will not. 
+     * A page-type will change the browser fragment. An include-type will not. 
      */
-    public static enum Type { PAGE, INCLUDE }
+    public static enum Type { PAGE, INCLUDE, ERROR }
     
     /**
      * For debugging, a unique id for this instance
@@ -75,6 +76,7 @@ class VaadinRequest {
     protected Object view
     protected boolean viewIsName = true
     protected Map params
+    protected Map attributes
     protected Map model
     protected Map flash
     protected Type type = Type.PAGE
@@ -141,6 +143,10 @@ class VaadinRequest {
      * The request params - for example [id:15]
      */
     public Map getParams() { this.params }
+    /**
+     * The request attributes - for example [foo:'bar']
+     */
+    public Map getAttributes() { this.attributes }
     /**
      * The request model - for example [bookInstance:bookInstance]
      */
@@ -216,6 +222,7 @@ class VaadinRequest {
         this.action = args.action ?: this.action
         this.view = this.action
         this.params = args.params ?: [:]
+        this.attributes = args.attributes ?: this.attributes
         this.model = [:]
         this.id = args.id
         this.instance = args.instance
@@ -373,6 +380,7 @@ class VaadinRequest {
         this.view = this.action
         this.viewIsName = true
         this.params = this.params ?: [:]
+        this.attributes = this.attributes ?: [:] // Maintain attributes between redirects
         this.model = [:] // Reset model between redirects
         this.flash = this.flash ?: [:] // Maintain flash between redirects
         this.dispatched = false
@@ -414,6 +422,7 @@ class VaadinRequest {
             action:action,
             view:view,
             params:params,
+            attributes:attributes,
             model:model,
             flash:flash
         ]
@@ -430,6 +439,7 @@ class VaadinRequest {
             this.action = props.action
             this.view = props.view
             this.params = props.params ?: [:]
+            this.attributes = props.attributes ?: [:]
             this.model = props.model ?: [:]
             this.flash = props.flash ?: [:]
             this.id = props.id
@@ -445,6 +455,9 @@ class VaadinRequest {
         def props = this.properties
         if (props.params) {
             props.params = Utils.toString(props.params)
+        }
+        if (props.attributes) {
+            props.attributes = Utils.toString(props.attributes)
         }
         if (props.model) {
             props.model = Utils.toString(props.model)

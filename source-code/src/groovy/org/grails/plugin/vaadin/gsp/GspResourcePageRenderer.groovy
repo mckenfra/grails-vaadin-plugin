@@ -7,6 +7,7 @@ import org.apache.commons.logging.LogFactory
 
 import org.codehaus.groovy.grails.commons.GrailsApplication;
 import org.codehaus.groovy.grails.web.pages.discovery.GrailsConventionGroovyPageLocator
+import org.codehaus.groovy.grails.web.pages.discovery.GroovyPageScriptSource;
 import org.codehaus.groovy.grails.web.pages.discovery.GroovyPageStaticResourceLocator;
 import org.codehaus.groovy.grails.web.pages.FastStringWriter
 import org.codehaus.groovy.grails.web.pages.GroovyPagesTemplateEngine
@@ -18,6 +19,7 @@ import org.grails.plugin.vaadin.servlet.BackgroundResponse
 
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
+import org.springframework.core.io.Resource;
 import org.springframework.web.context.ServletContextAware
 import org.springframework.web.context.request.RequestContextHolder
 
@@ -137,6 +139,9 @@ class GspResourcePageRenderer implements ApplicationContextAware, ServletContext
         }
         else if (args.resource) {
             source = grailsResourceLocator.findResourceForURI(args.resource.toString())
+        }
+        else if (args.source && (args.source instanceof GroovyPageScriptSource || args.source instanceof Resource)) {
+            source = args.source
         }
         if (source == null) {
             return

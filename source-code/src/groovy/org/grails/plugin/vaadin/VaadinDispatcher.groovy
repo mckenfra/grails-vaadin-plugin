@@ -1,14 +1,22 @@
 package org.grails.plugin.vaadin
 
+import javax.servlet.ServletException;
+
 import org.codehaus.groovy.grails.commons.GrailsApplication;
 import org.codehaus.groovy.grails.plugins.metadata.GrailsPlugin
+import org.codehaus.groovy.grails.web.errors.GrailsExceptionResolver;
 import org.codehaus.groovy.grails.web.util.TypeConvertingMap
 import org.grails.plugin.vaadin.ui.GspLayout;
+import org.grails.plugin.vaadin.ui.StartupUriFragmentUtility;
 import org.grails.plugin.vaadin.utils.Stopwatch;
 import org.grails.plugin.vaadin.utils.Utils;
+import org.springframework.util.StringUtils
 
 import com.vaadin.Application;
+import com.vaadin.terminal.Terminal;
+import com.vaadin.terminal.Terminal.ErrorEvent;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.UriFragmentUtility
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedListener;
@@ -35,7 +43,7 @@ import org.apache.commons.logging.LogFactory
  */
 class VaadinDispatcher implements Serializable {
     def log = LogFactory.getLog(this.class)
-    
+
     /**
      * Vaadin Application for this dispatcher
      */
@@ -83,12 +91,15 @@ class VaadinDispatcher implements Serializable {
      */
     protected UriFragmentUtility getOrCreateFragmentUtility() {
         if (! this.fragmentUtility ) {
-            if (vaadinApplication.mainWindow) {
-                this.fragmentUtility = new UriFragmentUtility()
-                vaadinApplication.mainWindow.addComponent(this.fragmentUtility)
-            } else {
-                throw new Exception("Application must have main window!")
-            }
+			synchronized(this) {
+				if (! this.fragmentUtility ) {
+		            if (!vaadinApplication.mainWindow) {
+						throw new Exception("Application must have main window!")
+		            }
+		            this.fragmentUtility = new StartupUriFragmentUtility()
+		            vaadinApplication.mainWindow.addComponent(this.fragmentUtility)
+				}
+			}
         }
         return this.fragmentUtility
     }
@@ -123,37 +134,36 @@ class VaadinDispatcher implements Serializable {
                 public void fragmentChanged(FragmentChangedEvent source) {
                     if (!parent.stopped) {
                         String fragment = source?.uriFragmentUtility?.fragment
-                        parent.vaadinApplication.dispatcher.dispatchWithFragment(fragment)
+                        parent.vaadinApplication.dispatcher.dispatch(fragment)
                     }
                 }
-            });
+            })
             this.fragmentListenerStarted = true
-        }
-        if (!currentPage && !stopped) {
-            if (log.isDebugEnabled()) {
-                log.debug("DEFAULT: ${defaultPage}")
-            }
-            this.dispatchWithFragment(defaultPage)
         }
     }
 
     /**
-     * Dispatches a 'request' to show a particular Vaadin 'page' using the
-     * specified URI fragment, e.g. '#book/show/15'
-     * 
-     * @param fragment The URI fragment
-     */
-    def dispatchWithFragment(String fragment) {
-        dispatch(new VaadinRequest(vaadinApplication, fragment, VaadinRequest.Type.PAGE))
-    }
-    
-    /**
      * Dispatches the active page request again, or goes to home page if no active page
      */
     def refresh() {
-        dispatchWithFragment(currentPage ?: defaultPage)
+		def fragmentUtil = getOrCreateFragmentUtility()
+		if (fragmentUtil instanceof StartupUriFragmentUtility) {
+			fragmentUtil.restart()
+		} else {
+			dispatch(currentPage ?: defaultPage)
+		}
     }
     
+    /**
+     * Dispatches a 'request' to show a particular Vaadin 'page' using the
+     * specified URI fragment, for example '#book/show/15'
+     *
+     * @param fragment The URI fragment
+     */
+    def dispatch(String fragment) {
+        dispatch(new VaadinRequest(vaadinApplication, fragment, VaadinRequest.Type.PAGE))
+    }
+
     /**
      * Dispatches a 'request' to show a particular Vaadin 'page' using the
      * specified args, containing 'controller', 'action', 'id' etc.
@@ -181,15 +191,28 @@ class VaadinDispatcher implements Serializable {
      * @param request The 'request' containing e.g. the 'controller' etc.
      */
     protected dispatch(VaadinRequest request) {
+        try {
         // Execute the request to build the view component
-        Component newView = this.request(request, true)
-        
-        // Update page request
-        this.currentPage = request.fragment
-        this.currentController = request.controller
-        
-        // Update browser
-        getOrCreateFragmentUtility().setFragment(request.fragment, false)
+            this.request(request, true)
+        } finally {
+            // Update page request
+            this.currentPage = request.fragment
+            this.currentController = request.controller
+            
+            // Update browser
+            getOrCreateFragmentUtility().setFragment(request.fragment, false)
+        }
+    }
+
+    /**
+     * Executes a new request using the specified using the
+     * specified URI fragment, and returns the generated
+     * view Vaadin Component.
+     *
+     * @param fragment The URI fragment
+     */
+    public Component request(String fragment) {
+        return request(new VaadinRequest(vaadinApplication, fragment, VaadinRequest.Type.INCLUDE))
     }
 
     /**
@@ -199,7 +222,7 @@ class VaadinDispatcher implements Serializable {
      * @param requestArgs The args containing the details of the request
      */
     public Component request(Map requestArgs) {
-        return request(new VaadinRequest(requestArgs, VaadinRequest.Type.INCLUDE))
+        return request(new VaadinRequest(vaadinApplication, requestArgs, VaadinRequest.Type.INCLUDE))
     }
     
     /**
@@ -212,32 +235,40 @@ class VaadinDispatcher implements Serializable {
     protected Component request(VaadinRequest request, boolean attach = false) {
         Component result
         
-        // Get the transaction manager for wrapping the request in a transaction
-        def vaadinTransactionManager = vaadinApplication.getBean("vaadinTransactionManager")
-        if (! vaadinTransactionManager) {
-            throw new NullPointerException("Unable to retrieve spring bean 'vaadinTransactionManager'")
-        }
-        // Get grails application that holds the controllers
-        def grailsApplication = vaadinApplication.getBean("grailsApplication")
-        if (! grailsApplication) {
-            throw new NullPointerException("Unable to retrieve spring bean 'grailsApplication'")
-        }
-        
-        int redirects = 0
-        while (true) {
-            // Check we're not in an endless redirect loop
-            if (redirects > 20) {
-                throw new Exception("Too many redirects!")
+        try {
+            // Get the transaction manager for wrapping the request in a transaction
+            def vaadinTransactionManager = vaadinApplication.getBean("vaadinTransactionManager")
+            if (! vaadinTransactionManager) {
+                throw new NullPointerException("Unable to retrieve spring bean 'vaadinTransactionManager'")
+            }
+            // Get grails application that holds the controllers
+            def grailsApplication = vaadinApplication.getBean("grailsApplication")
+            if (! grailsApplication) {
+                throw new NullPointerException("Unable to retrieve spring bean 'grailsApplication'")
             }
             
-            // Execute the controller and view in a transaction
-            result = vaadinTransactionManager.wrapInTransaction({executeRequest(request, grailsApplication, attach)})
-            
-            // Quit if we're not redirecting
-            if(!request.redirected) break
-            
-            // Increment our redirect counter
-            redirects++
+            int redirects = 0
+            while (true) {
+                // Check we're not in an endless redirect loop
+                if (redirects > 20) {
+                    throw new Exception("Too many redirects!")
+                }
+                
+                // Execute the controller and view in a transaction
+                result = vaadinTransactionManager.wrapInTransaction({executeRequest(request, grailsApplication, attach)})
+                
+                // Quit if we're not redirecting
+                if(!request.redirected) break
+                
+                // Increment our redirect counter
+                redirects++
+            }
+        } catch(Throwable t) {
+            if (request?.type == VaadinRequest.Type.ERROR) {
+                throw t
+            } else {
+                error (t, request?.fragment)
+            }
         }
 
         // Return view component
@@ -302,21 +333,18 @@ class VaadinDispatcher implements Serializable {
     
                 // Execute view
                 if (request.viewIsName) {
-                    view = new GspLayout(vaadinApplication, request.viewFullName, request.params, request.model, request.flash, request.controller, request.type == VaadinRequest.Type.PAGE)
+                    view = new GspLayout([uri:request.viewFullName, params:request.params, model:request.model, flash:request.flash, controllerName:request.controller, attributes:request.attributes])
+                    view.root = request.type != VaadinRequest.Type.INCLUDE
                 } else if (request.view instanceof Component) {
                     view = request.view
                 } else {
-                    view = new GspLayout(vaadinApplication, {"${request.view}"}, request.type == VaadinRequest.Type.PAGE)
+                    view = new GspLayout({"${request.view}"})
+                    view.root = request.type != VaadinRequest.Type.INCLUDE
                 }
                 
                 // Attach if necessary
                 if (attach) {
-                    def oldView = vaadinApplication.mainWindow.componentIterator.find { ! (it instanceof UriFragmentUtility) }
-                    if (oldView) {
-                        vaadinApplication.mainWindow.replaceComponent(oldView, view)
-                    } else {
-                        vaadinApplication.mainWindow.addComponent(view)
-                    }
+                    attachPage(view)
                 }
             }
         } finally {
@@ -328,5 +356,91 @@ class VaadinDispatcher implements Serializable {
         }
         
         return view
-    }    
+    }
+    
+    /**
+     * Adds the specified component as the main window's top-level page component. 
+     */
+    protected void attachPage(Component page) {
+        def oldPage = vaadinApplication.mainWindow.componentIterator.find { ! (it instanceof UriFragmentUtility) }
+        if (oldPage) {
+            vaadinApplication.mainWindow.replaceComponent(oldPage, page)
+        } else {
+            vaadinApplication.mainWindow.addComponent(page)
+        }
+    }
+
+    /**
+     * Dispatches to the error page for the specified error
+     * 
+     * @param t The error
+     */
+    public void error(Throwable t, String fragment = null) {
+        fragment = "${fragment ?: currentPage}"
+        try {
+            def errorRequest = [
+                controller:"error",
+                params:[exception:t],
+                attributes:[
+                    'javax.servlet.error.status_code':500,
+                    'javax.servlet.error.request_uri':fragment
+                ]
+            ]
+            dispatch(new VaadinRequest(vaadinApplication, errorRequest, VaadinRequest.Type.ERROR))
+        } catch(err) {
+            String defaultHTML = """\
+<div class='body'>
+  <h1>Original Error</h1>
+  <div>${renderDefaultErrorHTML(t)}</div>
+  <h1>Error in Error Controller</h1>
+  <div>${renderDefaultErrorHTML(err)}</div>
+</div>
+"""
+            attachPage(new Label(defaultHTML, Label.CONTENT_XHTML))
+        }
+        
+        // Now throw the error
+        throw t
+    }
+	
+	protected String renderDefaultErrorHTML(Throwable exception) {
+		String result
+		
+		try {
+			StringWriter currentOut = new StringWriter()
+			
+			// Try to get root cause
+			currentOut << '<dl class="error-details">'
+			def root = GrailsExceptionResolver.getRootCause(exception)
+			currentOut << "<dt>Class</dt><dd>${root?.getClass()?.name ?: exception.getClass().name}</dd>"
+			currentOut << "<dt>Message</dt><dd>${exception.message?.encodeAsHTML()}</dd>"
+			if (root != null && root != exception && root.message != exception.message) {
+				currentOut << "<dt>Caused by</dt><dd>${root.message?.encodeAsHTML()}</dd>"
+			}
+			currentOut << "</dl>"
+	
+			// Print stack trace
+			def errorsViewStackTracePrinter = vaadinApplication?.getBean("errorsViewStackTracePrinter")
+			if (errorsViewStackTracePrinter) {
+				currentOut << errorsViewStackTracePrinter.prettyPrintCodeSnippet(exception)
+				def trace = errorsViewStackTracePrinter.prettyPrint(exception.cause ?: exception)
+				if (StringUtils.hasText(trace.trim())) {
+					currentOut << "<h2>Trace</h2>"
+					currentOut << '<pre class="stack">'
+					currentOut << trace.encodeAsHTML()
+					currentOut << '</pre>'
+				}
+				result = currentOut.toString()
+				
+			// Default to plain HTML
+			} else {
+				result = '<pre class="stack">${t?.stackTrace?.toString()?.replaceAll("\n", "<br></br>")}</code></p>'
+			}
+		// Default to plain HTML
+		} catch(err) {
+			result = '<pre class="stack">${t?.stackTrace?.toString()?.replaceAll("\n", "<br></br>")}</code></p>'
+		}
+ 
+		return result
+	}
 }

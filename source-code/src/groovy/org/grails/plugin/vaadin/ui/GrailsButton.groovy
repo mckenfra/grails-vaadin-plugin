@@ -81,10 +81,12 @@ class GrailsButton extends Button {
     }
     
     /**
-     * Add default click listener when attaching button to component graph.
+     * Renders the gsp body.
      */
-    @Override
-    public void attach() {
+    protected void render() {
+        final application = requireVaadinApplication()
+        final transactionManager = requireVaadinTransactionManager()
+        
         // Catch a cancel
         final thiz = this
         final cancellableClick = {
@@ -103,16 +105,10 @@ class GrailsButton extends Button {
         // Always disable on click
         this.disableOnClick = true
 
-        // Always wrap in a transaction
-        final vaadinTransactionManager = application.getBean("vaadinTransactionManager")
-        if (! vaadinTransactionManager) {
-            throw new NullPointerException("Unable to retrieve spring bean 'vaadinTransactionManager'")
-        }
-
         // Put it all together by adding the full listener
         this.addListener(new Button.ClickListener() {
             public void buttonClick(Button.ClickEvent event) {
-                vaadinTransactionManager.wrapInTransaction(cancellableClick)
+                transactionManager.wrapInTransaction(cancellableClick)
             }
         })
     }
@@ -127,11 +123,9 @@ class GrailsButton extends Button {
      */
     public void dispatch() {
         if (args || fragment) {
-            if (! application) {
-                throw new RuntimeException("Cannot dispatch until button is attached")
-            }
-            if (args) application.dispatcher.dispatch(args)
-            else if (fragment) application.dispatcher.dispatchWithFragment(fragment)
+            def app = requireVaadinApplication()
+            if (args) app.dispatcher.dispatch(args)
+            else if (fragment) app.dispatcher.dispatch(fragment)
         }
     }
 
@@ -182,5 +176,48 @@ class GrailsButton extends Button {
     /**
      * Set the onclick closure of the link.
      */
-    void setOnclick(Closure onclick) { this.onclick = onclick } 
+    void setOnclick(Closure onclick) { this.onclick = onclick }
+    
+    /**
+     * Helper method for situations where a Vaadin Transaction Manager is required
+     */
+    protected requireVaadinTransactionManager() {
+        def result = requireVaadinApplication().getBean("vaadinTransactionManager")
+        if (!result) throw new NullPointerException("Spring bean not found: 'vaadinTransactionManager'")
+        return result
+    }
+    /**
+     * Helper method for situations where a Vaadin Application is required
+     */
+    protected requireVaadinApplication() {
+        def result = this.application
+        if (!result) throw new NullPointerException("Application not found - component must be attached")
+        return result
+    }
+    /**
+     * Prevent rendering twice
+     */
+    protected boolean rendered
+    /**
+     * Requests the render to take place if not yet done.
+     * <p>
+     * Note that rendering should only be done after the component has been attached,
+     * as the Vaadin application is required.
+     * 
+     * @param force Force the render, even if already done
+     */
+    public void requestRender(boolean force = false) {
+        if ((!rendered && application) || force) {
+            requireVaadinApplication()
+            render()
+            rendered = true
+        }
+    }
+    /**
+     * Render when attached
+     */
+    public void attach() {
+        requestRender()
+        super.attach()
+    }
 }
