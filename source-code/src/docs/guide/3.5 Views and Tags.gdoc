@@ -16,6 +16,7 @@ In addition, you can embed Vaadin components in GSPs using the tag library provi
  [include|Tags] | Includes the output of another controller/action in the current Gsp.
  [layout|Tags] | Renders the tag's body using another Gsp as a template.
  [location|Tags] | Adds the tag's body to the specified location in the parent container.
+ [mainWindow|Tags] | Allows configuring the Vaadin application's main [Window|api:com.vaadin.ui.Window].
  [tab|Tags] | Configures a single tab of the parent [TabSheet|http://vaadin.com/api/com/vaadin/ui/TabSheet.html] component.
  [tabs|Tags] | Adds a [TabSheet|http://vaadin.com/api/com/vaadin/ui/TabSheet.html] component to the parent container.
  [verticalLayout|Tags] | Adds a [VerticalLayout|http://vaadin.com/api/com/vaadin/ui/VerticalLayout.html] component to the parent container.

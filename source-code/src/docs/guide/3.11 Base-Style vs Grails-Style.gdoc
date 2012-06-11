@@ -1,0 +1,26 @@
+As previously discussed, the Vaadin plugin supports two styles of usage, which are
+compared in the below sections.
+
+h2. Base-Style
+
+{table}
+ *Aspect of Style* | *Description*
+ *Overview* | Simply exposes the base Vaadin [Application|api:com.vaadin.Application], leaving the developer to\\build the interface programmatically using Java/Groovy classes.
+ *How to Use* | Subclass [com.vaadin.Application|api:com.vaadin.Application] in your app's Vaadin application class\\located in @grails-app/vaadin@
+ *Typical Code* | @Form form = new Form();@\\@TextField textField = new TextField();@\\@textField.name = "myField";@\\@textField.caption = "My Field";@\\@form.addComponent(textField);@
+ *Architecture Pattern* | None
+ *Pros* | - May be suitable for developers familiar with GWT but not with Grails.
+ *Cons* | - More difficult to build HTML interfaces, due to separation of HTML layout code\\and Vaadin Component code.
+{table}
+
+h2. Grails-Style
+
+{table}
+ *Aspect of Style* | *Description*
+ *Overview* | Allows the developer to construct an application using Grails-style Controllers and\\GSP Views, supported by a Vaadin tag library.
+ *How to Use* | Subclass [org.grails.plugin.vaadin.GrailsVaadinApplication|api:org.grails.plugin.vaadin.GrailsVaadinApplication] in your app's\\Vaadin application class located in @grails-app/vaadin@
+ *Typical Code* | @<v:form>@\\@<v:text name="myField">My Field</v:text>@\\@</v:form>@
+ *Architecture Pattern* | [Grails and Spring|http://grails.org/doc/latest/guide/spring.html#theUnderpinningsOfGrails] Model-View-Controller
+ *Pros* | - Full CRUD scaffolding supported\\- Easier to build HTML interfaces using Grails & Vaadin tags in GSPs\\- MVC separation of application logic and presentation\\- Browser fragment and history handling\\- Grails error screens for easy debugging\\- Automatic wrapping of controller code in persistence transactions
+ *Cons* | - Adding custom Vaadin Components requires writing tag libraries or else writing\\code scriptlets in GSPs.
+{table}

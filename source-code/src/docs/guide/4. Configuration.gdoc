@@ -8,7 +8,7 @@ h3. VaadinConfig
  *Parameter* | *Description*
  *applicationClass* | The name of the app's main Vaadin [Application|http://vaadin.com/api/com/vaadin/Application.html] class.
  *servletClass* | The name of the app's main Vaadin [ApplicationServlet|http://vaadin.com/api/com/vaadin/terminal/gwt/server/ApplicationServlet.html] class.
- *autowire* | Set how dependencies should be. Either @byName@ or @byType@.
+ *autowire* | Set how spring dependencies should be referenced. Either @byName@ or @byType@.
  *contextRelativePath* | The root path of the Vaadin application. Note that this is appended to the Grails applications's @grails.app.context@ path. If set as @'/'@ then Vaadin will handle all requests, bypassing Grails.
  *googleAppEngineMode* | Set to @true@ if the app is to be deployed on Google App Engine.
  *javascriptLibraries* | Specify a list of paths to Javascript files, to be included within the HTML @<head>@.

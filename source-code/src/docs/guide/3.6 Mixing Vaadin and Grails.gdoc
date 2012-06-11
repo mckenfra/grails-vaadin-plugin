@@ -1,0 +1,16 @@
+For any Domain class, you can easily create a regular-Grails CRUD interface and a Vaadin
+CRUD interface for it in the same app. E.g. for Domain class @mypackage.Book@: 
+
+{table}
+  | *Scaffolding Command* | *URL*  
+ *Grails*: | @generate-all mypackage.Book@ | @http://localhost:8080/myapp/book@
+ *Vaadin*: | @generate-vaadin-all mypackage.Book@ | @http://localhost:8080/myapp/vaadin#book@
+{table}
+
+The default configuration is for Vaadin to be served from path @/vaadin@ - 
+see the @contextRelativePath@ setting in the [Configuration|guide:4. Configuration].
+
+{note}
+If you set @contextRelativePath@ to @'/'@ it will prevent any requests from reaching
+'regular' Grails controllers.
+{note}

@@ -26,12 +26,24 @@ http://localhost:8080/grailsapp/vaadin#book/list
 
 h3. Controller API
 
-Note that [render|http://grails.org/doc/latest/ref/Controllers/render.html],
+Grails methods [render|http://grails.org/doc/latest/ref/Controllers/render.html],
 [redirect|http://grails.org/doc/latest/ref/Controllers/redirect.html],
 [params|http://grails.org/doc/latest/ref/Controllers/params.html],
 [flash|http://grails.org/doc/latest/ref/Controllers/flash.html] are specifically overridden
 in Vaadin controllers, to provide support for the plugin's page-dispatching
 mechanism. However, they can be treated like the corresponding regular Grails methods. 
+
+Vaadin Controllers can also render Vaadin Components directly, as in the following example:
+
+{code:java}
+import com.vaadin.ui.Label
+
+class MyVaadinController {
+	def index() {
+		render new Label("Hello World!")
+	}
+}
+{code}
 
 Controllers can reference @vaadinApplication@ to get the Vaadin Application object
 for the current session.

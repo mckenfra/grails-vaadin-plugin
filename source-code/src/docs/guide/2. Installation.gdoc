@@ -9,7 +9,7 @@ plugins {
     // . . .
     // . . .
 
-    compile ':vaadin:1.6.2.1-SNAPSHOT'
+    compile ':vaadin:1.6.2.2-SNAPSHOT'
 }
 {code}
 
@@ -18,7 +18,7 @@ we need to use scripts in the plugin beforehand, we also have to install the plu
 manually the first time. Run the following at the command line:
 
 {code}
-grails install-plugin vaadin 1.6.2.1-SNAPSHOT
+grails install-plugin vaadin 1.6.2.2-SNAPSHOT
 {code}
 
 h4. Create the Application

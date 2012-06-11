@@ -1,5 +1,6 @@
 {table}
  *Version* | *Date* | *Description*
+ 1.6.2.2 | 11-Jun 2012 | *Improvements*:\\- Go straight to current browser fragment page on startup/refresh\\- Added mainWindow tag for e.g. setting browser title\\- Easier debugging with Grails stacktrace screens\\- Cleanly delineated Base-style vs Grails-style apps
  1.6.2.1 | 24-May 2012 | *Improvements*:\\- Reduced memory footprint and improved stability + multiple bugfixes.\\- Support configuring SystemMessages\\- Support including additional javascript libraries\\- Support embedding a Vaadin application in a @.gsp@ page
  1.6.2 | 3-May 2012 | *Improvements*:\\- Scaffold all property types, e.g. bytearray, locale\\- Many new tags, e.g. include, tabs, accordion, file 
  1.6.1 | 15-Apr 2012 | *Improvements*:\\- Create Vaadin GUIs using GSPs & tags\\- Allow regular Grails controllers & Vaadin to be mixed together in one app 

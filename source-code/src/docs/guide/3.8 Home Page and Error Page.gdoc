@@ -1,0 +1,59 @@
+h3. Home Page
+
+The Vaadin plugin includes a controller called
+[HomeVaadinController|api:org.grails.plugin.vaadin.HomeVaadinController]. The @index()@
+method of this controller is called when the user's browser contains an empty fragment,
+or contains the fragment @#home@.
+
+This controller simply renders your application's @grails-app/views/vaadin/index.gsp@
+view. You can edit this file directly to customise the home page.
+
+For even more flexibility, you could create a @HomeVaadinController@ in your app by
+running the following command:
+
+{code:java}
+grails create-vaadin-controller mypackage.Home
+{code}
+
+You could then customise this controller by for example redirecting to another
+controller as the default home page:
+
+{code:java}
+package mypackage
+
+class HomeVaadinController {
+	def index() {
+		redirect controller:book
+	}
+}
+{code}
+
+h3. Error Page
+
+The Vaadin plugin includes a controller called
+[ErrorVaadinController|api:org.grails.plugin.vaadin.ErrorVaadinController]. The @index()@
+method of this controller is called whenever a Vaadin Controller or View throws
+an error.
+
+This controller simply renders your application's @grails-app/views/vaadin/error.gsp@
+view. You can edit this file directly to customise the error page.
+
+For even more flexibility, you could create a @ErrorVaadinController@ in your app by
+running the following command:
+
+{code:java}
+grails create-vaadin-controller mypackage.Error
+{code}
+
+You could then customise this controller by for example redirecting to another
+controller as the default error page:
+
+{code:java}
+package mypackage
+
+class ErrorVaadinController {
+	def index() {
+		redirect "http://google.com"
+	}
+}
+{code}
