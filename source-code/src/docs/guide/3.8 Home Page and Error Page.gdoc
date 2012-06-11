@@ -23,7 +23,7 @@ package mypackage
 
 class HomeVaadinController {
 	def index() {
-		redirect controller:book
+		redirect controller:"book"
 	}
 }
 {code}
@@ -53,7 +53,7 @@ package mypackage
 
 class ErrorVaadinController {
 	def index() {
-		redirect "http://google.com"
+		redirect url:"http://google.com"
 	}
 }
 {code}
