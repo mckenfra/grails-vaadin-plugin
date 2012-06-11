@@ -93,6 +93,17 @@ Package org.grails.plugin.vaadin
     </TR>
 
         <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="ErrorVaadinController.html" title="class in org/grails/plugin/vaadin">ErrorVaadinController</A></B></TD>
+        <TD>Controller for displaying default error page.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="GrailsVaadinApplication.html" title="class in org/grails/plugin/vaadin">GrailsVaadinApplication</A></B></TD>
+        <TD>A Vaadin Application that provides a request-dispatching framework
+ with a Grails-like Model-View-Controller architecture.</TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
         <TD WIDTH="15%"><B><A HREF="HomeVaadinController.html" title="class in org/grails/plugin/vaadin">HomeVaadinController</A></B></TD>
         <TD>Controller for displaying default application home page.</TD>
         </TR>
@@ -104,8 +115,10 @@ Package org.grails.plugin.vaadin
 
         <TR BGCOLOR="white" CLASS="TableRowColor">
         <TD WIDTH="15%"><B><A HREF="VaadinApplication.html" title="class in org/grails/plugin/vaadin">VaadinApplication</A></B></TD>
-        <TD>Users should override this class, when creating the Application class for
- their Vaadin project.</TD>
+        <TD>A Vaadin Application that supports configuring SystemMessages
+ in <code>grails-app/conf/VaadinConfig.groovy</code> and provides
+ easy access to the application in the current thread using
+ <a href='../../../../org/grails/plugin/vaadin/VaadinApplicationContextHolder.html' title='VaadinApplicationContextHolder'>VaadinApplicationContextHolder</a></TD>
         </TR>
 
         <TR BGCOLOR="white" CLASS="TableRowColor">
@@ -157,7 +170,8 @@ Package org.grails.plugin.vaadin
 
         <TR BGCOLOR="white" CLASS="TableRowColor">
         <TD WIDTH="15%"><B><A HREF="VaadinRequest.Type.html" title="class in org/grails/plugin/vaadin">VaadinRequest.Type</A></B></TD>
-        <TD>The request can be a top-level browser page, or a frame within the page.</TD>
+        <TD>The request can be a top-level browser page or error page, or an include
+ within the page.</TD>
         </TR>
 
 </TABLE>

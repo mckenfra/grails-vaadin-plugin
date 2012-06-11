@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>4 Configuration 1.6.2.1-SNAPSHOT</title>
+    <title>4 Configuration 1.6.2.2-SNAPSHOT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -84,7 +84,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Ondrej Kvasnovsky, Francis McKenzie</p>
 
-                    <p><strong>Version:</strong> 1.6.2.1-SNAPSHOT</p>
+                    <p><strong>Version:</strong> 1.6.2.2-SNAPSHOT</p>
 
                     
                 </div>
@@ -96,7 +96,7 @@ function addJsClass() {
 <h1 id="4. Configuration">4 Configuration</h1>
 The plugin is configured using the <code>grails-app/conf/VaadinConfig.groovy</code> configuration
 file. A default configuration file is automatically created in your application when
-the Vaadin plugin is first installed. The available settings are as follows:<p class="paragraph"/><h3>VaadinConfig</h3><p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Parameter</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td><strong class="bold">applicationClass</strong></td><td>The name of the app's main Vaadin <a href="http://vaadin.com/api/com/vaadin/Application.html" target="blank">Application</a> class.</td></tr><tr class="table-even"><td><strong class="bold">servletClass</strong></td><td>The name of the app's main Vaadin <a href="http://vaadin.com/api/com/vaadin/terminal/gwt/server/ApplicationServlet.html" target="blank">ApplicationServlet</a> class.</td></tr><tr class="table-odd"><td><strong class="bold">autowire</strong></td><td>Set how dependencies should be. Either <code>byName</code> or <code>byType</code>.</td></tr><tr class="table-even"><td><strong class="bold">contextRelativePath</strong></td><td>The root path of the Vaadin application. Note that this is appended to the Grails applications's <code>grails.app.context</code> path. If set as <code>'/'</code> then Vaadin will handle all requests, bypassing Grails.</td></tr><tr class="table-odd"><td><strong class="bold">googleAppEngineMode</strong></td><td>Set to <code>true</code> if the app is to be deployed on Google App Engine.</td></tr><tr class="table-even"><td><strong class="bold">javascriptLibraries</strong></td><td>Specify a list of paths to Javascript files, to be included within the HTML <code>&#60;head&#62;</code>.</td></tr><tr class="table-odd"><td><strong class="bold">systemMessages</strong></td><td>A closure that contains settings to apply to <a href="http://vaadin.com/api/com/vaadin/Application.SystemMessages.html" target="blank">Application.SystemMessages</a>. For example, set the <code>sessionExpiredNotificationEnabled</code> to <code>false</code> to automatically start a new session if the old one has expired.</td></tr></table><p class="paragraph"/><h3>Other Configuration</h3><p class="paragraph"/>Note that the Vaadin plugin depends on two external Vaadin addons. Therefore the Vaadin addons
+the Vaadin plugin is first installed. The available settings are as follows:<p class="paragraph"/><h3>VaadinConfig</h3><p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Parameter</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td><strong class="bold">applicationClass</strong></td><td>The name of the app's main Vaadin <a href="http://vaadin.com/api/com/vaadin/Application.html" target="blank">Application</a> class.</td></tr><tr class="table-even"><td><strong class="bold">servletClass</strong></td><td>The name of the app's main Vaadin <a href="http://vaadin.com/api/com/vaadin/terminal/gwt/server/ApplicationServlet.html" target="blank">ApplicationServlet</a> class.</td></tr><tr class="table-odd"><td><strong class="bold">autowire</strong></td><td>Set how spring dependencies should be referenced. Either <code>byName</code> or <code>byType</code>.</td></tr><tr class="table-even"><td><strong class="bold">contextRelativePath</strong></td><td>The root path of the Vaadin application. Note that this is appended to the Grails applications's <code>grails.app.context</code> path. If set as <code>'/'</code> then Vaadin will handle all requests, bypassing Grails.</td></tr><tr class="table-odd"><td><strong class="bold">googleAppEngineMode</strong></td><td>Set to <code>true</code> if the app is to be deployed on Google App Engine.</td></tr><tr class="table-even"><td><strong class="bold">javascriptLibraries</strong></td><td>Specify a list of paths to Javascript files, to be included within the HTML <code>&#60;head&#62;</code>.</td></tr><tr class="table-odd"><td><strong class="bold">systemMessages</strong></td><td>A closure that contains settings to apply to <a href="http://vaadin.com/api/com/vaadin/Application.SystemMessages.html" target="blank">Application.SystemMessages</a>. For example, set the <code>sessionExpiredNotificationEnabled</code> to <code>false</code> to automatically start a new session if the old one has expired.</td></tr></table><p class="paragraph"/><h3>Other Configuration</h3><p class="paragraph"/>Note that the Vaadin plugin depends on two external Vaadin addons. Therefore the Vaadin addons
 Maven repository needs to be included in the <code>repositories</code> closure in your app's
 <code>grails-app/conf/BuildConfig.groovy</code>. This is automatically added by command  
 <a href="../ref/Command Line/generate-vaadin-app.html" class="Command Line">generate-vaadin-app</a>.<p class="paragraph"/>The Vaadin addons Maven repository is <code>http://maven.vaadin.com/vaadin-addons</code>
@@ -205,6 +205,9 @@ Maven repository needs to be included in the <code>repositories</code> closure i
                             </div>
                             
                             <div class="menu-item"><a href="../ref/Tags/location.html">location</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Tags/mainWindow.html">mainWindow</a>
                             </div>
                             
                             <div class="menu-item"><a href="../ref/Tags/optionGroup.html">optionGroup</a>

@@ -1,0 +1,261 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>3.11 Base-Style vs Grails-Style 1.6.2.2-SNAPSHOT</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass() {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <ul>
+        <li>
+            <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                <a href="../../guide/index.html" class="button">Table of contents</a>
+
+                <div id="nav-summary-childs" style="display:none;">
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/1.%20Overview.html"><strong>1</strong><span>Overview</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/2.%20Installation.html"><strong>2</strong><span>Installation</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/3.%20Concepts%20and%20Usage.html"><strong>3</strong><span>Concepts and Usage</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/4.%20Configuration.html"><strong>4</strong><span>Configuration</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5.%20Known%20Issues%20and%20Limitations.html"><strong>5</strong><span>Known Issues and Limitations</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/6.%20Roadmap.html"><strong>6</strong><span>Roadmap</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/7.%20Version%20History.html"><strong>7</strong><span>Version History</span></a>
+                    </div>
+                    
+                </div>
+            </div>
+        </li>
+        <li class="separator selected">
+            <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+        </li>
+    </ul>
+</div>
+<div id="header">
+    <div class="images clearfix">
+        
+        
+    </div>
+    <p>        A plugin for creating a Vaadin application in Grails.
+    </p>
+</div>
+
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../../guide/2.%20Installation.html">&lt;&lt; <strong>2</strong><span>Installation</span></a></div>
+                
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                
+                    <div class="toc-item next-right"><a href="../../guide/4.%20Configuration.html"><strong>4</strong><span>Configuration</span> >></a></div>
+                
+
+
+                <div class="project">
+                    <h1>3.11 Base-Style vs Grails-Style - Reference Documentation</h1>
+
+                    <p><strong>Authors:</strong> Ondrej Kvasnovsky, Francis McKenzie</p>
+
+                    <p><strong>Version:</strong> 1.6.2.2-SNAPSHOT</p>
+
+                    
+                </div>
+
+                
+
+                
+
+<h2 id="3.11 Base-Style vs Grails-Style">3.11 Base-Style vs Grails-Style</h2>
+As previously discussed, the Vaadin plugin supports two styles of usage, which are
+compared in the below sections.<p class="paragraph"/><h2>Base-Style</h2><p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Aspect of Style</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td><strong class="bold">Overview</strong></td><td>Simply exposes the base Vaadin <a href="https://vaadin.com/api/com/vaadin/Application.html" class="api">Application</a>, leaving the developer to<br/>build the interface programmatically using Java/Groovy classes.</td></tr><tr class="table-even"><td><strong class="bold">How to Use</strong></td><td>Subclass <a href="https://vaadin.com/api/com/vaadin/Application.html" class="api">com.vaadin.Application</a> in your app's Vaadin application class<br/>located in <code>grails-app/vaadin</code></td></tr><tr class="table-odd"><td><strong class="bold">Typical Code</strong></td><td><code>Form form = new Form();</code><br/><code>TextField textField = new TextField();</code><br/><code>textField.name = "myField";</code><br/><code>textField.caption = "My Field";</code><br/><code>form.addComponent(textField);</code></td></tr><tr class="table-even"><td><strong class="bold">Architecture Pattern</strong></td><td>None</td></tr><tr class="table-odd"><td><strong class="bold">Pros</strong></td><td>- May be suitable for developers familiar with GWT but not with Grails.</td></tr><tr class="table-even"><td><strong class="bold">Cons</strong></td><td>- More difficult to build HTML interfaces, due to separation of HTML layout code<br/>and Vaadin Component code.</td></tr></table><p class="paragraph"/><h2>Grails-Style</h2><p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Aspect of Style</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td><strong class="bold">Overview</strong></td><td>Allows the developer to construct an application using Grails-style Controllers and<br/>GSP Views, supported by a Vaadin tag library.</td></tr><tr class="table-even"><td><strong class="bold">How to Use</strong></td><td>Subclass <a href="../gapi/org/grails/plugin/vaadin/GrailsVaadinApplication.html" class="api">org.grails.plugin.vaadin.GrailsVaadinApplication</a> in your app's<br/>Vaadin application class located in <code>grails-app/vaadin</code></td></tr><tr class="table-odd"><td><strong class="bold">Typical Code</strong></td><td><code>&#60;v:form&#62;</code><br/><code>&#60;v:text name="myField"&#62;My Field&#60;/v:text&#62;</code><br/><code>&#60;/v:form&#62;</code></td></tr><tr class="table-even"><td><strong class="bold">Architecture Pattern</strong></td><td><a href="http://grails.org/doc/latest/guide/spring.html#theUnderpinningsOfGrails" target="blank">Grails and Spring</a> Model-View-Controller</td></tr><tr class="table-odd"><td><strong class="bold">Pros</strong></td><td>- Full CRUD scaffolding supported<br/>- Easier to build HTML interfaces using Grails &#38; Vaadin tags in GSPs<br/>- MVC separation of application logic and presentation<br/>- Browser fragment and history handling<br/>- Grails error screens for easy debugging<br/>- Automatic wrapping of controller code in persistence transactions</td></tr><tr class="table-even"><td><strong class="bold">Cons</strong></td><td>- Adding custom Vaadin Components requires writing tag libraries or else writing<br/>code scriptlets in GSPs.</td></tr></table>
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../../guide/2.%20Installation.html">&lt;&lt; <strong>2</strong><span>Installation</span></a></div>
+                
+                    <div class="toc-item next-right"><a href="../../guide/4.%20Configuration.html"><strong>4</strong><span>Configuration</span> >></a></div>
+                
+                <div style="clear:both"></div>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Command Line</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/create-vaadin-controller.html">create-vaadin-controller</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/create-vaadin-embedded.html">create-vaadin-embedded</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-all.html">generate-vaadin-all</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-app.html">generate-vaadin-app</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-controller.html">generate-vaadin-controller</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/generate-vaadin-views.html">generate-vaadin-views</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Command%20Line/install-vaadin-templates.html">install-vaadin-templates</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Tags</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/accordion.html">accordion</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/checkBox.html">checkBox</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/column.html">column</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/comboBox.html">comboBox</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/currencySelect.html">currencySelect</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/customField.html">customField</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/date.html">date</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/error.html">error</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/field.html">field</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/file.html">file</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/form.html">form</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/horizontalLayout.html">horizontalLayout</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/include.html">include</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/label.html">label</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/layout.html">layout</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/link.html">link</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/listSelect.html">listSelect</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/localeSelect.html">localeSelect</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/location.html">location</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/mainWindow.html">mainWindow</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/optionGroup.html">optionGroup</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/password.html">password</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/select.html">select</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/styling.html">styling</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/tab.html">tab</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/table.html">table</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/tabs.html">tabs</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/text.html">text</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/textArea.html">textArea</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/timeZoneSelect.html">timeZoneSelect</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/verticalLayout.html">verticalLayout</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags/warning.html">warning</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    
+    
+</div>
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
+</body>
+</html>
