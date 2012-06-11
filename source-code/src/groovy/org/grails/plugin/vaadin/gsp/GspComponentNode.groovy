@@ -127,7 +127,7 @@ class GspComponentNode {
      * in this node.
      * <p>
      * Note this node's Vaadin Component MUST be of type
-     * <a href="http://vaadin.com/api/com/vaadin/ui/ComponentContainer.html>ComponentContainer</a>
+     * {@link com.vaadin.ui.ComponentContainer}
      * <p>
      * If this node's Vaadin Component is a CustomLayout, then calls
      * addComponent(com.vaadin.ui.Component,java.lang.String) on the component.
