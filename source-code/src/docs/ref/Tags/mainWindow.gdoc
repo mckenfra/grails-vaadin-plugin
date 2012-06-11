@@ -7,7 +7,7 @@ Allows configuring the Vaadin application's main [Window|api:com.vaadin.ui.Windo
 h2. Examples
 
 {code:java}
-<v:mainWindow title="Hello World!"/>
+<v:mainWindow caption="Hello World!"/>
 {code}
 
 h2. Description
