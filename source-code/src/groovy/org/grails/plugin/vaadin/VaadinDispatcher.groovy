@@ -13,6 +13,7 @@ import org.grails.plugin.vaadin.utils.Utils;
 import org.springframework.util.StringUtils
 
 import com.vaadin.Application;
+import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.Terminal.ErrorEvent;
 import com.vaadin.ui.Component;
@@ -258,8 +259,15 @@ class VaadinDispatcher implements Serializable {
                 result = vaadinTransactionManager.wrapInTransaction({executeRequest(request, grailsApplication, attach)})
                 
                 // Quit if we're not redirecting
-                if(!request.redirected) break
-                
+                if (!request.redirected) {
+                    break
+                    
+                // Redirected to external Url
+                } else if (request.external) {
+                    vaadinApplication.mainWindow.open(new ExternalResource(request.url))
+                    break
+                }
+
                 // Increment our redirect counter
                 redirects++
             }

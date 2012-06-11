@@ -79,6 +79,7 @@ class VaadinRequest {
     protected Map attributes
     protected Map model
     protected Map flash
+    protected String url // For redirecting to external URLs
     protected Type type = Type.PAGE
     
     /**
@@ -94,9 +95,17 @@ class VaadinRequest {
      */
     protected boolean redirected
     /**
+     * Indicates if this request has been redirected to external 
+     */
+    protected boolean external
+    /**
      * Indicates if this request has been redirected 
      */
     public boolean isRedirected() { redirected }
+    /**
+     * Indicates if this request has been redirected to an external Url
+     */
+    public boolean isExternal() { external }
     /**
      * The requested controller - for example 'book'
      */
@@ -155,6 +164,10 @@ class VaadinRequest {
      * The flash message and error - for example [message:"Book 15 created!"]
      */
     public Map getFlash() { this.flash }
+    /**
+     * The external Url - only applies if this request has been redirected to external.
+     */
+    public String getUrl() { this.url }
     /**
      * The id of the domain instance - for example '15'
      */
@@ -227,6 +240,8 @@ class VaadinRequest {
         this.id = args.id
         this.instance = args.instance
         this.redirected = true
+        this.url = args.url
+        this.external = this.url
     }
     
     /**
@@ -417,7 +432,7 @@ class VaadinRequest {
      * @return This request as property map
      */
     public Map getProperties() {
-        return [
+        return url ? [url:url] : [
             controller:controller,
             action:action,
             view:view,
@@ -444,6 +459,7 @@ class VaadinRequest {
             this.flash = props.flash ?: [:]
             this.id = props.id
             this.instance = props.instance
+            this.url = props.url
         }
     }
     
