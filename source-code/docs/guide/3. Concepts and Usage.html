@@ -272,7 +272,7 @@ view. You can edit this file directly to customise the home page.<p class="parag
 running the following command:<p class="paragraph"/><div class="code"><pre>grails create&#45;vaadin&#45;controller mypackage.Home</pre></div><p class="paragraph"/>You could then customise this controller by for example redirecting to another
 controller as the default home page:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> mypackage<p class="paragraph"/>class HomeVaadinController &#123;
 	def index() &#123;
-		redirect controller:book
+		redirect controller:<span class="java&#45;quote">"book"</span>
 	&#125;
 &#125;</pre></div><p class="paragraph"/><h3>Error Page</h3><p class="paragraph"/>The Vaadin plugin includes a controller called
 <a href="../gapi/org/grails/plugin/vaadin/ErrorVaadinController.html" class="api">ErrorVaadinController</a>. The <code>index()</code>
@@ -282,7 +282,7 @@ view. You can edit this file directly to customise the error page.<p class="para
 running the following command:<p class="paragraph"/><div class="code"><pre>grails create&#45;vaadin&#45;controller mypackage.Error</pre></div><p class="paragraph"/>You could then customise this controller by for example redirecting to another
 controller as the default error page:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> mypackage<p class="paragraph"/>class ErrorVaadinController &#123;
 	def index() &#123;
-		redirect <span class="java&#45;quote">"http://google.com"</span>
+		redirect url:<span class="java&#45;quote">"http://google.com"</span>
 	&#125;
 &#125;</pre></div>
 
