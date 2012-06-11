@@ -4,4 +4,4 @@ The plugin supports two styles of usage:
 * *Grails-Style*: Allows the developer to construct an application using Grails-style Controllers and GSP Views, supported by a Vaadin tag library.
 
 This guide assumes the user prefers to utilise the *Grails-Style* architectural
-pattern. See a comparison of the styles and further details [here|guide:3.10 Base-Style vs Grails-Style].
+pattern. See a comparison of the styles and further details [here|guide:3.11 Base-Style vs Grails-Style].
