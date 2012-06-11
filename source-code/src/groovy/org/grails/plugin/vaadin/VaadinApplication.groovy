@@ -42,7 +42,9 @@ abstract class VaadinApplication extends Application implements HttpServletReque
                 }
             }
         }
-        if (!systemMessages) {
+        if (systemMessages) {
+			return systemMessages
+        } else {
             log.warn("Customized System Messages not found!")
             return Application.getSystemMessages()
         }
