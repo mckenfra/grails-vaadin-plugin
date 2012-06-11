@@ -1125,7 +1125,7 @@ class VaadinTagLib {
     /**
      * Converts the specified Vaadin component class to a Closure that should configure that class
      */
-    protected Closure toConfigurer(Class clazz) {
+    protected Closure toConfigurer = { Class clazz ->
         if (DateField.isAssignableFrom(clazz)) return dateConfigurer
         else if (CheckBox.isAssignableFrom(clazz)) return fieldConfigurer
         else if (ComboBox.isAssignableFrom(clazz)) return selectConfigurer
