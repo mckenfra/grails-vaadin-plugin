@@ -44,7 +44,8 @@ class VaadinGrailsPlugin {
     // the other plugins this plugin depends on
     def dependsOn = [
         'servlets': '2.0.0 > *',
-        'groovyPages': '2.0.0 > *'
+        'groovyPages': '2.0.0 > *',
+        'controllers': '2.0.0 > *'
     ]
     // resources that are excluded from plugin packaging
     def pluginExcludes = [
