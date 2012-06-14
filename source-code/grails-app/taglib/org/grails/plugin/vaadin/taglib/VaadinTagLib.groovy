@@ -620,7 +620,7 @@ class VaadinTagLib {
         // Evaluate body
         if (body) {
             GspComponentNode node = new GspComponentNode(component, body, withBody, withConfig)
-            GspContext context = new GspContext(session)
+            GspContext context = new GspContext()
             context.evaluate(node)
         }
         
@@ -639,7 +639,7 @@ class VaadinTagLib {
      * @param attrs Any additional attributes to pass to the attacher. E.g. may contain 'location'
      */
     protected void attachComponent(Component component, Map attrs = null) {
-        GspContext context = new GspContext(session)
+        GspContext context = new GspContext()
         GspAttacher attacher = new GspAttacher(context, out)
         attacher.attachComponent(component, attrs)
     }
@@ -661,7 +661,7 @@ class VaadinTagLib {
             attrs[bodyProperty] = body()?.toString()
         }
         GspComponentConfig config = new GspComponentConfig(componentClass, type, attrs)
-        GspContext context = new GspContext(session)
+        GspContext context = new GspContext()
         GspAttacher attacher = new GspAttacher(context, out)
         attacher.attachConfig(config)
     }
@@ -670,7 +670,7 @@ class VaadinTagLib {
      * Finds the current Vaadin parent component.
      */
     protected Component lookupParentComponent() {
-        GspContext context = new GspContext(session)
+        GspContext context = new GspContext()
         return context.node?.component
     }
 
@@ -949,7 +949,7 @@ class VaadinTagLib {
                 select.setItemCaption(id, noSelection)
             }
         }
-        // Always expicitly set the captions, to avoid no-hibernate-session errors on rendering
+        // Always explicitly set the captions, to avoid no-hibernate-session errors on rendering
         select.itemCaptionMode = AbstractSelect.ITEM_CAPTION_MODE_EXPLICIT_DEFAULTS_ID
         select.itemIds.each { id ->
             if (id != select.nullSelectionItemId) {

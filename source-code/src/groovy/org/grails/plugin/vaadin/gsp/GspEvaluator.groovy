@@ -30,10 +30,6 @@ class GspEvaluator {
      */
     CustomLayout parent
     /**
-     * The Vaadin application (required)
-     */
-    Application application
-    /**
      * True if this is the root component (optional)
      */
     boolean root = false
@@ -47,12 +43,10 @@ class GspEvaluator {
      * Initialise with specified values. 
      * 
      * @param parent The parent component
-     * @param application The Vaadin application
      * @param root True if this is the root component 
      */
-    public GspEvaluator(CustomLayout parent, Application application, boolean root = false) {
+    public GspEvaluator(CustomLayout parent, boolean root = false) {
         this.parent = parent
-        this.application = application
         this.root = root
     }
     
@@ -61,7 +55,6 @@ class GspEvaluator {
     * text and components.
     *
     * @param parent The parent component
-    * @param application The vaadin application
     * @param body The closure to execute to obtain the GSP text and components
     * @param root True if this is the root component
     * 
@@ -69,12 +62,11 @@ class GspEvaluator {
     */
    public Result evaluate(Closure body) {
        if (!parent) throw new NullPointerException("Parent component required!")
-       if (!application) throw new NullPointerException("Application required!")
        if (!body) throw new NullPointerException("Body required!")
        
        // Prepare to execute
        GspLayoutNode node = new GspLayoutNode(parent, body)
-       GspContext context = new GspContext(application.context.session)
+       GspContext context = new GspContext()
        
        // Execute and return result
        Result result = new Result()

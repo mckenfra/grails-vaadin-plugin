@@ -2,11 +2,8 @@ package org.grails.plugin.vaadin.ui
 
 import com.vaadin.Application;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.CustomLayout;
 
 import org.apache.commons.logging.LogFactory;
-import org.grails.plugin.vaadin.gsp.GspComponentNode;
-import org.grails.plugin.vaadin.gsp.GspContext;
 import org.grails.plugin.vaadin.gsp.GspEvaluator;
 import org.grails.plugin.vaadin.utils.Stopwatch;
 
@@ -164,7 +161,7 @@ class GspLayout extends GspBodyLayout {
                 session: vaadinApplication.context.httpSession, attributes:attribs ])
         }
         // Execute body - we use its body text as this layout's template
-        def evaluator = new GspEvaluator(this, vaadinApplication, root)
+        def evaluator = new GspEvaluator(this, root)
         def result = evaluator.evaluate(templateBody)
         templateContents = result.text ?: ""
         
