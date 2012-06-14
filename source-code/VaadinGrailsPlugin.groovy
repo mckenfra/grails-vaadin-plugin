@@ -23,6 +23,7 @@ import org.slf4j.Logger
 import com.vaadin.grails.terminal.gwt.server.GrailsAwareApplicationServlet
 
 import org.codehaus.groovy.grails.commons.GrailsApplication
+import org.codehaus.groovy.grails.commons.GrailsClass;
 import org.grails.plugin.vaadin.VaadinApi
 import org.grails.plugin.vaadin.VaadinSystemMessages
 import org.grails.plugin.vaadin.gsp.GspResourcePageRenderer
@@ -44,9 +45,10 @@ class VaadinGrailsPlugin {
     // the other plugins this plugin depends on
     def dependsOn = [
         'servlets': '2.0.0 > *',
-        'groovyPages': '2.0.0 > *',
-        'controllers': '2.0.0 > *'
+        'groovyPages': '2.0.0 > *'
     ]
+    // We need to know about changes to VaadinControllers
+    def observe = ["controllers"]
     // resources that are excluded from plugin packaging
     def pluginExcludes = [
         "docs/**/*",
@@ -57,8 +59,7 @@ class VaadinGrailsPlugin {
     ]
     def artefacts = [VaadinArtefactHandler]
     def watchedResources = [
-        "file:./grails-app/vaadin/**/*.groovy",
-        "file:./grails-app/controllers/**/*VaadinController.groovy"
+        "file:./grails-app/vaadin/**/*.groovy"
     ]
     // release-plugin --zipOnly
 
@@ -84,33 +85,28 @@ class VaadinGrailsPlugin {
     // URL to the plugin's documentation
     def documentation = "http://grails.org/plugin/vaadin"
 
-    def configureVaadinApplication = { clazz, config = null ->
-        //create the vaadin Application definition:
-        "${GrailsAwareApplicationServlet.VAADIN_APPLICATION_BEAN_NAME}"(clazz) { bean ->
-            bean.singleton = false; //prototype scope
-            bean.autowire = config?.autowire ?: 'byName'
-        }
-    }
-
     /**
-     * Currently (to v2.0.2) GrailsApplication.addArtefact() will add multiple copies of the same class.
-     * So this method first checks if the class has already been added to GrailsApplication, and only
-     * calls the addArtefact method if it hasn't been added already.
+     * Returns the Vaadin Application spring bean definition for the
+     * relevant class configured in the grails application.
+     * <p>
+     * Applies the 'autowire' setting from the specified config object
+     * when constructing the bean definition.
      */
-    def addVaadinArtefactToGrails(Class artefact, GrailsApplication grailsApplication) {
-        if (! grailsApplication.allClasses.contains(artefact)) {
-            if (log.isDebugEnabled()) {
-                log.debug "ADDING TO GRAILS: ${artefact}"
+    def defineVaadinApplicationBean = { GrailsApplication application ->
+        def vaadinApplicationClassName = application.config.vaadin?.applicationClass
+        def vaadinApplicationClass = application.vaadinClasses.find {
+            it.clazz.name.equals(vaadinApplicationClassName)
+        }?.clazz
+        if (vaadinApplicationClass) {
+            "${GrailsAwareApplicationServlet.VAADIN_APPLICATION_BEAN_NAME}"(vaadinApplicationClass) { bean ->
+                bean.singleton = false; // prototype scope
+                bean.autowire = application.config?.vaadin?.autowire ?: 'byName'
             }
-            grailsApplication.addArtefact(VaadinArtefactHandler.TYPE, artefact)
-            // Get it to appear on the controllers list too
-            if (artefact.name.endsWith("Controller")) {
-                grailsApplication.addArtefact("Controller", artefact)
+            if (log.isDebugEnabled()) {
+                log.debug "APPLICATION BEAN: ${vaadinApplicationClass}"
             }
         } else {
-            if (log.isDebugEnabled()) {
-                log.debug "ALREADY IN GRAILS: ${artefact}"
-            }
+            log.warn "Vaadin Application with class '${vaadinApplicationClassName}' not found!"
         }
     }
 
@@ -120,13 +116,8 @@ class VaadinGrailsPlugin {
         if (!config) return
 
         // Vaadin Application Bean
-        def vaadinApplicationClass = application.vaadinClasses.find {
-            it.clazz.name.equals(config.applicationClass)
-        }?.clazz
-        if (vaadinApplicationClass) {
-            configureVaadinApplication.delegate = delegate
-            configureVaadinApplication(vaadinApplicationClass, config)
-        }
+        defineVaadinApplicationBean.delegate = delegate
+        defineVaadinApplicationBean(application)
         
         // Beans for scaffolded applications
         vaadinTransactionManager(VaadinTransactionManager) {
@@ -223,9 +214,9 @@ class VaadinGrailsPlugin {
         }
     }
     
-    def loadVaadinConfig(application) {
+    def loadVaadinConfig(GrailsApplication application, boolean forceReload = false) {
         // Return if already loaded
-        if (application.config.vaadin?.applicationClass) return application.config.vaadin
+        if (!forceReload && application.config.vaadin?.applicationClass) return application.config.vaadin
 
         // Load config
         ClassLoader parent = getClass().getClassLoader();
@@ -268,66 +259,71 @@ class VaadinGrailsPlugin {
         // event.application, event.manager, event.ctx, and event.plugin.
         log.trace "Received event ${event}"
 
-        if (!(event.source instanceof Class)) {
-            return;
-        }
-
         def application = event.application
-        def config = application.config.vaadin
-
-        Class changedClass = event.source
-
-        if (application.isVaadinClass(changedClass)) {
-            // Ensure new artefacts are always added
-            addVaadinArtefactToGrails(changedClass, application)
+        
+        // We are only watching grails-app/vaadin, and grails-app/controllers
+        // Therefore if a class has changed but it is not a controller,
+        // it must be a Vaadin Artefact.
+        boolean isController = application.isControllerClass(event.source)
+        boolean isVaadinController = isController && event.source.name.endsWith("VaadinController")
+        boolean isVaadinArtefact = !isController && event.source instanceof Class
+        
+        // Only reload if Vaadin Artefact or Vaadin Controller
+        if (isVaadinArtefact || isVaadinController) {
             
-            //a vaadin component class has changed, but due to 'reachability'
-            //we don't know which classes referenced it and might have a stale reference
-            //So, we need to reload all classes:
-
-            // keep a reference to the vaadinApplicationClass when we find it - we'll use
-            // it to reload the Spring bean later
-            def vaadinApplicationClass = null
-
-            // Vaadin Classes
-            application.vaadinClasses.each { vaadinGrailsClass ->
-                // def reloadedClass = application.classLoader.getClassLoader().reloadClass(vaadinGrailsClass.clazz.name)
-                def reloadedClass = application.classLoader.loadClass(vaadinGrailsClass.clazz.name)
-                if (reloadedClass.name.equals(config.applicationClass)) {
-                    vaadinApplicationClass = reloadedClass
-                }
-                application.mainContext.vaadinApi.injectApi(reloadedClass)
-                addVaadinArtefactToGrails(reloadedClass, application)
+            // Register the reloaded Vaadin Artefact
+            if (isVaadinArtefact) {
+                application.addArtefact(VaadinArtefactHandler.TYPE, event.source)
             }
+
+            // A Vaadin class has changed, but due to 'reachability' we don't
+            // know which classes referenced it and might have a stale reference.
+            // So, we need to reload all Vaadin classes.
+            reloadVaadinArtefacts(application, [event.source])
             
-            // Vaadin Controllers
-            application.getArtefacts("Controller").findAll { it.name.endsWith("Vaadin") }.each {
-                def reloadedClass = application.classLoader.loadClass(it.clazz.name)
-                application.mainContext.vaadinApi.injectApi(reloadedClass)
-                addVaadinArtefactToGrails(reloadedClass, application)
-            }
-
-            //Now re-register the vaadin application Spring bean:
-            if (vaadinApplicationClass) {
-                def beans = beans(configureVaadinApplication.curry(vaadinApplicationClass, config))
-                beans.registerBeans(event.ctx)
-            }
-
-            //Now that a Vaadin component's source code has changed and classes are reloaded, all existing
-            //Vaadin application instances tied to end-users's Sessions are stale.  Each end-user will need
-            //a new Application instance that reflects the changed source code.  So, create a new token for
-            //the new Application.  The GrailsAwareApplicationServlet will react to the changed token value
+            // Re-inject the Vaadin api
+            event.ctx.vaadinApi.injectApi(application)
+            
+            // Re-register the Vaadin Application bean
+            def beans = beans(defineVaadinApplicationBean.curry(application))
+            beans.registerBeans(event.ctx)
+    
+            // Now that a Vaadin class's source code has changed and classes are reloaded, all existing
+            // Vaadin application instances tied to end-users's Sessions are stale.  Each end-user will need
+            // a new Application instance that reflects the changed source code.  So, create a new token for
+            // the new Application.  The GrailsAwareApplicationServlet will react to the changed token value
             // and restart any previous Vaadin Application instances for all further incoming HTTP requests:
             RestartingApplicationHttpServletRequest.restartToken = UUID.randomUUID().toString()
 
-            log.info "Vaadin artefact ${changedClass} has changed.  Browser refresh required."
+            log.info "Vaadin class ${event.source} has changed. Browser refresh required."
         } else {
-            log.info "Changed class is not a Vaadin class: ${changedClass}"
+            if (!isController) {
+                log.info "IGNORING: ${event.source}"
+            }
         }
     }
 
     def onConfigChange = { event ->
         // TODO Implement code that is executed when the project configuration changes.
         // The event is the same as for 'onChange'.
+    }
+    
+    /**
+     * Reloads all Vaadin Controllers in the application, apart from the specified
+     * excluded classes (which have already been reloaded).
+     * 
+     * @param application The Grails Application containing the artefacts
+     * @param excludes The classes to exclude from reloading
+     */
+    def reloadVaadinArtefacts(GrailsApplication application, List<Class> excludes = []) {
+        application.vaadinClasses.each { it ->
+            if (! (it.clazz in excludes)) {
+                def reloadedClass = application.classLoader.loadClass(it.clazz.name)
+                application.addArtefact(VaadinArtefactHandler.TYPE, reloadedClass)
+                if (log.isDebugEnabled()) {
+                    log.debug "RELOADED: ${reloadedClass}"
+                }
+            }
+        }
     }
 }

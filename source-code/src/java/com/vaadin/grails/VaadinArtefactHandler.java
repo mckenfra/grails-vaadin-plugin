@@ -22,7 +22,10 @@ import org.codehaus.groovy.grails.commons.ArtefactHandlerAdapter;
 import org.codehaus.groovy.grails.commons.GrailsClassUtils;
 
 /**
- * Configures Vaadin Classes and Controllers in grails application.
+ * Configures Vaadin Classes in grails application.
+ * <p>
+ * Note, Vaadin Controllers are treated as regular controllers
+ * and are therefore not handled by this ArtefactHandler.
  * 
  * @author Les Hazlewood, Francis McKenzie
  * @since 1.2
@@ -30,7 +33,6 @@ import org.codehaus.groovy.grails.commons.GrailsClassUtils;
 public class VaadinArtefactHandler extends ArtefactHandlerAdapter {
 
     private static final String VAADIN_COMPONENT_DISCOVERY_TOKEN = "vaadin";
-    private static final String VAADIN_CONTROLLER_DISCOVERY_TOKEN = "VaadinController";
 
     public static final String TYPE = "Vaadin";
 
@@ -45,6 +47,10 @@ public class VaadinArtefactHandler extends ArtefactHandlerAdapter {
         }
 
         if (GrailsClassUtils.isJdk5Enum(clazz)) {
+            return false;
+        }
+        
+        if (clazz.getName().endsWith("package-info")) {
             return false;
         }
 
@@ -69,9 +75,8 @@ public class VaadinArtefactHandler extends ArtefactHandlerAdapter {
         // packages start with 'com.vaadin', so
         // any UI subclasses would be discovered).
         Class<?> testClass = clazz;
-        boolean result = testClass.getSimpleName().endsWith(VAADIN_CONTROLLER_DISCOVERY_TOKEN) &&
-            !testClass.getSimpleName().equals(VAADIN_CONTROLLER_DISCOVERY_TOKEN);
-        while (!result && (testClass != null) && !testClass.equals(GroovyObject.class) && !testClass.equals(Object.class)) {
+        boolean result = false;
+        while (testClass != null && !testClass.equals(GroovyObject.class) && !testClass.equals(Object.class)) {
             if (testClass.getName().contains(VAADIN_COMPONENT_DISCOVERY_TOKEN)) {
                 result = true;
                 break;
