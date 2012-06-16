@@ -41,16 +41,26 @@ public class VaadinArtefactHandler extends ArtefactHandlerAdapter {
             return false;
         }
 
-        // its not a closure
+        // Exclude closures
         if (Closure.class.isAssignableFrom(clazz)) {
             return false;
         }
 
+        // Exclude enums
         if (GrailsClassUtils.isJdk5Enum(clazz)) {
             return false;
         }
         
-        if (clazz.getName().endsWith("package-info")) {
+        // Exclude Grails artefacts
+        String name = clazz.getName();
+        if (name.endsWith("Controller") ||
+            name.endsWith("TagLib") ||
+            name.endsWith("Service")) {
+            return false;
+        }
+        
+        // Exclude documentation classes
+        if (name.endsWith("package-info")) {
             return false;
         }
 
