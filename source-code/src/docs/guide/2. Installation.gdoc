@@ -35,10 +35,12 @@ to make it ready for Vaadin. See details in the [generate-vaadin-app|Command Lin
 
 h4. Run the Application
 
-If you now execute the following at the command line, you should see the default Grails
-home page - however note this is implemented in Vaadin, even though it (should) look
-identical to the standard home page provided by Grails!
+Now run the application with the following command as normal:
 
 {code}
 grails run-app
 {code}
+
+If you browse to @http://localhost:8080/{grailsappname}/vaadin@ you should see the familiar
+Grails home page - however note this is implemented in Vaadin, even though it (should) look
+identical to the standard home page provided by Grails!
